@@ -1,10 +1,10 @@
-package ru.focsit.lopify_backend;
+package ru.focsit.backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class LopifyBackendApplicationTests {
+class BackendApplicationTests {
 
 	@Test
 	void contextLoads() {

@@ -1,13 +1,13 @@
-package ru.focsit.lopify_backend;
+package ru.focsit.backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class LopifyBackendApplication {
+public class BackendApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(LopifyBackendApplication.class, args);
+		SpringApplication.run(BackendApplication.class, args);
 	}
 
 }
