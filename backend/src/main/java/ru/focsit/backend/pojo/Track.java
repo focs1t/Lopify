@@ -1,40 +1,44 @@
 package ru.focsit.backend.pojo;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
-@Getter
-@Setter
+@Table(name = "tracks")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Track {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long TRACKID;
+    @Column(name = "trackId")
+    private Long trackId;
 
-    @Column(nullable = false)
-    private String TRACKNAME;
+    @Column(name = "trackName", nullable = false)
+    private String trackName;
 
-    private LocalDate TRACKDATE;
+    @Column(name = "trackDate")
+    private LocalDate trackDate;
 
-    @Column(nullable = false)
-    private String TRACKIMAGE_URL;
+    @Column(name = "trackImageUrl", nullable = false)
+    private String trackImageUrl;
 
-    @Column(nullable = false)
-    private String TRACKSONG_URL;
+    @Column(name = "trackSongUrl", nullable = false)
+    private String trackSongUrl;
 
-    private LocalTime TRACK_DURATION;
+    @Column(name = "trackDuration")
+    private LocalTime trackDuration;
 
-    @ManyToOne
-    @JoinColumn(name = "TRACK_ALBUM_ID")
-    private Album ALBUM;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "trackAlbumId")
+    private Album trackAlbum;
 
-    @ManyToOne
-    @JoinColumn(name = "TRACK_GENRE_ID")
-    private Genre GENRE;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "trackGenreId")
+    private Genre trackGenre;
 }
 

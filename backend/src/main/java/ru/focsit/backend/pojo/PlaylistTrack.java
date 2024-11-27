@@ -1,23 +1,25 @@
 package ru.focsit.backend.pojo;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import jakarta.persistence.*;
 
 @Entity
-@Getter
-@Setter
+@Table(name = "playliststracks")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@IdClass(PlaylistTrackId.class)
 public class PlaylistTrack {
 
     @Id
-    @ManyToOne
-    @JoinColumn(name = "PLAYLIST_ID")
-    private Playlist PLAYLIST;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "playlistId")
+    private Playlist playlist;
 
     @Id
-    @ManyToOne
-    @JoinColumn(name = "TRACK_ID")
-    private Track TRACK;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "trackId")
+    private Track track;
 }
 

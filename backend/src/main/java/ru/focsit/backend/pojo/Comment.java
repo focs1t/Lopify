@@ -1,31 +1,34 @@
 package ru.focsit.backend.pojo;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
+@Table(name = "comments")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long COMMENTID;
+    @Column(name = "commentId")
+    private Long commentId;
 
-    @ManyToOne
-    @JoinColumn(name = "COMMENT_USER_ID")
-    private User USER;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "commentUserId")
+    private User commentUser;
 
-    @ManyToOne
-    @JoinColumn(name = "COMMENT_ALBUM_ID")
-    private Album ALBUM;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "commentAlbumId")
+    private Album commentAlbum;
 
-    @Column(nullable = false)
-    private String COMMENTTEXT;
+    @Column(name = "commentText", nullable = false)
+    private String commentText;
 
-    private LocalDateTime COMMENTDATE = LocalDateTime.now();
+    @Column(name = "commentDate", nullable = false, updatable = false)
+    private LocalDateTime commentDate = LocalDateTime.now();
 }
 

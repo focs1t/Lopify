@@ -1,37 +1,40 @@
 package ru.focsit.backend.pojo;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
+@Table(name = "concerts")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Concert {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long CONCERTID;
+    @Column(name = "concertId")
+    private Long concertId;
 
-    @Column(nullable = false)
-    private String CONCERTPLACE;
+    @Column(name = "concertPlace", nullable = false)
+    private String concertPlace;
 
-    @Column(nullable = false)
-    private String CONCERTCITY;
+    @Column(name = "concertCity", nullable = false)
+    private String concertCity;
 
-    @Column(nullable = false)
-    private String CONCERTTICKETURL;
+    @Column(name = "concertTicketUrl", nullable = false)
+    private String concertTicketUrl;
 
-    private LocalDateTime CONCERTDATE;
+    @Column(name = "concertDate")
+    private LocalDateTime concertDate;
 
-    @ManyToOne
-    @JoinColumn(name = "CONCERT_COUNTRY_ID")
-    private Country COUNTRY;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "concertCountryId")
+    private Country concertCountry;
 
-    @ManyToOne
-    @JoinColumn(name = "CONCERT_TOUR_ID")
-    private Tour TOUR;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "concertTourId")
+    private Tour concertTour;
 }
 

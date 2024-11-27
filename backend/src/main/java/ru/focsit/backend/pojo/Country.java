@@ -1,19 +1,21 @@
 package ru.focsit.backend.pojo;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import jakarta.persistence.*;
 
 @Entity
-@Getter
-@Setter
+@Table(name = "countries")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Country {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long COUNTRYID;
+    @Column(name = "countryId")
+    private Long countryId;
 
-    @Column(nullable = false, unique = true)
-    private String COUNTRYNAME;
+    @Column(name = "countryName", nullable = false, unique = true)
+    private String countryName;
 }

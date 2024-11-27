@@ -1,18 +1,20 @@
 package ru.focsit.backend.pojo;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import jakarta.persistence.*;
 
 @Entity
-@Getter
-@Setter
+@Table(name = "roles")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ROLEID;
+    @Column(name = "roleId")
+    private Long roleId;
 
-    @Column(nullable = false, unique = true)
-    private String ROLENAME;
+    @Column(name = "roleName", nullable = false, unique = true)
+    private String roleName;
 }

@@ -1,26 +1,26 @@
 package ru.focsit.backend.pojo;
 
-import jakarta.persistence.*;
-
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import jakarta.persistence.*;
 
 @Entity
-@Getter
-@Setter
+@Table(name = "tours")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Tour {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long TOURID;
+    @Column(name = "tourId")
+    private Long tourId;
 
-    @Column(nullable = false)
-    private String TOURNAME;
+    @Column(name = "tourName", nullable = false)
+    private String tourName;
 
-    @ManyToOne
-    @JoinColumn(name = "TOUR_ARTIST_ID")
-    private Artist ARTIST;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tourArtistId")
+    private Artist tourArtist;
 }
 

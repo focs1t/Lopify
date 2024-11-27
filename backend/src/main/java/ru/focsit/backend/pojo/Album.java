@@ -1,38 +1,43 @@
 package ru.focsit.backend.pojo;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
-@Getter
-@Setter
+@Table(name = "albums")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Album {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ALBUMID;
+    @Column(name = "albumId")
+    private Long albumId;
 
-    @Column(nullable = false)
-    private String ALBUMNAME;
+    @Column(name = "albumName", nullable = false)
+    private String albumName;
 
-    @Column(nullable = false)
-    private String ALBUMDESCRIPTION;
+    @Column(name = "albumDescription", nullable = false)
+    private String albumDescription;
 
-    @Column(nullable = false)
-    private String ALBUMIMAGE_URL;
+    @Column(name = "albumImageUrl", nullable = false)
+    private String albumImageUrl;
 
-    private LocalDate ALBUMRELEASE_DATE;
-    private LocalTime ALBUMDURATION;
+    @Column(name = "albumReleaseDate")
+    private LocalDate albumReleaseDate;
 
-    @ManyToOne
-    @JoinColumn(name = "ALBUM_ARTIST_ID")
-    private Artist ARTIST;
+    @Column(name = "albumDuration")
+    private LocalTime albumDuration;
 
-    @ManyToOne
-    @JoinColumn(name = "ALBUM_GENRE_ID")
-    private Genre GENRE;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "albumArtistId")
+    private Artist albumArtist;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "albumGenreId")
+    private Genre albumGenre;
 }

@@ -1,30 +1,32 @@
 package ru.focsit.backend.pojo;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import jakarta.persistence.*;
 
 @Entity
-@Getter
-@Setter
+@Table(name = "playlists")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Playlist {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long PLAYLISTID;
+    @Column(name = "playlistId")
+    private Long playlistId;
 
-    @Column(nullable = false)
-    private String PLAYLISTNAME;
+    @Column(name = "playlistName", nullable = false)
+    private String playlistName;
 
-    @Column(nullable = false)
-    private String PLAYLISTDESCRIPTION;
+    @Column(name = "playlistDescription", nullable = false)
+    private String playlistDescription;
 
-    @Column(nullable = false)
-    private String PLAYLISTIMAGE_URL;
+    @Column(name = "playlistImageUrl", nullable = false)
+    private String playlistImageUrl;
 
-    @ManyToOne
-    @JoinColumn(name = "PLAYLIST_USER_ID")
-    private User USER;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "playlistUserId")
+    private User playlistUser;
 }
 

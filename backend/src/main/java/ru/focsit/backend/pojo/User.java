@@ -1,34 +1,36 @@
 package ru.focsit.backend.pojo;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import jakarta.persistence.*;
 
 @Entity
-@Getter
-@Setter
+@Table(name = "users")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long USERID;
+    @Column(name = "userId")
+    private Long userId;
 
-    @Column(nullable = false, unique = true)
-    private String USERLOGIN;
+    @Column(name = "userLogin", nullable = false, unique = true)
+    private String userLogin;
 
-    @Column(nullable = false)
-    private String USERPASSWORD;
+    @Column(name = "userPassword", nullable = false)
+    private String userPassword;
 
-    @Column(nullable = false, unique = true)
-    private String USEREMAIL;
+    @Column(name = "userEmail", nullable = false, unique = true)
+    private String userEmail;
 
-    @ManyToOne
-    @JoinColumn(name = "USER_ROLE_ID")
-    private Role ROLE;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userRoleId")
+    private Role userRole;
 
-    @ManyToOne
-    @JoinColumn(name = "USER_COUNTRY_ID")
-    private Country COUNTRY;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userCountryId")
+    private Country userCountry;
 }
 
