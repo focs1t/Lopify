@@ -1,4 +1,4 @@
 package ru.focsit.backend.controllers;
 
-public class MainController {
+public class AuthController {
 }
