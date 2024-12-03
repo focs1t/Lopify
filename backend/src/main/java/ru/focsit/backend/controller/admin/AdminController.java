@@ -3,14 +3,16 @@ package ru.focsit.backend.controller.admin;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import ru.focsit.backend.pojo.User;
 
 @Controller
+@RequestMapping("/admin")
 public class AdminController {
-    @GetMapping("/admin")
+    @GetMapping
     public String adminPage(Model model) {
         model.addAttribute("message", "Welcome to the admin page!");
-        return "admin";
+        return "admin/admin-page";
     }
 
     @GetMapping("/admin/countries")

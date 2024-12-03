@@ -8,7 +8,7 @@
 <body>
 <div class="container mt-5">
   <h1>Список жанров</h1>
-  <a th:href="@{/genres/new}" class="btn btn-primary mb-3">Добавить новый жанр</a>
+  <a th:href="@{/admin/genres/new}" class="btn btn-primary mb-3">Добавить новый жанр</a>
   <table class="table">
     <thead>
     <tr>
@@ -22,8 +22,8 @@
       <td th:text="${genre.genreId}"></td>
       <td th:text="${genre.genreName}"></td>
       <td>
-        <a th:href="@{/genres/edit/{id}(id=${genre.genreId})}" class="btn btn-warning">Редактировать</a>
-        <a th:href="@{/genres/delete/{id}(id=${genre.genreId})}" class="btn btn-danger" onclick="return confirm('Вы уверены?');">Удалить</a>
+        <a th:href="@{/admin/genres/edit/{id}(id=${genre.genreId})}" class="btn btn-warning">Редактировать</a>
+        <a th:href="@{/admin/genres/delete/{id}(id=${genre.genreId})}" class="btn btn-danger" onclick="return confirm('Вы уверены?');">Удалить</a>
       </td>
     </tr>
     </tbody>

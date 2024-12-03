@@ -1,4 +1,4 @@
-package ru.focsit.backend.controller;
+package ru.focsit.backend.controller.admin;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,7 +15,7 @@ import ru.focsit.backend.repository.UserRepository;
 import java.util.List;
 
 @Controller
-@RequestMapping("/users")
+@RequestMapping("/admin/users")
 public class UserController {
 
     @Autowired
@@ -57,6 +57,6 @@ public class UserController {
         existingUser.setUserRole(user.getUserRole());
         existingUser.setUserCountry(user.getUserCountry());
         userRepository.save(existingUser);
-        return "redirect:/users";
+        return "redirect:/admin/users";
     }
 }

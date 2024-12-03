@@ -8,7 +8,7 @@
 <body>
 <div class="container mt-5">
   <h1>Список ролей</h1>
-  <a th:href="@{/roles/new}" class="btn btn-primary mb-3">Добавить новую роль</a>
+  <a th:href="@{/admin/roles/new}" class="btn btn-primary mb-3">Добавить новую роль</a>
   <table class="table">
     <thead>
     <tr>
@@ -22,8 +22,8 @@
       <td th:text="${role.roleId}"></td>
       <td th:text="${role.roleName}"></td>
       <td>
-        <a th:href="@{/roles/edit/{id}(id=${role.roleId})}" class="btn btn-warning">Редактировать</a>
-        <a th:href="@{/roles/delete/{id}(id=${role.roleId})}" class="btn btn-danger" onclick="return confirm('Вы уверены?');">Удалить</a>
+        <a th:href="@{/admin/roles/edit/{id}(id=${role.roleId})}" class="btn btn-warning">Редактировать</a>
+        <a th:href="@{/admin/roles/delete/{id}(id=${role.roleId})}" class="btn btn-danger" onclick="return confirm('Вы уверены?');">Удалить</a>
       </td>
     </tr>
     </tbody>

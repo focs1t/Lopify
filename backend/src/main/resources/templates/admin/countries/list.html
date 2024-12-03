@@ -8,7 +8,7 @@
 <body>
 <div class="container mt-5">
   <h1>Список стран</h1>
-  <a th:href="@{/countries/new}" class="btn btn-primary mb-3">Добавить новую страну</a>
+  <a th:href="@{/admin/countries/new}" class="btn btn-primary mb-3">Добавить новую страну</a>
   <table class="table">
     <thead>
     <tr>
@@ -22,8 +22,8 @@
       <td th:text="${country.countryId}"></td>
       <td th:text="${country.countryName}"></td>
       <td>
-        <a th:href="@{/countries/edit/{id}(id=${country.countryId})}" class="btn btn-warning">Редактировать</a>
-        <a th:href="@{/countries/delete/{id}(id=${country.countryId})}" class="btn btn-danger" onclick="return confirm('Вы уверены?');">Удалить</a>
+        <a th:href="@{/admin/countries/edit/{id}(id=${country.countryId})}" class="btn btn-warning">Редактировать</a>
+        <a th:href="@{/admin/countries/delete/{id}(id=${country.countryId})}" class="btn btn-danger" onclick="return confirm('Вы уверены?');">Удалить</a>
       </td>
     </tr>
     </tbody>

@@ -10,7 +10,7 @@ import ru.focsit.backend.repository.GenreRepository;
 import java.util.List;
 
 @Controller
-@RequestMapping("/genres")
+@RequestMapping("/admin/genres")
 public class GenreController {
 
     @Autowired
@@ -35,7 +35,7 @@ public class GenreController {
     @PostMapping
     public String createGenre(@ModelAttribute Genre genre) {
         genreRepository.save(genre);
-        return "redirect:/genres";
+        return "redirect:/admin/genres";
     }
 
     // Формуляр для редактирования жанра
@@ -52,7 +52,7 @@ public class GenreController {
         Genre genre = genreRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid genre Id:" + id));
         genre.setGenreName(genreDetails.getGenreName());
         genreRepository.save(genre);
-        return "redirect:/genres";
+        return "redirect:/admin/genres";
     }
 
     // Удаление жанра
@@ -60,7 +60,7 @@ public class GenreController {
     public String deleteGenre(@PathVariable Long id) {
         Genre genre = genreRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid genre Id:" + id));
         genreRepository.delete(genre);
-        return "redirect:/genres";
+        return "redirect:/admin/genres";
     }
 }
 

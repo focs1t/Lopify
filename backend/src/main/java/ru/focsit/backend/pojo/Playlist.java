@@ -31,7 +31,7 @@ public class Playlist {
     @JoinColumn(name = "playlistUserId")
     private User playlistUser;
 
-    @ManyToMany(mappedBy = "artists")
+    @ManyToMany(mappedBy = "playlists")
     private Set<Track> tracks;
 }
 

@@ -10,7 +10,7 @@ import ru.focsit.backend.repository.RoleRepository;
 import java.util.List;
 
 @Controller
-@RequestMapping("/roles")
+@RequestMapping("/admin/roles")
 public class RoleController {
 
     @Autowired
@@ -36,7 +36,7 @@ public class RoleController {
     public String createRole(@ModelAttribute Role role) {
         role.setRoleName("ROLE_" + role.getRoleName());
         roleRepository.save(role);
-        return "redirect:/roles";
+        return "redirect:/admin/roles";
     }
 
     // Формуляр для редактирования роли
@@ -53,7 +53,7 @@ public class RoleController {
         Role role = roleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid role Id:" + id));
         role.setRoleName(roleDetails.getRoleName());
         roleRepository.save(role);
-        return "redirect:/roles";
+        return "redirect:/admin/roles";
     }
 
     // Удаление роли
@@ -61,7 +61,7 @@ public class RoleController {
     public String deleteRole(@PathVariable Long id) {
         Role role = roleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid role Id:" + id));
         roleRepository.delete(role);
-        return "redirect:/roles";
+        return "redirect:/admin/roles";
     }
 }
 

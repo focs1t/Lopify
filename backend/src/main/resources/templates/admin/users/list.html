@@ -27,7 +27,7 @@
       <td th:text="${user.userRole.roleName}"></td>
       <td th:text="${user.userCountry.countryName}"></td>
       <td>
-        <a th:href="@{/users/edit/{id}(id=${user.userId})}" class="btn btn-warning">Изменить</a>
+        <a th:href="@{/admin/users/edit/{id}(id=${user.userId})}" class="btn btn-warning">Изменить</a>
       </td>
     </tr>
     </tbody>

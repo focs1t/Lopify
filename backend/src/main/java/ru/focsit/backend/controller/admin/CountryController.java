@@ -10,7 +10,7 @@ import ru.focsit.backend.repository.CountryRepository;
 import java.util.List;
 
 @Controller
-@RequestMapping("/countries")
+@RequestMapping("/admin/countries")
 public class CountryController {
 
     @Autowired
@@ -35,7 +35,7 @@ public class CountryController {
     @PostMapping
     public String createCountry(@ModelAttribute Country country) {
         countryRepository.save(country);
-        return "redirect:/countries";
+        return "redirect:/admin/countries";
     }
 
     // Формуляр для редактирования страны
@@ -52,7 +52,7 @@ public class CountryController {
         Country country = countryRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid country Id:" + id));
         country.setCountryName(countryDetails.getCountryName());
         countryRepository.save(country);
-        return "redirect:/countries";
+        return "redirect:/admin/countries";
     }
 
     // Удаление страны
@@ -60,6 +60,6 @@ public class CountryController {
     public String deleteCountry(@PathVariable Long id) {
         Country country = countryRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid country Id:" + id));
         countryRepository.delete(country);
-        return "redirect:/countries";
+        return "redirect:/admin/countries";
     }
 }

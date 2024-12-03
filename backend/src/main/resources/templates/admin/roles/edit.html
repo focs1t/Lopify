@@ -8,13 +8,13 @@
 <body>
 <div class="container mt-5">
   <h1>Редактировать роль</h1>
-  <form th:action="@{/roles/update/{id}(id=${role.roleId})}" th:object="${role}" method="post">
+  <form th:action="@{/admin/roles/update/{id}(id=${role.roleId})}" th:object="${role}" method="post">
     <div class="form-group">
       <label for="roleName">Название роли</label>
       <input type="text" id="roleName" th:field="*{roleName}" class="form-control" required>
     </div>
     <button type="submit" class="btn btn-warning">Обновить</button>
-    <a href="#" th:href="@{/roles}" class="btn btn-secondary">Назад</a>
+    <a href="#" th:href="@{/admin/roles}" class="btn btn-secondary">Назад</a>
   </form>
 </div>
 </body>
