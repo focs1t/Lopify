@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
+<div th:replace="~{admin/header}"></div>
 <div class="container mt-5">
   <h1>Добавить новую роль</h1>
   <form th:action="@{/admin/roles}" th:object="${role}" method="post">

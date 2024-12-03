@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
+<div th:replace="~{admin/header}"></div>
 <div class="container mt-5">
   <h1>Добавить новый жанр</h1>
   <form th:action="@{/admin/genres}" th:object="${genre}" method="post">
