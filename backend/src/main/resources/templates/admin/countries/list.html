@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Список стран</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+  <h1>Список стран</h1>
+  <a th:href="@{/countries/new}" class="btn btn-primary mb-3">Добавить новую страну</a>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Название страны</th>
+      <th>Действия</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="country : ${countries}">
+      <td th:text="${country.countryId}"></td>
+      <td th:text="${country.countryName}"></td>
+      <td>
+        <a th:href="@{/countries/edit/{id}(id=${country.countryId})}" class="btn btn-warning">Редактировать</a>
+        <a th:href="@{/countries/delete/{id}(id=${country.countryId})}" class="btn btn-danger" onclick="return confirm('Вы уверены?');">Удалить</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>

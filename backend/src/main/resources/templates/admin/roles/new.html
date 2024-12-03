@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Добавить роль</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+  <h1>Добавить новую роль</h1>
+  <form th:action="@{/roles}" th:object="${role}" method="post">
+    <div class="form-group">
+      <label for="roleName">Название роли (без ROLE_)</label>
+      <input type="text" id="roleName" th:field="*{roleName}" class="form-control" required>
+
+    </div>
+    <button type="submit" class="btn btn-success">Создать</button>
+    <a href="#" th:href="@{/roles}" class="btn btn-secondary">Назад</a>
+  </form>
+</div>
+</body>
+</html>

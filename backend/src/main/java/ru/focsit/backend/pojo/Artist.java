@@ -4,6 +4,8 @@ import lombok.*;
 
 import jakarta.persistence.*;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "artists")
 @Data
@@ -25,5 +27,8 @@ public class Artist {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "artistCountryId")
     private Country artistCountry;
+
+    @ManyToMany(mappedBy = "artists")
+    private Set<Track> tracks;
 }
 

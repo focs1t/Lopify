@@ -22,6 +22,9 @@ public class User {
     @Column(name = "userPassword", nullable = false)
     private String userPassword;
 
+    @Column(name = "userPasswordConfirm")
+    private String userPasswordConfirm;
+
     @Column(name = "userEmail", nullable = false, unique = true)
     private String userEmail;
 

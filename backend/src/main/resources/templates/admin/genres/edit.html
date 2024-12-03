@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Редактировать жанр</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+  <h1>Редактировать жанр</h1>
+  <form th:action="@{/genres/update/{id}(id=${genre.genreId})}" th:object="${genre}" method="post">
+    <div class="form-group">
+      <label for="genreName">Название жанра</label>
+      <input type="text" id="genreName" th:field="*{genreName}" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-warning">Обновить</button>
+    <a href="#" th:href="@{/genres}" class="btn btn-secondary">Назад</a>
+  </form>
+</div>
+</body>
+</html>

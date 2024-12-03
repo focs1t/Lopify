@@ -5,6 +5,7 @@ import lombok.*;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "tracks")
@@ -40,5 +41,21 @@ public class Track {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trackGenreId")
     private Genre trackGenre;
+
+    @ManyToMany
+    @JoinTable(
+            name = "tracksArtists",
+            joinColumns = @JoinColumn(name = "trackId"),
+            inverseJoinColumns = @JoinColumn(name = "artistId")
+    )
+    private Set<Artist> artists;
+
+    @ManyToMany
+    @JoinTable(
+            name = "tracksPlaylists",
+            joinColumns = @JoinColumn(name = "trackId"),
+            inverseJoinColumns = @JoinColumn(name = "playlistId")
+    )
+    private Set<Playlist> playlists;
 }
 

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Список жанров</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+  <h1>Список жанров</h1>
+  <a th:href="@{/genres/new}" class="btn btn-primary mb-3">Добавить новый жанр</a>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Название жанра</th>
+      <th>Действия</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="genre : ${genres}">
+      <td th:text="${genre.genreId}"></td>
+      <td th:text="${genre.genreName}"></td>
+      <td>
+        <a th:href="@{/genres/edit/{id}(id=${genre.genreId})}" class="btn btn-warning">Редактировать</a>
+        <a th:href="@{/genres/delete/{id}(id=${genre.genreId})}" class="btn btn-danger" onclick="return confirm('Вы уверены?');">Удалить</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>

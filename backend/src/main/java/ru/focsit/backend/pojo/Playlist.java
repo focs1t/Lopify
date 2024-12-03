@@ -4,6 +4,8 @@ import lombok.*;
 
 import jakarta.persistence.*;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "playlists")
 @Data
@@ -28,5 +30,8 @@ public class Playlist {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "playlistUserId")
     private User playlistUser;
+
+    @ManyToMany(mappedBy = "artists")
+    private Set<Track> tracks;
 }
 
