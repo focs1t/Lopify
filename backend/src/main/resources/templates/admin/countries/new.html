@@ -1,22 +1,20 @@
+<!-- src/main/resources/templates/admin/countries/new.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Добавить страну</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Создать страну</title>
+  <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-<div th:replace="~{admin/header}"></div>
-<div class="container mt-5">
-  <h1>Добавить новую страну</h1>
+<div th:replace="~{header}"></div>
+<div class="container">
+  <h1>Создать новую страну</h1>
   <form th:action="@{/admin/countries}" th:object="${country}" method="post">
-    <div class="form-group">
-
-      <label for="countryName">Название страны</label>
-      <input type="text" id="countryName" th:field="*{countryName}" class="form-control" required>
-    </div>
-    <button type="submit" class="btn btn-success">Создать</button>
-    <a href="#" th:href="@{/admin/countries}" class="btn btn-secondary">Назад</a>
+    <label for="countryName">Название страны:</label>
+    <input type="text" id="countryName" th:field="*{countryName}" required>
+    <button type="submit">Создать страну</button>
   </form>
 </div>
 </body>

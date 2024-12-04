@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Moderator Dashboard</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div th:replace="~{header}"></div>
+<div class="container mt-5">
+  <h1>Moderator Dashboard</h1>
+  <p th:text="${message}"></p>
+
+  <div class="list-group">
+    <a href="/moderator/albums" class="list-group-item list-group-item-action">Albums</a>
+    <a href="/moderator/artists" class="list-group-item list-group-item-action">Artists</a>
+    <a href="/moderator/comments" class="list-group-item list-group-item-action">Comments</a>
+    <a href="/moderator/concerts" class="list-group-item list-group-item-action">Concerts</a>
+    <a href="/moderator/playlists" class="list-group-item list-group-item-action">Playlists</a>
+    <a href="/moderator/tours" class="list-group-item list-group-item-action">Tours</a>
+    <a href="/moderator/tracks" class="list-group-item list-group-item-action">Tracks</a>
+    <a href="/moderator/users" class="list-group-item list-group-item-action">Users</a>
+  </div>
+</div>
+</body>
+</html>

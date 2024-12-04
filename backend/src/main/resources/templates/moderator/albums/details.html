@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Детали альбома</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div th:replace="~{header}"></div>
+<div class="container">
+  <div class="album-details">
+    <div class="album-cover">
+      <img th:src="@{${album.albumImageUrl}}" alt="th:text=${album.albumName}">
+    </div>
+    <div class="album-info">
+      <h1 th:text="${album.albumName}"></h1>
+      <p><strong>Исполнитель:</strong> <span th:text="${album.albumArtist.artistName}"></span></p>
+      <p><strong>Дата релиза:</strong> <span th:text="${album.albumReleaseDate}"></span></p>
+      <p><strong>Жанр:</strong> <span th:text="${album.albumGenre.genreName}"></span></p>
+      <p><strong>Описание:</strong> <span th:text="${album.albumDescription}"></span></p>
+    </div>
+  </div>
+
+  <h2>Треки</h2>
+  <ul class="track-list">
+    <li th:each="track : ${tracks}" th:text="${track.trackName}"></li>
+  </ul>
+
+  <h2>Комментарии</h2>
+  <ul class="comment-list">
+    <li th:each="comment : ${comments}">
+      <div class="comment-header">
+        <strong th:text="${comment.commentAuthor}"></strong>
+        <span th:text="${comment.commentDate}"></span>
+      </div>
+      <p th:text="${comment.commentText}"></p>
+    </li>
+  </ul>
+</div>
+</body>
+</html>
