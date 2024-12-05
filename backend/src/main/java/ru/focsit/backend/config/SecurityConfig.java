@@ -28,6 +28,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/moderator/**").hasRole("MODERATOR")
+                        .requestMatchers("/api/**").hasRole("USER")
                         .anyRequest().permitAll()
                 )
                 .formLogin(withDefaults())
