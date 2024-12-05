@@ -17,7 +17,7 @@
 
     <label for="userRole">Роль:</label>
     <select id="userRole" th:field="*{userRole}" required>
-      <option th:each="role : ${roles}" th:value="${role.roleId}" th:text="${role.roleName}" th:selected="${user.userRole.roleId == role.roleId}"></option>
+      <option th:each="role : ${roles}" th:value="${role.roleId}" th:text="${role.roleName}"></option>
     </select>
 
     <label for="userCountry">Страна:</label>

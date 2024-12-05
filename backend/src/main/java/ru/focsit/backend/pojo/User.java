@@ -36,5 +36,17 @@ public class User {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userCountryId")
     private Country userCountry;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", userLogin='" + userLogin + '\'' +
+                ", userPassword='" + userPassword + '\'' +
+                ", userEmail='" + userEmail + '\'' +
+                ", userRole=" + (userRole != null ? userRole.getRoleId() : null) +
+                ", userCountry=" + (userCountry != null ? userCountry.getCountryId() : null) +
+                '}';
+    }
 }
 

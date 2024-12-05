@@ -74,7 +74,7 @@ public class UserController {
     @PostMapping("/update/{id}")
     public String updateUser(@PathVariable Long id, @ModelAttribute User user) {
         User existingUser = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
-        existingUser.setUserPassword(user.getUserPassword());
+        existingUser.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
         existingUser.setUserRole(user.getUserRole());
         existingUser.setUserCountry(user.getUserCountry());
         userRepository.save(existingUser);
