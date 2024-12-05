@@ -22,6 +22,7 @@ public class User {
     @Column(name = "userPassword", nullable = false)
     private String userPassword;
 
+    @Transient
     @Column(name = "userPasswordConfirm")
     private String userPasswordConfirm;
 

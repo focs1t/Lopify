@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Register</title>
+  <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.1.3/css/bootstrap.min.css}"/>
+</head>
+<body>
+<div class="container">
+  <h1 class="mt-5">Register</h1>
+  <form th:action="@{/register}" th:object="${userRegistrationDto}" method="post" class="form-signin">
+    <div class="mb-3">
+      <label for="userLogin" class="form-label">Login:</label>
+      <input type="text" id="userLogin" th:field="*{userLogin}" class="form-control" required/>
+    </div>
+    <div class="mb-3">
+      <label for="userPassword" class="form-label">Password:</label>
+      <input type="password" id="userPassword" th:field="*{userPassword}" class="form-control" required/>
+    </div>
+    <div class="mb-3">
+      <label for="userEmail" class="form-label">Email:</label>
+      <input type="email" id="userEmail" th:field="*{userEmail}" class="form-control" required/>
+    </div>
+    <div class="mb-3">
+      <label for="userCountryId" class="form-label">Country:</label>
+      <select id="userCountryId" th:field="*{userCountryId}" class="form-select" required>
+        <option th:each="country : ${countries}" th:value="${country.countryId}" th:text="${country.countryName}"></option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Register</button>
+  </form>
+  <div th:if="${successMessage}" class="alert alert-success mt-3" th:text="${successMessage}"></div>
+  <div th:if="${errorMessage}" class="alert alert-danger mt-3" th:text="${errorMessage}"></div>
+</div>
+</body>
+</html>

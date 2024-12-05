@@ -29,30 +29,6 @@ public class CommentController {
         return "moderator/comments/list";
     }
 
-    @GetMapping("/edit/{id}")
-    public String editComment(@PathVariable Long id, Model model) {
-        Comment comment = commentRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid comment Id:" + id));
-
-        List<User> users = userRepository.findAll();
-        List<Album> albums = albumRepository.findAll();
-
-        model.addAttribute("comment", comment);
-        model.addAttribute("users", users);
-        model.addAttribute("albums", albums);
-
-        return "moderator/comments/edit";
-    }
-
-    @PostMapping("/update/{id}")
-    public String updateComment(@PathVariable Long id, @ModelAttribute Comment comment) {
-        Comment existingComment = commentRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid comment Id:" + id));
-        existingComment.setCommentText(comment.getCommentText());
-        existingComment.setCommentAlbum(comment.getCommentAlbum());
-        existingComment.setCommentUser(comment.getCommentUser());
-        commentRepository.save(existingComment);
-        return "redirect:/moderator/comments";
-    }
-
     @GetMapping("/delete/{id}")
     public String deleteComment(@PathVariable Long id) {
         Comment comment = commentRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid comment Id:" + id));

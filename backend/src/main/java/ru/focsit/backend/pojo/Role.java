@@ -3,6 +3,8 @@ package ru.focsit.backend.pojo;
 import lombok.*;
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "roles")
 @Data
@@ -17,4 +19,7 @@ public class Role {
 
     @Column(name = "roleName", nullable = false, unique = true)
     private String roleName;
+
+    @OneToMany(mappedBy = "userRole", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<User> users;
 }

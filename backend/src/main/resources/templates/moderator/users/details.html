@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Детали пользователя</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script defer src="/js/tooltip.js"></script>
+  <style>
+    .user-details {
+      margin-bottom: 20px;
+    }
+    .comment-list {
+      margin-top: 20px;
+    }
+    .comment-item {
+      border: 1px solid #ddd;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+<div th:replace="~{header}"></div>
+<div class="container">
+  <h1>Детали пользователя</h1>
+  <div class="user-details">
+    <p><strong>Имя:</strong> <span th:text="${user.userLogin}"></span></p>
+    <p><strong>Email:</strong> <span th:text="${user.userEmail}"></span></p>
+  </div>
+  <div class="comment-list">
+    <h2>Комментарии</h2>
+    <div th:each="comment : ${comments}" class="comment-item">
+      <p th:text="${comment.content}"></p>
+      <p><strong>Дата:</strong> <span th:text="${comment.date}"></span></p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

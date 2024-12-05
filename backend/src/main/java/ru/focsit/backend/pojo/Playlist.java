@@ -4,6 +4,7 @@ import lombok.*;
 
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -32,6 +33,6 @@ public class Playlist {
     private User playlistUser;
 
     @ManyToMany(mappedBy = "playlists")
-    private Set<Track> tracks;
+    private List<Track> tracks;
 }
 

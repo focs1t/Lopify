@@ -5,6 +5,7 @@ import lombok.*;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Entity
 @Table(name = "albums")
@@ -40,4 +41,10 @@ public class Album {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "albumGenreId")
     private Genre albumGenre;
+
+    @OneToMany(mappedBy = "commentAlbum", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments;
+
+    @OneToMany(mappedBy = "trackAlbum", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Track> tracks;
 }

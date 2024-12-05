@@ -34,7 +34,7 @@ public class RoleController {
     // Создание новой роли
     @PostMapping
     public String createRole(@ModelAttribute Role role) {
-        role.setRoleName("ROLE_" + role.getRoleName());
+        //role.setRoleName("ROLE_" + role.getRoleName());
         roleRepository.save(role);
         return "redirect:/admin/roles";
     }

@@ -4,6 +4,7 @@ import lombok.*;
 
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -29,6 +30,9 @@ public class Artist {
     private Country artistCountry;
 
     @ManyToMany(mappedBy = "artists")
-    private Set<Track> tracks;
+    private List<Track> tracks;
+
+    @OneToMany(mappedBy = "albumArtist", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Album> albums;
 }
 

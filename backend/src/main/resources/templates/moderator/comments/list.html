@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Список комментариев</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script defer src="/js/tooltip.js"></script>
+  <style>
+    .comment-wrapper {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+    .comment-number {
+      background-color: #f0f0f0;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-right: 10px;
+    }
+    .comment-meta {
+      display: flex;
+      flex-direction: column;
+      margin-right: 10px;
+    }
+    .comment-meta div {
+      display: flex;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+    .comment-meta i {
+      margin-right: 5px;
+    }
+    .comment-card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      flex: 1;
+      position: relative;
+    }
+    .comment-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .comment-text {
+      margin-top: 10px;
+      word-wrap: break-word;
+    }
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+    }
+    .actions .date {
+      display: flex;
+      align-items: center;
+      margin-left: auto; /* Перемещаем дату ближе к кнопке удаления */
+    }
+    .actions .date i {
+      margin-right: 5px;
+    }
+    .actions a {
+      margin-left: 10px;
+    }
+    .separator {
+      margin: 0 10px;
+      font-weight: bold;
+    }
+    .bold {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+<div th:replace="~{header}"></div>
+<div class="container">
+  <h1>Комментарии</h1>
+  <div th:each="comment, iterStat : ${#lists.sort(comments, {commentDate})}" class="comment-wrapper">
+    <div class="comment-number" th:text="${iterStat.count}"></div>
+    <div class="comment-card">
+      <div class="comment-header">
+        <div>
+          <i class="fas fa-user"></i> <span class="bold" th:text="${comment.commentUser.userLogin}"></span>
+          <span class="separator">—</span>
+          <i class="fas fa-compact-disc"></i> <span class="bold" th:text="${comment.commentAlbum.albumName}"></span>
+        </div>
+      </div>
+      <div class="comment-text" th:text="${comment.commentText}"></div>
+      <div class="actions">
+        <div class="date">
+          <i class="fas fa-calendar-alt"></i> <span th:text="${comment.commentDate}"></span>
+        </div>
+        <a th:href="@{/moderator/comments/delete/{id}(id=${comment.commentId})}" class="btn btn-delete" data-tooltip="Удалить"><i class="fas fa-trash"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -17,10 +17,10 @@ public class ArtistController {
     private ArtistRepository artistRepository;
 
     @Autowired
-    private ConcertRepository concertRepository;
+    private CountryRepository countryRepository;
 
     @Autowired
-    private TourRepository tourRepository;
+    private AlbumRepository albumRepository;
 
     @GetMapping
     public String listArtists(Model model) {
@@ -32,18 +32,17 @@ public class ArtistController {
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute("artist", new Artist());
+        List<Country> countries = countryRepository.findAll();
+        model.addAttribute("countries", countries);
         return "moderator/artists/new";
     }
 
     @GetMapping("/{id}")
     public String viewArtistDetails(@PathVariable Long id, Model model) {
         Artist artist = artistRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid artist Id:" + id));
-        List<Tour> tours = tourRepository.findByTourArtist(artist);
-        List<Concert> concerts = tours.stream()
-                .flatMap(tour -> concertRepository.findByConcertTour(tour).stream())
-                .toList();
+        List<Album> albums = albumRepository.findByAlbumArtist(artist);
         model.addAttribute("artist", artist);
-        model.addAttribute("concerts", concerts);
+        model.addAttribute("albums", albums);
         return "moderator/artists/details";
     }
 
@@ -56,6 +55,8 @@ public class ArtistController {
     @GetMapping("/edit/{id}")
     public String editArtist(@PathVariable Long id, Model model) {
         Artist artist = artistRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid artist Id:" + id));
+        List<Country> countries = countryRepository.findAll();
+        model.addAttribute("countries", countries);
         model.addAttribute("artist", artist);
         return "moderator/artists/edit";
     }

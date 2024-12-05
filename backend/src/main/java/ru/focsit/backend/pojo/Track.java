@@ -5,6 +5,7 @@ import lombok.*;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -48,7 +49,7 @@ public class Track {
             joinColumns = @JoinColumn(name = "trackId"),
             inverseJoinColumns = @JoinColumn(name = "artistId")
     )
-    private Set<Artist> artists;
+    private List<Artist> artists;
 
     @ManyToMany
     @JoinTable(
@@ -56,6 +57,6 @@ public class Track {
             joinColumns = @JoinColumn(name = "trackId"),
             inverseJoinColumns = @JoinColumn(name = "playlistId")
     )
-    private Set<Playlist> playlists;
+    private List<Playlist> playlists;
 }
 

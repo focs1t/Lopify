@@ -53,7 +53,7 @@ public class AlbumController {
 
     @GetMapping("/{id}")
     public String viewAlbumDetails(@PathVariable Long id, Model model) {
-        Album album = albumRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+        Album album = albumRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid album Id:" + id));
         List<Track> tracks = trackRepository.findByTrackAlbum(album);
         List<Comment> comments = commentRepository.findByCommentAlbum(album);
         model.addAttribute("album", album);
@@ -67,12 +67,14 @@ public class AlbumController {
         if (!file.isEmpty()) {
             try {
                 byte[] bytes = file.getBytes();
-                Path path = Paths.get("uploads/" + file.getOriginalFilename());
+                Path path = Paths.get("src/main/resources/static/uploads/" + file.getOriginalFilename());
                 Files.write(path, bytes);
                 album.setAlbumImageUrl("/uploads/" + file.getOriginalFilename());
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        } else {
+            album.setAlbumImageUrl("/uploads/default-album.jpg"); // Установите значение по умолчанию
         }
         albumRepository.save(album);
         return "redirect:/moderator/albums";
@@ -104,7 +106,7 @@ public class AlbumController {
         if (!file.isEmpty()) {
             try {
                 byte[] bytes = file.getBytes();
-                Path path = Paths.get("uploads/" + file.getOriginalFilename());
+                Path path = Paths.get("src/main/resources/static/uploads/" + file.getOriginalFilename());
                 Files.write(path, bytes);
                 existingAlbum.setAlbumImageUrl("/uploads/" + file.getOriginalFilename());
             } catch (IOException e) {
