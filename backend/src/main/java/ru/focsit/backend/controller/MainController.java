@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import ru.focsit.backend.pojo.Country;
 import ru.focsit.backend.pojo.Role;
-import ru.focsit.backend.pojo.User;
 import ru.focsit.backend.pojo.UserRegistrationDto;
 import ru.focsit.backend.repository.CountryRepository;
 import ru.focsit.backend.repository.RoleRepository;
@@ -54,7 +53,13 @@ public class MainController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute UserRegistrationDto userRegistrationDto, Model model) {
+    public String registerUser(@ModelAttribute @Valid UserRegistrationDto userRegistrationDto, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            List<Country> countries = countryRepository.findAll();
+            model.addAttribute("countries", countries);
+            return "register";
+        }
+
         try {
             // Устанавливаем роль ROLE_USER автоматически
             Optional<Role> userRole = roleRepository.findByRoleName("ROLE_USER");
