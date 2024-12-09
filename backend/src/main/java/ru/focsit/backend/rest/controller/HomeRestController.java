@@ -1,4 +1,4 @@
 package ru.focsit.backend.rest.controller;
 
-public class ArtistRestController {
+public class HomeRestController {
 }
