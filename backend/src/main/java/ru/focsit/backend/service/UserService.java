@@ -29,7 +29,7 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public void registerUser(UserRegistrationDto userRegistrationDto) {
+    public void createUser(UserRegistrationDto userRegistrationDto) {
         Country country = countryRepository.findById(userRegistrationDto.getUserCountryId())
                 .orElseThrow(() -> new IllegalArgumentException("Country not found"));
 
@@ -52,16 +52,14 @@ public class UserService {
         return userRepository.findById(userId);
     }
 
-    public User createUser(User user) {
-        return userRepository.save(user);
-    }
-
     public User updateUser(Long userId, User userDetails) {
         Optional<User> user = userRepository.findById(userId);
         if (user.isPresent()) {
             User curUser = user.get();
             curUser.setUserLogin(userDetails.getUserLogin());
-            curUser.setUserPassword(userDetails.getUserPassword());
+            if (userDetails.getUserPassword() != null && !userDetails.getUserPassword().isEmpty()) {
+                curUser.setUserPassword(passwordEncoder.encode(userDetails.getUserPassword()));
+            }
             curUser.setUserEmail(userDetails.getUserEmail());
             curUser.setUserRole(userDetails.getUserRole());
             curUser.setUserCountry(userDetails.getUserCountry());
