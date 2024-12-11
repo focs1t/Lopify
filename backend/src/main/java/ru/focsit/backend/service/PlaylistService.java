@@ -42,4 +42,8 @@ public class PlaylistService {
     public void deletePlaylist(Long playlistId) {
         playlistRepository.deleteById(playlistId);
     }
+
+    public List<Playlist> searchPlaylists(String query) {
+        return playlistRepository.findByPlaylistNameContainingIgnoreCase(query);
+    }
 }

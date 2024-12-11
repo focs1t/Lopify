@@ -71,5 +71,9 @@ public class UserService {
     public void deleteUser(Long userId) {
         userRepository.deleteById(userId);
     }
+
+    public List<User> searchUsers(String query) {
+        return userRepository.findByUserLoginContainingIgnoreCase(query);
+    }
 }
 

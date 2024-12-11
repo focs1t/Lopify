@@ -45,4 +45,8 @@ public class AlbumService {
     public void deleteAlbum(Long albumId) {
         albumRepository.deleteById(albumId);
     }
+
+    public List<Album> searchAlbums(String query) {
+        return albumRepository.findByAlbumNameContainingIgnoreCase(query);
+    }
 }

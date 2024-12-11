@@ -41,4 +41,8 @@ public class ArtistService {
     public void deleteArtist(Long artistId) {
         artistRepository.deleteById(artistId);
     }
+
+    public List<Artist> searchArtists(String query) {
+        return artistRepository.findByArtistNameContainingIgnoreCase(query);
+    }
 }

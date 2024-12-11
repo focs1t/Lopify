@@ -41,4 +41,8 @@ public class TrackService {
     public void deleteTrack(Long trackId) {
         trackRepository.deleteById(trackId);
     }
+
+    public List<Track> searchTracks(String query) {
+        return trackRepository.findByTrackNameContainingIgnoreCase(query);
+    }
 }
