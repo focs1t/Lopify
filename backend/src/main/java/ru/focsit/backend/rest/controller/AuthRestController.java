@@ -32,7 +32,7 @@ public class AuthRestController {
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody UserRegistrationDto userRegistrationDto) {
         try {
-            userService.registerUser(userRegistrationDto);
+            userService.createUser(userRegistrationDto);
             return ResponseEntity.ok("User registered successfully");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error registering user: " + e.getMessage());

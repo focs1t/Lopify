@@ -64,7 +64,7 @@ public class MainController {
             // Устанавливаем роль ROLE_USER автоматически
             Optional<Role> userRole = roleRepository.findByRoleName("ROLE_USER");
             userRegistrationDto.setUserRoleId(userRole.get().getRoleId());
-            userService.registerUser(userRegistrationDto);
+            userService.createUser(userRegistrationDto);
             model.addAttribute("successMessage", "User registered successfully");
         } catch (Exception e) {
             model.addAttribute("errorMessage", "Error registering user: " + e.getMessage());

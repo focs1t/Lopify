@@ -7,6 +7,7 @@
       <sourceFolder url="file://$MODULE_DIR$/backend/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/mobile/app/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/mobile/app/src/main/res" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/frontend-mobile/app/src/main/java" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
