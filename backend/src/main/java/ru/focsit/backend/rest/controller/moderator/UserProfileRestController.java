@@ -25,12 +25,15 @@ public class UserProfileRestController {
         return userService.getUserById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+        // TODO сделать отображение плейлистов
+        // TODO сделать отображение комментариев
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
         User updatedUser = userService.updateUser(id, userDetails);
         return updatedUser != null ? ResponseEntity.ok(updatedUser) : ResponseEntity.notFound().build();
+        // TODO изменение только имени пользователя
     }
 
     @DeleteMapping("/{id}")
@@ -38,4 +41,6 @@ public class UserProfileRestController {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
+
+    // TODO Поиск для пользователей по логину
 }

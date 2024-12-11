@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/moderator/tracks")
@@ -26,11 +25,14 @@ public class TrackRestController {
         return trackService.getTrackById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+        // TODO сделать отображение исполнителей
+        // TODO сделать отображение концертов и туров исполнителя
     }
 
     @PostMapping
     public Track createTrack(@RequestBody Track track) {
         return trackService.createTrack(track);
+        // TODO сделать создание альбома если он не указан
     }
 
     @PutMapping("/{id}")
@@ -44,4 +46,6 @@ public class TrackRestController {
         trackService.deleteTrack(id);
         return ResponseEntity.noContent().build();
     }
+
+    // TODO Поиск для треков по названию, по альбому, по исполнителям
 }

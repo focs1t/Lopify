@@ -26,6 +26,10 @@ public class ArtistRestController {
         return artistService.getArtistById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+        // TODO сделать отображение альбомов
+        // TODO сделать отображение треков
+        // TODO сделать отображение туров и концертов
+        // TODO сделать поиск треков или/и альбома
     }
 
     @PostMapping
@@ -44,4 +48,6 @@ public class ArtistRestController {
         artistService.deleteArtist(id);
         return ResponseEntity.noContent().build();
     }
+
+    // TODO Поиск для исполнителей по имени
 }

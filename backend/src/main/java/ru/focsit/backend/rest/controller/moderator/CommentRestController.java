@@ -21,27 +21,10 @@ public class CommentRestController {
         return commentService.getAllComments();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Comment> getCommentById(@PathVariable Long id) {
-        return commentService.getCommentById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @PostMapping
-    public Comment createComment(@RequestBody Comment comment) {
-        return commentService.createComment(comment);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Comment> updateComment(@PathVariable Long id, @RequestBody Comment commentDetails) {
-        Comment updatedComment = commentService.updateComment(id, commentDetails);
-        return updatedComment != null ? ResponseEntity.ok(updatedComment) : ResponseEntity.notFound().build();
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteComment(@PathVariable Long id) {
         commentService.deleteComment(id);
         return ResponseEntity.noContent().build();
+        // TODO удаление только своих комментариев
     }
 }

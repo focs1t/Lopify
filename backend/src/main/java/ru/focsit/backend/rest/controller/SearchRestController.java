@@ -59,4 +59,7 @@ public class SearchRestController {
         private List<Track> tracks;
         private List<User> users;
     }
+
+    // TODO отображение альбомов с определенными жанрами
+    // TODO переход на свой профиль
 }

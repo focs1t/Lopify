@@ -1,17 +1,14 @@
-package ru.focsit.backend.rest.controller.user;
+package ru.focsit.backend.rest.controller.moderator;
 
-import ru.focsit.backend.pojo.Playlist;
-import ru.focsit.backend.service.PlaylistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import ru.focsit.backend.pojo.Playlist;
+import ru.focsit.backend.service.PlaylistService;
 
 @RestController
-@RequestMapping("/api/user/playlists")
+@RequestMapping("/api/moderator/playlists")
 public class PlaylistRestController {
-
     @Autowired
     private PlaylistService playlistService;
 
@@ -24,13 +21,13 @@ public class PlaylistRestController {
         // TODO сделать поиск треков по названию или/и по исполнителю
     }
 
-    /*
+
     @PostMapping
     public Playlist createPlaylist(@RequestBody Playlist playlist) {
         return playlistService.createPlaylist(playlist);
-        // TODO создание плейлиста для текущего пользователя
+        // TODO создание плейлиста под стандартным именем
     }
-    */
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Playlist> updatePlaylist(@PathVariable Long id, @RequestBody Playlist playlistDetails) {
@@ -44,4 +41,6 @@ public class PlaylistRestController {
         playlistService.deletePlaylist(id);
         return ResponseEntity.noContent().build();
     }
+
+    // TODO создание плейлистов по названию жанра и под стандартным именем
 }

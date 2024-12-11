@@ -26,22 +26,31 @@ public class AlbumRestController {
         return albumService.getAlbumById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+        // TODO сделать отображение комментариев альбома
+        // TODO сделать отображение треков альбома
+        // TODO сделать поиск треков по названию или/и по исполнителю
+        // TODO создание коммента под именем модерации
     }
 
     @PostMapping
     public Album createAlbum(@RequestBody Album album) {
         return albumService.createAlbum(album);
+        // TODO добавление новых треков при создании альбома в ручном режиме
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Album> updateAlbum(@PathVariable Long id, @RequestBody Album albumDetails) {
         Album updatedAlbum = albumService.updateAlbum(id, albumDetails);
         return updatedAlbum != null ? ResponseEntity.ok(updatedAlbum) : ResponseEntity.notFound().build();
+        // TODO удаление/добавление треков
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAlbum(@PathVariable Long id) {
         albumService.deleteAlbum(id);
         return ResponseEntity.noContent().build();
+        // TODO удаление альбомов автоматически если в нем нет треков
     }
+
+    // TODO Поиск для альбомов по названию, по исполнителям
 }
