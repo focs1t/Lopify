@@ -1,12 +1,18 @@
 package ru.focsit.backend.rest.controller.moderator;
 
+import ru.focsit.backend.pojo.Album;
+import ru.focsit.backend.pojo.Artist;
+import ru.focsit.backend.pojo.Playlist;
 import ru.focsit.backend.pojo.Track;
+import ru.focsit.backend.service.AlbumService;
+import ru.focsit.backend.service.ArtistService;
 import ru.focsit.backend.service.TrackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/moderator/tracks")
@@ -15,6 +21,12 @@ public class TrackRestController {
     @Autowired
     private TrackService trackService;
 
+    @Autowired
+    private ArtistService artistService;
+
+    @Autowired
+    private AlbumService albumService;
+
     @GetMapping
     public List<Track> getAllTracks() {
         return trackService.getAllTracks();
@@ -22,17 +34,33 @@ public class TrackRestController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Track> getTrackById(@PathVariable Long id) {
-        return trackService.getTrackById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-        // TODO сделать отображение исполнителей
-        // TODO сделать отображение концертов и туров исполнителя
+        Optional<Track> trackOptional = trackService.getTrackById(id);
+        if (trackOptional.isPresent()) {
+            Track track = trackOptional.get();
+            List<Artist> artists = artistService.getArtistsByTrack(track);
+            track.setArtists(artists);
+            return ResponseEntity.ok(track);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping
     public Track createTrack(@RequestBody Track track) {
+        if (track.getTrackAlbum() == null) {
+            Optional<Artist> artistOptional = artistService.getArtistByTrack(track);
+            if (artistOptional.isPresent()) {
+                Artist artist = artistOptional.get();
+                Album newAlbum = new Album();
+                newAlbum.setAlbumName(track.getTrackName());
+                newAlbum.setAlbumArtist(artist);
+                newAlbum = albumService.createAlbum(newAlbum);
+                track.setTrackAlbum(newAlbum);
+            } else {
+                throw new IllegalArgumentException("No artist found for the track");
+            }
+        }
         return trackService.createTrack(track);
-        // TODO сделать создание альбома если он не указан
     }
 
     @PutMapping("/{id}")
@@ -47,5 +75,8 @@ public class TrackRestController {
         return ResponseEntity.noContent().build();
     }
 
-    // TODO Поиск для треков по названию, по альбому, по исполнителям
+    @GetMapping("/search")
+    public List<Track> searchTracks(@RequestParam(required = false) String query) {
+        return trackService.searchTracks(query);
+    }
 }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -68,12 +69,32 @@ public class UserService {
         return null;
     }
 
+    public User updateUserself(Long userId, User userDetails) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isPresent()) {
+            User curUser = user.get();
+            curUser.setUserLogin(userDetails.getUserLogin());
+            curUser.setUserEmail(userDetails.getUserEmail());
+            return userRepository.save(curUser);
+        }
+        return null;
+    }
+
     public void deleteUser(Long userId) {
         userRepository.deleteById(userId);
     }
 
     public List<User> searchUsers(String query) {
-        return userRepository.findByUserLoginContainingIgnoreCase(query);
+        return getAllUsers().stream()
+                .filter(user -> user.getUserLogin().contains(query))
+                .collect(Collectors.toList());
+    }
+
+    public User getLopifyUser() {
+        return getAllUsers().stream()
+                .filter(user -> user.getUserLogin().equals("Lopify"))
+                .findFirst()
+                .orElseThrow();
     }
 }
 

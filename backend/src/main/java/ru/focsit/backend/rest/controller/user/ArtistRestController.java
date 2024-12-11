@@ -25,7 +25,6 @@ public class ArtistRestController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
         // TODO сделать отображение альбомов
         // TODO сделать отображение треков
-        // TODO сделать отображение туров и концертов
         // TODO сделать поиск треков или/и альбома
     }
 }

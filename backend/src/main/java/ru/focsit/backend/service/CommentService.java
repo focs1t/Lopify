@@ -1,18 +1,25 @@
 package ru.focsit.backend.service;
 
+import ru.focsit.backend.pojo.Album;
 import ru.focsit.backend.pojo.Comment;
+import ru.focsit.backend.pojo.User;
 import ru.focsit.backend.repository.CommentRepository;
+import ru.focsit.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
 
     @Autowired
     private CommentRepository commentRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public List<Comment> getAllComments() {
         return commentRepository.findAll();
@@ -41,5 +48,15 @@ public class CommentService {
 
     public void deleteComment(Long commentId) {
         commentRepository.deleteById(commentId);
+    }
+
+    public List<Comment> getCommentsByAlbum(Album album) {
+        return commentRepository.findByCommentAlbum(album);
+    }
+
+    public List<Comment> getCommentsByUser(User user) {
+        return getAllComments().stream()
+                .filter(comment -> comment.getCommentUser().equals(user))
+                .collect(Collectors.toList());
     }
 }

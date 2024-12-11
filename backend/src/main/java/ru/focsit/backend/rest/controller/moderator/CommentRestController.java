@@ -25,6 +25,5 @@ public class CommentRestController {
     public ResponseEntity<Void> deleteComment(@PathVariable Long id) {
         commentService.deleteComment(id);
         return ResponseEntity.noContent().build();
-        // TODO удаление только своих комментариев
     }
 }

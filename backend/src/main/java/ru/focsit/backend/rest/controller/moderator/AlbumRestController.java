@@ -1,10 +1,15 @@
 package ru.focsit.backend.rest.controller.moderator;
 
 import ru.focsit.backend.pojo.Album;
+import ru.focsit.backend.pojo.Comment;
+import ru.focsit.backend.pojo.Track;
 import ru.focsit.backend.service.AlbumService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.focsit.backend.service.CommentService;
+import ru.focsit.backend.service.TrackService;
+import ru.focsit.backend.service.UserService;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +21,15 @@ public class AlbumRestController {
     @Autowired
     private AlbumService albumService;
 
+    @Autowired
+    private CommentService commentService;
+
+    @Autowired
+    private TrackService trackService;
+
+    @Autowired
+    private UserService userService;
+
     @GetMapping
     public List<Album> getAllAlbums() {
         return albumService.getAllAlbums();
@@ -23,34 +37,73 @@ public class AlbumRestController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Album> getAlbumById(@PathVariable Long id) {
-        return albumService.getAlbumById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-        // TODO сделать отображение комментариев альбома
-        // TODO сделать отображение треков альбома
-        // TODO сделать поиск треков по названию или/и по исполнителю
-        // TODO создание коммента под именем модерации
+        Optional<Album> albumOptional = albumService.getAlbumById(id);
+        if (albumOptional.isPresent()) {
+            Album album = albumOptional.get();
+            List<Comment> comments = commentService.getCommentsByAlbum(album);
+            List<Track> tracks = trackService.getTracksByAlbum(album);
+            album.setComments(comments);
+            album.setTracks(tracks);
+            return ResponseEntity.ok(album);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping
     public Album createAlbum(@RequestBody Album album) {
         return albumService.createAlbum(album);
-        // TODO добавление новых треков при создании альбома в ручном режиме
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Album> updateAlbum(@PathVariable Long id, @RequestBody Album albumDetails) {
         Album updatedAlbum = albumService.updateAlbum(id, albumDetails);
         return updatedAlbum != null ? ResponseEntity.ok(updatedAlbum) : ResponseEntity.notFound().build();
-        // TODO удаление/добавление треков
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAlbum(@PathVariable Long id) {
         albumService.deleteAlbum(id);
         return ResponseEntity.noContent().build();
-        // TODO удаление альбомов автоматически если в нем нет треков
     }
 
-    // TODO Поиск для альбомов по названию, по исполнителям
+    @GetMapping("/search")
+    public List<Album> searchAlbums(@RequestParam(required = false) String query) {
+        return albumService.searchAlbums(query);
+    }
+
+    @PostMapping("/{id}/comments")
+    public Comment createComment(@PathVariable Long id, @RequestBody Comment comment) {
+        Optional<Album> albumOptional = albumService.getAlbumById(id);
+        if (albumOptional.isPresent()) {
+            Album album = albumOptional.get();
+            comment.setCommentAlbum(album);
+            comment.setCommentUser(userService.getLopifyUser());
+            return commentService.createComment(comment);
+        } else {
+            throw new IllegalArgumentException("Album not found");
+        }
+    }
+
+    @DeleteMapping("/{id}/comments/{commentId}")
+    public ResponseEntity<Void> deleteComment(@PathVariable Long id, @PathVariable Long commentId) {
+        Optional<Album> albumOptional = albumService.getAlbumById(id);
+        if (albumOptional.isPresent()) {
+            commentService.deleteComment(commentId);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/{id}/tracks/search")
+    public List<Track> searchTracks(@PathVariable Long id, @RequestParam(required = false) String query) {
+        Optional<Album> albumOptional = albumService.getAlbumById(id);
+        if (albumOptional.isPresent()) {
+            Album album = albumOptional.get();
+            return trackService.searchTracksByAlbum(album, query);
+        } else {
+            throw new IllegalArgumentException("Album not found");
+        }
+    }
 }

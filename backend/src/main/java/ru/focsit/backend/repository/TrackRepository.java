@@ -7,7 +7,4 @@ import java.util.List;
 
 public interface TrackRepository extends JpaRepository<Track, Long> {
     List<Track> findByTrackAlbum(Album album);
-    List<Track> findByPlaylists(Playlist playlist);
-
-    List<Track> findByTrackNameContainingIgnoreCase(String query);
 }

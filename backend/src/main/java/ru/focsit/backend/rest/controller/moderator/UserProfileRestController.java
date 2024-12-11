@@ -1,12 +1,15 @@
 package ru.focsit.backend.rest.controller.moderator;
 
-import ru.focsit.backend.pojo.User;
+import ru.focsit.backend.pojo.*;
+import ru.focsit.backend.service.CommentService;
+import ru.focsit.backend.service.PlaylistService;
 import ru.focsit.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/moderator/users")
@@ -15,6 +18,12 @@ public class UserProfileRestController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private CommentService commentService;
+
+    @Autowired
+    private PlaylistService playlistService;
+
     @GetMapping
     public List<User> getAllUsers() {
         return userService.getAllUsers();
@@ -22,18 +31,17 @@ public class UserProfileRestController {
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        return userService.getUserById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-        // TODO сделать отображение плейлистов
-        // TODO сделать отображение комментариев
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
-        User updatedUser = userService.updateUser(id, userDetails);
-        return updatedUser != null ? ResponseEntity.ok(updatedUser) : ResponseEntity.notFound().build();
-        // TODO изменение только имени пользователя
+        Optional<User> userOptional = userService.getUserById(id);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            List<Comment> comments = commentService.getCommentsByUser(user);
+            List<Playlist> playlists = playlistService.getPlaylistsByUser(user);
+            user.setComments(comments);
+            user.setPlaylists(playlists);
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -42,5 +50,8 @@ public class UserProfileRestController {
         return ResponseEntity.noContent().build();
     }
 
-    // TODO Поиск для пользователей по логину
+    @GetMapping("/search")
+    public List<User> searchUsers(@RequestParam(required = false) String query) {
+        return userService.searchUsers(query);
+    }
 }

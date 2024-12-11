@@ -3,10 +3,15 @@ package ru.focsit.backend.rest.controller.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.focsit.backend.pojo.Comment;
+import ru.focsit.backend.pojo.Playlist;
 import ru.focsit.backend.pojo.User;
+import ru.focsit.backend.service.CommentService;
+import ru.focsit.backend.service.PlaylistService;
 import ru.focsit.backend.service.UserService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user/users")
@@ -15,6 +20,12 @@ public class ProfileRestController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private CommentService commentService;
+
+    @Autowired
+    private PlaylistService playlistService;
+
     @GetMapping
     public List<User> getAllUsers() {
         return userService.getAllUsers();
@@ -22,17 +33,22 @@ public class ProfileRestController {
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        return userService.getUserById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-        // TODO сделать отображение плейлистов
-        // TODO сделать отображение комментариев
+        Optional<User> userOptional = userService.getUserById(id);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            List<Comment> comments = commentService.getCommentsByUser(user);
+            List<Playlist> playlists = playlistService.getPlaylistsByUser(user);
+            user.setComments(comments);
+            user.setPlaylists(playlists);
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
-        User updatedUser = userService.updateUser(id, userDetails);
+    public ResponseEntity<User> updateUserself(@PathVariable Long id, @RequestBody User userDetails) {
+        User updatedUser = userService.updateUserself(id, userDetails);
         return updatedUser != null ? ResponseEntity.ok(updatedUser) : ResponseEntity.notFound().build();
-        // TODO изменение имени и почты для себя
     }
 }

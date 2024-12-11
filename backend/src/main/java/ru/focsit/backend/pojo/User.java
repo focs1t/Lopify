@@ -4,6 +4,8 @@ import lombok.*;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 @Data
@@ -36,6 +38,12 @@ public class User {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userCountryId")
     private Country userCountry;
+
+    @OneToMany(mappedBy = "playlistUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Playlist> playlists;
+
+    @OneToMany(mappedBy = "commentUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments;
 
     @Override
     public String toString() {

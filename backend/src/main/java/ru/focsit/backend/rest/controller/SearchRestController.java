@@ -1,5 +1,6 @@
 package ru.focsit.backend.rest.controller;
 
+import org.springframework.web.bind.annotation.RequestMapping;
 import ru.focsit.backend.pojo.Album;
 import ru.focsit.backend.pojo.Artist;
 import ru.focsit.backend.pojo.Playlist;
@@ -20,24 +21,23 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @RestController
+@RequestMapping("/api/search")
 public class SearchRestController {
 
-    private final AlbumService albumService;
-    private final ArtistService artistService;
-    private final PlaylistService playlistService;
-    private final TrackService trackService;
-    private final UserService userService;
+    @Autowired
+    private AlbumService albumService;
 
     @Autowired
-    public SearchRestController(AlbumService albumService, ArtistService artistService,
-                                PlaylistService playlistService, TrackService trackService,
-                                UserService userService) {
-        this.albumService = albumService;
-        this.artistService = artistService;
-        this.playlistService = playlistService;
-        this.trackService = trackService;
-        this.userService = userService;
-    }
+    private ArtistService artistService;
+
+    @Autowired
+    private PlaylistService playlistService;
+
+    @Autowired
+    private TrackService trackService;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/api/search")
     public SearchResults search(@RequestParam String query) {
