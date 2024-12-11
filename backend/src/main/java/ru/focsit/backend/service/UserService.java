@@ -96,5 +96,9 @@ public class UserService {
                 .findFirst()
                 .orElseThrow();
     }
+
+    public User findByUserLogin(String curUserName) {
+        return searchUsers(curUserName).stream().findFirst().orElseThrow();
+    }
 }
 

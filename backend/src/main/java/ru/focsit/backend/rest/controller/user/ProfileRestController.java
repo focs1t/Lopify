@@ -36,19 +36,11 @@ public class ProfileRestController {
         Optional<User> userOptional = userService.getUserById(id);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            List<Comment> comments = commentService.getCommentsByUser(user);
             List<Playlist> playlists = playlistService.getPlaylistsByUser(user);
-            user.setComments(comments);
             user.setPlaylists(playlists);
             return ResponseEntity.ok(user);
         } else {
             return ResponseEntity.notFound().build();
         }
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<User> updateUserself(@PathVariable Long id, @RequestBody User userDetails) {
-        User updatedUser = userService.updateUserself(id, userDetails);
-        return updatedUser != null ? ResponseEntity.ok(updatedUser) : ResponseEntity.notFound().build();
     }
 }

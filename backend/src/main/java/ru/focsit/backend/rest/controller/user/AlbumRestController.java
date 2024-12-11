@@ -2,13 +2,17 @@ package ru.focsit.backend.rest.controller.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ru.focsit.backend.pojo.Album;
 import ru.focsit.backend.pojo.Comment;
 import ru.focsit.backend.pojo.Track;
+import ru.focsit.backend.pojo.User;
 import ru.focsit.backend.service.AlbumService;
 import ru.focsit.backend.service.CommentService;
 import ru.focsit.backend.service.TrackService;
+import ru.focsit.backend.service.UserService;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +30,9 @@ public class AlbumRestController {
     @Autowired
     private TrackService trackService;
 
+    @Autowired
+    private UserService userService;
+
     @GetMapping("/{id}")
     public ResponseEntity<Album> getAlbumById(@PathVariable Long id) {
         Optional<Album> albumOptional = albumService.getAlbumById(id);
@@ -41,7 +48,6 @@ public class AlbumRestController {
         }
     }
 
-    // TODO Поиск для треков по названию, по исполнителям
     @GetMapping("/search")
     public List<Album> searchAlbums(@RequestParam(required = false) String query) {
         return albumService.searchAlbums(query);
@@ -53,7 +59,10 @@ public class AlbumRestController {
         if (albumOptional.isPresent()) {
             Album album = albumOptional.get();
             comment.setCommentAlbum(album);
-            comment.setCommentUser(); // TODO вписывать имя авторизированного пользователя
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String curUserName = authentication.getName();
+            User curUser = userService.findByUserLogin(curUserName);
+            comment.setCommentUser(curUser);
             return commentService.createComment(comment);
         } else {
             throw new IllegalArgumentException("Album not found");
@@ -64,12 +73,24 @@ public class AlbumRestController {
     public ResponseEntity<Void> deleteComment(@PathVariable Long id, @PathVariable Long commentId) {
         Optional<Album> albumOptional = albumService.getAlbumById(id);
         if (albumOptional.isPresent()) {
-            commentService.deleteComment(commentId);
-            return ResponseEntity.noContent().build();
+            Optional<Comment> commentOptional = commentService.getCommentById(commentId);
+            if (commentOptional.isPresent()) {
+                Comment comment = commentOptional.get();
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                String curUserName = authentication.getName();
+                User currentUser = userService.findByUserLogin(curUserName);
+                if (comment.getCommentUser().equals(currentUser)) {
+                    commentService.deleteComment(commentId);
+                    return ResponseEntity.noContent().build();
+                } else {
+                    return ResponseEntity.status(403).build();
+                }
+            } else {
+                return ResponseEntity.notFound().build();
+            }
         } else {
             return ResponseEntity.notFound().build();
         }
-        // TODO удаление только своих комментариев
     }
 
     @GetMapping("/{id}/tracks/search")

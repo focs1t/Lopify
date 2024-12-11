@@ -2,12 +2,15 @@ package ru.focsit.backend.service;
 
 import ru.focsit.backend.pojo.Album;
 import ru.focsit.backend.pojo.Artist;
+import ru.focsit.backend.pojo.Genre;
 import ru.focsit.backend.pojo.Track;
 import ru.focsit.backend.repository.AlbumRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -19,6 +22,9 @@ public class AlbumService {
 
     @Autowired
     private TrackService trackService;
+
+    @Autowired
+    private GenreService genreService;
 
     public List<Album> getAllAlbums() {
         return albumRepository.findAll();
@@ -94,5 +100,15 @@ public class AlbumService {
         return getAllAlbums().stream()
                 .filter(album -> album.getAlbumArtist().equals(artist) || album.getAlbumName().contains(query))
                 .collect(Collectors.toList());
+    }
+
+    public Map<String, List<Album>> getAlbumsByAllGenres(List<Genre> genres) {
+        return genres.stream()
+                .collect(Collectors.toMap(
+                        Genre::getGenreName,
+                        genre -> getAllAlbums().stream()
+                                .filter(album -> album.getAlbumGenre().equals(genre))
+                                .collect(Collectors.toList())
+                ));
     }
 }

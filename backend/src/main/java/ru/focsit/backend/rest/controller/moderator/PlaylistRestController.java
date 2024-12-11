@@ -2,11 +2,10 @@ package ru.focsit.backend.rest.controller.moderator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import ru.focsit.backend.pojo.Album;
-import ru.focsit.backend.pojo.Comment;
-import ru.focsit.backend.pojo.Playlist;
-import ru.focsit.backend.pojo.Track;
+import ru.focsit.backend.pojo.*;
 import ru.focsit.backend.service.PlaylistService;
 import ru.focsit.backend.service.TrackService;
 import ru.focsit.backend.service.UserService;
@@ -47,14 +46,52 @@ public class PlaylistRestController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Playlist> updatePlaylist(@PathVariable Long id, @RequestBody Playlist playlistDetails) {
-        Playlist updatedPlaylist = playlistService.updatePlaylist(id, playlistDetails);
-        return updatedPlaylist != null ? ResponseEntity.ok(updatedPlaylist) : ResponseEntity.notFound().build();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String curUserName = authentication.getName();
+        User curUser = userService.findByUserLogin(curUserName);
+        if (curUser.getUserRole().getRoleName().contains("ROLE_MODERATOR")) {
+            User lopifyUser = userService.getLopifyUser();
+            playlistDetails.setPlaylistUser(lopifyUser);
+
+            Optional<Playlist> playlistOptional = playlistService.getPlaylistById(id);
+            if (playlistOptional.isPresent()) {
+                Playlist existingPlaylist = playlistOptional.get();
+                if (existingPlaylist.getPlaylistUser().equals(lopifyUser)) {
+                    Playlist updatedPlaylist = playlistService.updatePlaylist(id, playlistDetails);
+                    return updatedPlaylist != null ? ResponseEntity.ok(updatedPlaylist) : ResponseEntity.notFound().build();
+                } else {
+                    return ResponseEntity.status(403).build();
+                }
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } else {
+            return ResponseEntity.status(403).build();
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePlaylist(@PathVariable Long id) {
-        playlistService.deletePlaylist(id);
-        return ResponseEntity.noContent().build();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String curUserName = authentication.getName();
+        User curUser = userService.findByUserLogin(curUserName);
+        if (curUser.getUserRole().getRoleName().contains("ROLE_MODERATOR")) {
+            User lopifyUser = userService.getLopifyUser();
+            Optional<Playlist> playlistOptional = playlistService.getPlaylistById(id);
+            if (playlistOptional.isPresent()) {
+                Playlist existingPlaylist = playlistOptional.get();
+                if (existingPlaylist.getPlaylistUser().equals(lopifyUser)) {
+                    playlistService.deletePlaylist(id);
+                    return ResponseEntity.noContent().build();
+                } else {
+                    return ResponseEntity.status(403).build();
+                }
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } else {
+            return ResponseEntity.status(403).build();
+        }
     }
 
     @GetMapping("/{id}/tracks/search")

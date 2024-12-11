@@ -73,4 +73,14 @@ public class PlaylistService {
                 .filter(playlist -> playlist.getPlaylistName().contains(query))
                 .collect(Collectors.toList());
     }
+
+    public Playlist getFirstPlaylist() {
+        return getAllPlaylists().get(0);
+    }
+
+    public List<Playlist> searchPlaylistsByUser(User curUser, String query) {
+        return getAllPlaylists().stream()
+                .filter(playlist -> playlist.getPlaylistUser().equals(curUser) && playlist.getPlaylistUser().getUserLogin().contains(query))
+                .collect(Collectors.toList());
+    }
 }

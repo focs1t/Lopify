@@ -67,26 +67,4 @@ public class ArtistRestController {
     public List<Artist> searchArtists(@RequestParam(required = false) String query) {
         return artistService.searchArtists(query);
     }
-
-    @GetMapping("/{id}/albums/search")
-    public List<Album> searchAlbumsByArtist(@PathVariable Long id, @RequestParam(required = false) String query) {
-        Optional<Artist> artistOptional = artistService.getArtistById(id);
-        if (artistOptional.isPresent()) {
-            Artist artist = artistOptional.get();
-            return albumService.searchAlbumsByArtist(artist, query);
-        } else {
-            throw new IllegalArgumentException("Artist not found");
-        }
-    }
-
-    @GetMapping("/{id}/tracks/search")
-    public List<Track> searchTracksByArtist(@PathVariable Long id, @RequestParam(required = false) String query) {
-        Optional<Artist> artistOptional = artistService.getArtistById(id);
-        if (artistOptional.isPresent()) {
-            Artist artist = artistOptional.get();
-            return trackService.searchTracksByArtist(artist, query);
-        } else {
-            throw new IllegalArgumentException("Artist not found");
-        }
-    }
 }
