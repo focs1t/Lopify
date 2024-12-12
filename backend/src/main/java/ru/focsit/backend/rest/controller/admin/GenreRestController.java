@@ -20,22 +20,9 @@ public class GenreRestController {
         return genreService.getAllGenres();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Genre> getGenreById(@PathVariable Long id) {
-        return genreService.getGenreById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
     @PostMapping
     public Genre createGenre(@RequestBody Genre genre) {
         return genreService.createGenre(genre);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Genre> updateGenre(@PathVariable Long id, @RequestBody Genre genreDetails) {
-        Genre updatedGenre = genreService.updateGenre(id, genreDetails);
-        return updatedGenre != null ? ResponseEntity.ok(updatedGenre) : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")

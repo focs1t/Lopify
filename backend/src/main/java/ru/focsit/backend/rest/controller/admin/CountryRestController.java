@@ -20,22 +20,9 @@ public class CountryRestController {
         return countryService.getAllCountries();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Country> getCountryById(@PathVariable Long id) {
-        return countryService.getCountryById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
     @PostMapping
     public Country createCountry(@RequestBody Country country) {
         return countryService.createCountry(country);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Country> updateCountry(@PathVariable Long id, @RequestBody Country countryDetails) {
-        Country updatedCountry = countryService.updateCountry(id, countryDetails);
-        return updatedCountry != null ? ResponseEntity.ok(updatedCountry) : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")

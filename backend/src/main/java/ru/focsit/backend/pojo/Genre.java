@@ -32,4 +32,17 @@ public class Genre {
     @OneToMany(mappedBy = "albumGenre", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonBackReference
     private List<Album> albums;
+
+    @PreRemove
+    @PreUpdate
+    private void checkProtectedGenre() {
+        List<String> protectedGenres = List.of(
+                "Pop", "Rock", "Hip-Hop", "Jazz", "Classical", "Electronic", "Reggae", "Country",
+                "Metal", "Blues", "Folk", "Soul", "Alternative", "Indie", "K-Pop", "Trap", "R&B",
+                "Dancehall", "Lo-fi", "Dubstep", "Synthwave", "Tropical House"
+        );
+        if (protectedGenres.contains(genreName)) {
+            throw new RuntimeException("Cannot delete or update protected genre");
+        }
+    }
 }

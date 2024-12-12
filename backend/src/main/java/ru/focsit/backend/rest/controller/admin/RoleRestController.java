@@ -20,22 +20,9 @@ public class RoleRestController {
         return roleService.getAllRoles();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Role> getRoleById(@PathVariable Long id) {
-        return roleService.getRoleById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
     @PostMapping
     public Role createRole(@RequestBody Role role) {
         return roleService.createRole(role);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Role> updateRole(@PathVariable Long id, @RequestBody Role roleDetails) {
-        Role updatedRole = roleService.updateRole(id, roleDetails);
-        return updatedRole != null ? ResponseEntity.ok(updatedRole) : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")

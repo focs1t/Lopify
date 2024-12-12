@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.sql.DataSource;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "users")
@@ -103,5 +104,13 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @PreRemove
+    @PreUpdate
+    private void checkProtectedUser() {
+        if (Objects.equals("Lopify", username)) {
+            throw new RuntimeException("Cannot delete or update protected user");
+        }
     }
 }

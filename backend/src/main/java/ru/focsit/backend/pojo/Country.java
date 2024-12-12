@@ -34,4 +34,16 @@ public class Country {
     @OneToMany(mappedBy = "artistCountry", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonBackReference
     private List<Artist> artists;
+
+    @PreRemove
+    @PreUpdate
+    private void checkProtectedCountry() {
+        List<String> protectedCountries = List.of(
+                "USA", "Canada", "Mexico", "Great Britain", "Germany", "France", "Italy",
+                "Spain", "Japan", "China", "India", "Australia", "Brazil", "Russia", "South African Republic"
+        );
+        if (protectedCountries.contains(countryName)) {
+            throw new RuntimeException("Cannot delete or update protected country");
+        }
+    }
 }

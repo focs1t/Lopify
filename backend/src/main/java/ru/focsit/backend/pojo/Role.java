@@ -37,4 +37,12 @@ public class Role {
                 ", roleName='" + roleName + '\'' +
                 '}';
     }
+
+    @PreRemove
+    @PreUpdate
+    private void checkProtectedRole() {
+        if (List.of("ROLE_USER", "ROLE_ADMIN", "ROLE_MODERATOR").contains(roleName)) {
+            throw new RuntimeException("Cannot delete or update protected role");
+        }
+    }
 }
