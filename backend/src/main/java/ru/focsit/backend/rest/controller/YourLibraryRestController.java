@@ -2,6 +2,8 @@ package ru.focsit.backend.rest.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -9,20 +11,24 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
+import ru.focsit.backend.dto.JwtAuthenticationResponse;
+import ru.focsit.backend.dto.SignUpRequest;
 import ru.focsit.backend.pojo.Playlist;
 import ru.focsit.backend.pojo.User;
-import ru.focsit.backend.pojo.UserRegistrationDto;
+import ru.focsit.backend.service.AuthenticationService;
 import ru.focsit.backend.service.PlaylistService;
-import ru.focsit.backend.service.TrackService;
 import ru.focsit.backend.service.UserService;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/your-library")
+@RequiredArgsConstructor
 public class YourLibraryRestController {
     @Autowired
     private PlaylistService playlistService;
+
+    private final AuthenticationService authenticationService;
 
     @Autowired
     private UserService userService;
@@ -39,9 +45,7 @@ public class YourLibraryRestController {
     @GetMapping("/my-profile")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<User> getUserProfile() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String curUserName = authentication.getName();
-        User curUser = userService.findByUserLogin(curUserName);
+        User curUser = userService.getCurrentUser();
         List<Playlist> playlists = playlistService.getPlaylistsByUser(curUser);
         curUser.setPlaylists(playlists);
         return ResponseEntity.ok(curUser);
@@ -51,9 +55,7 @@ public class YourLibraryRestController {
     @PostMapping("/create-playlist")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Playlist> createPlaylist(@RequestBody Playlist playlist) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String curUserName = authentication.getName();
-        User curUser = userService.findByUserLogin(curUserName);
+        User curUser = userService.getCurrentUser();
         playlist.setPlaylistUser(curUser);
         Playlist createdPlaylist = playlistService.createPlaylist(playlist);
         return ResponseEntity.ok(createdPlaylist);
@@ -62,9 +64,7 @@ public class YourLibraryRestController {
     @GetMapping("/my-playlists")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<Playlist>> getMyPlaylists() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String curUserName = authentication.getName();
-        User curUser = userService.findByUserLogin(curUserName);
+        User curUser = userService.getCurrentUser();
         List<Playlist> playlists = playlistService.getPlaylistsByUser(curUser);
         return ResponseEntity.ok(playlists);
     }
@@ -72,9 +72,7 @@ public class YourLibraryRestController {
     @GetMapping("/search-my-playlists")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<Playlist>> searchMyPlaylists(@RequestParam String query) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String curUserName = authentication.getName();
-        User curUser = userService.findByUserLogin(curUserName);
+        User curUser = userService.getCurrentUser();
         List<Playlist> playlists = playlistService.searchPlaylistsByUser(curUser, query);
         return ResponseEntity.ok(playlists);
     }
@@ -108,13 +106,8 @@ public class YourLibraryRestController {
     // Для админа
     @PostMapping("/create-user")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> createUser(@RequestBody UserRegistrationDto userRegistrationDto) {
-        try {
-            userService.createUser(userRegistrationDto);
-            return ResponseEntity.ok("User registered successfully");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error registering user: " + e.getMessage());
-        }
+    public JwtAuthenticationResponse registerUser(@RequestBody @Valid SignUpRequest request) {
+        return authenticationService.registerUser(request);
     }
 
     @GetMapping("/users")

@@ -1,6 +1,7 @@
 package ru.focsit.backend.pojo;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -44,13 +45,14 @@ public class Track {
     @Column(name = "trackDuration")
     private LocalTime trackDuration;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "trackAlbumId")
-    @JsonBackReference
+    @JsonIdentityReference
     private Album trackAlbum;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "trackGenreId")
+    @JsonIdentityReference
     private Genre trackGenre;
 
     @ManyToMany

@@ -39,4 +39,8 @@ public class RoleService {
     public void deleteRole(Long roleId) {
         roleRepository.deleteById(roleId);
     }
+
+    public Optional<Role> getRoleByRoleName(String roleUser) {
+        return getAllRoles().stream().filter(role -> role.getRoleName().contains(roleUser)).findFirst();
+    }
 }

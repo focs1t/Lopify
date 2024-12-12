@@ -1,46 +1,29 @@
 package ru.focsit.backend.rest.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.*;
-import ru.focsit.backend.pojo.UserRegistrationDto;
-import ru.focsit.backend.security.JwtService;
-import ru.focsit.backend.service.UserService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import ru.focsit.backend.dto.JwtAuthenticationResponse;
+import ru.focsit.backend.dto.SignInRequest;
+import ru.focsit.backend.dto.SignUpRequest;
+import ru.focsit.backend.service.AuthenticationService;
 
 @RestController
 @RequestMapping("/api/auth")
+@RequiredArgsConstructor
 public class AuthRestController {
+    private final AuthenticationService authenticationService;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private UserDetailsService userDetailsService;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private JwtService jwtService;
-
-    @PostMapping("/register")
-    public String register(@RequestBody UserRegistrationDto userRegistrationDto) {
-        userService.createUser(userRegistrationDto);
-        return "User registered successfully";
+    @PostMapping("/sign-up")
+    public JwtAuthenticationResponse signUp(@RequestBody @Valid SignUpRequest request) {
+        return authenticationService.signUp(request);
     }
 
-    @PostMapping("/login")
-    public String login(@RequestBody UserRegistrationDto userRegistrationDto) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(userRegistrationDto.getUserLogin(), userRegistrationDto.getUserPassword())
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        UserDetails userDetails = userDetailsService.loadUserByUsername(userRegistrationDto.getUserLogin());
-        return jwtService.generateToken(userDetails);
+    @PostMapping("/sign-in")
+    public JwtAuthenticationResponse signIn(@RequestBody @Valid SignInRequest request) {
+        return authenticationService.signIn(request);
     }
 }

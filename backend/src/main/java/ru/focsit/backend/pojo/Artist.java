@@ -1,6 +1,7 @@
 package ru.focsit.backend.pojo;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -30,8 +31,9 @@ public class Artist {
     @Column(name = "artistBio")
     private String artistBio;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "artistCountryId")
+    @JsonIdentityReference
     private Country artistCountry;
 
     @ManyToMany(mappedBy = "artists")
@@ -39,6 +41,6 @@ public class Artist {
     private List<Track> tracks;
 
     @OneToMany(mappedBy = "albumArtist", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonBackReference
     private List<Album> albums;
 }

@@ -56,9 +56,7 @@ public class SearchRestController {
     @GetMapping("/my-profile")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<User> getUserProfile() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String curUserName = authentication.getName();
-        User curUser = userService.findByUserLogin(curUserName);
+        User curUser = userService.getCurrentUser();
         List<Playlist> playlists = playlistService.getPlaylistsByUser(curUser);
         curUser.setPlaylists(playlists);
         return ResponseEntity.ok(curUser);

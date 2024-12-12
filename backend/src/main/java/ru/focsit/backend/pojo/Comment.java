@@ -1,6 +1,7 @@
 package ru.focsit.backend.pojo;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -20,14 +21,14 @@ public class Comment {
     @Column(name = "commentId")
     private Long commentId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "commentUserId")
-    @JsonBackReference
+    @JsonIdentityReference
     private User commentUser;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "commentAlbumId")
-    @JsonBackReference
+    @JsonIdentityReference
     private Album commentAlbum;
 
     @NotBlank(message = "Текст комментария обязателен")

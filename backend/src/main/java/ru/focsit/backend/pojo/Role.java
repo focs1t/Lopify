@@ -1,5 +1,6 @@
 package ru.focsit.backend.pojo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -26,7 +27,7 @@ public class Role {
     private String roleName;
 
     @OneToMany(mappedBy = "userRole", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonBackReference
     private List<User> users;
 
     @Override

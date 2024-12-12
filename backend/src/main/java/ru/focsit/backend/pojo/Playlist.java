@@ -1,6 +1,7 @@
 package ru.focsit.backend.pojo;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -36,12 +37,12 @@ public class Playlist {
     @Column(name = "playlistImageUrl", nullable = false)
     private String playlistImageUrl;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "playlistUserId")
-    @JsonBackReference
+    @JsonIdentityReference
     private User playlistUser;
 
     @ManyToMany(mappedBy = "playlists")
-    @JsonManagedReference
+    @JsonBackReference
     private List<Track> tracks;
 }

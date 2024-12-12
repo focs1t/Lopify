@@ -51,9 +51,7 @@ public class PlaylistUserRestController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Playlist> updatePlaylist(@PathVariable Long id, @RequestBody Playlist playlistDetails) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String curUserName = authentication.getName();
-        User curUser = userService.findByUserLogin(curUserName);
+        User curUser = userService.getCurrentUser();
         Optional<Playlist> playlistOptional = playlistService.getPlaylistById(id);
         if (playlistOptional.isPresent()) {
             Playlist existingPlaylist = playlistOptional.get();
@@ -71,9 +69,7 @@ public class PlaylistUserRestController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePlaylist(@PathVariable Long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String curUserName = authentication.getName();
-        User curUser = userService.findByUserLogin(curUserName);
+        User curUser = userService.getCurrentUser();
         Optional<Playlist> playlistOptional = playlistService.getPlaylistById(id);
         if (playlistOptional.isPresent()) {
             Playlist existingPlaylist = playlistOptional.get();
@@ -81,7 +77,7 @@ public class PlaylistUserRestController {
                 playlistService.deletePlaylist(id);
                 return ResponseEntity.noContent().build();
             } else {
-                return ResponseEntity.status(403).build(); // Forbidden
+                return ResponseEntity.status(403).build();
             }
         } else {
             return ResponseEntity.notFound().build();

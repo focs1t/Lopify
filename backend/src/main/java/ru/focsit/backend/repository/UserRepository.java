@@ -8,6 +8,7 @@ import ru.focsit.backend.pojo.User;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    @Query("SELECT u FROM User u JOIN FETCH u.userRole WHERE u.userLogin = :username")
-    Optional<User> findByUserLoginWithRole(@Param("username") String username);
+    Optional<User> findByUsername(String username);
+    boolean existsByUsername(String username);
+    boolean existsByUserEmail(String email);
 }

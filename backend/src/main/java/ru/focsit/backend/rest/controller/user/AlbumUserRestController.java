@@ -59,9 +59,7 @@ public class AlbumUserRestController {
         if (albumOptional.isPresent()) {
             Album album = albumOptional.get();
             comment.setCommentAlbum(album);
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String curUserName = authentication.getName();
-            User curUser = userService.findByUserLogin(curUserName);
+            User curUser = userService.getCurrentUser();
             comment.setCommentUser(curUser);
             return commentService.createComment(comment);
         } else {
@@ -76,10 +74,8 @@ public class AlbumUserRestController {
             Optional<Comment> commentOptional = commentService.getCommentById(commentId);
             if (commentOptional.isPresent()) {
                 Comment comment = commentOptional.get();
-                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-                String curUserName = authentication.getName();
-                User currentUser = userService.findByUserLogin(curUserName);
-                if (comment.getCommentUser().equals(currentUser)) {
+                User curUser = userService.getCurrentUser();
+                if (comment.getCommentUser().equals(curUser)) {
                     commentService.deleteComment(commentId);
                     return ResponseEntity.noContent().build();
                 } else {
