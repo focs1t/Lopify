@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user/tracks")
-public class TrackRestController {
+public class TrackUserRestController {
 
     @Autowired
     private TrackService trackService;

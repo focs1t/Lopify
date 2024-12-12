@@ -57,7 +57,7 @@ public class HomeRestController {
     }
 
     @GetMapping("/my-profile")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<User> getUserProfile() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String curUserName = authentication.getName();
@@ -68,7 +68,7 @@ public class HomeRestController {
     }
 
     @GetMapping("/favourites")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Playlist> getLikedTracks() {
         Playlist likedTracks = playlistService.getFirstPlaylist();
         return ResponseEntity.ok(likedTracks);
@@ -76,28 +76,28 @@ public class HomeRestController {
 
     // Для админа!!!
     @GetMapping("/admin/genres")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Genre>> getGenres() {
         List<Genre> genres = genreService.getAllGenres();
         return ResponseEntity.ok(genres);
     }
 
     @GetMapping("/admin/countries")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Country>> getCountries() {
         List<Country> countries = countryService.getAllCountries();
         return ResponseEntity.ok(countries);
     }
 
     @GetMapping("/admin/roles")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Role>> getRoles() {
         List<Role> roles = roleService.getAllRoles();
         return ResponseEntity.ok(roles);
     }
 
     @GetMapping("/admin/users")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<User>> getUsers() {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
@@ -105,35 +105,35 @@ public class HomeRestController {
 
     // Для модера!!!
     @GetMapping("/moderator/albums")
-    @PreAuthorize("hasRole('ROLE_MODERATOR')")
+    @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<List<Album>> getAlbums() {
         List<Album> albums = albumService.getAllAlbums();
         return ResponseEntity.ok(albums);
     }
 
     @GetMapping("/moderator/tracks")
-    @PreAuthorize("hasRole('ROLE_MODERATOR')")
+    @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<List<Track>> getTracks() {
         List<Track> tracks = trackService.getAllTracks();
         return ResponseEntity.ok(tracks);
     }
 
     @GetMapping("/moderator/artists")
-    @PreAuthorize("hasRole('ROLE_MODERATOR')")
+    @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<List<Artist>> getArtists() {
         List<Artist> artists = artistService.getAllArtists();
         return ResponseEntity.ok(artists);
     }
 
     @GetMapping("/moderator/playlists")
-    @PreAuthorize("hasRole('ROLE_MODERATOR')")
+    @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<List<Playlist>> getPlaylists() {
         List<Playlist> playlists = playlistService.getAllPlaylists();
         return ResponseEntity.ok(playlists);
     }
 
     @GetMapping("/moderator/comments")
-    @PreAuthorize("hasRole('ROLE_MODERATOR')")
+    @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<List<Comment>> getComments() {
         List<Comment> comments = commentService.getAllComments();
         return ResponseEntity.ok(comments);

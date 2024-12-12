@@ -1,12 +1,15 @@
 package ru.focsit.backend.pojo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
-import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "tracks")
@@ -20,15 +23,21 @@ public class Track {
     @Column(name = "trackId")
     private Long trackId;
 
+    @NotBlank(message = "Название трека обязательно")
+    @Size(max = 100, message = "Название трека должно быть меньше 100 символов")
     @Column(name = "trackName", nullable = false)
     private String trackName;
 
     @Column(name = "trackDate")
     private LocalDate trackDate;
 
+    @NotBlank(message = "URL изображения трека обязателен")
+    @Size(max = 255, message = "URL изображения трека должен быть меньше 255 символов")
     @Column(name = "trackImageUrl", nullable = false)
     private String trackImageUrl;
 
+    @NotBlank(message = "URL песни трека обязателен")
+    @Size(max = 255, message = "URL песни трека должен быть меньше 255 символов")
     @Column(name = "trackSongUrl", nullable = false)
     private String trackSongUrl;
 
@@ -37,6 +46,7 @@ public class Track {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trackAlbumId")
+    @JsonBackReference
     private Album trackAlbum;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -49,6 +59,7 @@ public class Track {
             joinColumns = @JoinColumn(name = "trackId"),
             inverseJoinColumns = @JoinColumn(name = "artistId")
     )
+    @JsonManagedReference
     private List<Artist> artists;
 
     @ManyToMany
@@ -57,6 +68,6 @@ public class Track {
             joinColumns = @JoinColumn(name = "trackId"),
             inverseJoinColumns = @JoinColumn(name = "playlistId")
     )
+    @JsonBackReference
     private List<Playlist> playlists;
 }
-

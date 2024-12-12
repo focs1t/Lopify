@@ -48,7 +48,8 @@ public class TrackService {
 
     public List<Track> searchTracks(String query) {
         return getAllTracks().stream()
-                .filter(track -> track.getTrackName().contains(query) || track.getArtists().contains(query)) // TODO List<Artist> need to fix
+                .filter(track -> track.getTrackName().contains(query) ||
+                        track.getArtists().stream().anyMatch(artist -> artist.getArtistName().contains(query)))
                 .collect(Collectors.toList());
     }
 
@@ -60,13 +61,14 @@ public class TrackService {
 
     public List<Track> searchTracksByAlbum(Album album, String query) {
         return getTracksByAlbum(album).stream()
-                .filter(track -> track.getTrackName().contains(query) || track.getArtists().contains(query)) // TODO List<Album> need to fix
+                .filter(track -> track.getTrackName().contains(query) ||
+                        track.getArtists().stream().anyMatch(artist -> artist.getArtistName().contains(query)))
                 .collect(Collectors.toList());
     }
 
     public List<Track> getTracksByArtist(Artist artist) {
         return getAllTracks().stream()
-                .filter(track -> track.getTrackAlbum().getAlbumArtist().equals(artist))
+                .filter(track -> track.getArtists().contains(artist))
                 .collect(Collectors.toList());
     }
 
@@ -78,13 +80,14 @@ public class TrackService {
 
     public List<Track> getTracksByPlaylist(Playlist playlist) {
         return getAllTracks().stream()
-                .filter(track -> track.getPlaylists().contains(playlist)) // TODO List<Playlist> need to fix
+                .filter(track -> track.getPlaylists().contains(playlist))
                 .collect(Collectors.toList());
     }
 
     public List<Track> searchTracksByPlaylist(Playlist playlist, String query) {
         return getTracksByPlaylist(playlist).stream()
-                .filter(track -> track.getTrackName().contains(query) || track.getArtists().contains(query)) // TODO List<Playlist> need to fix
+                .filter(track -> track.getTrackName().contains(query) ||
+                        track.getArtists().stream().anyMatch(artist -> artist.getArtistName().contains(query)))
                 .collect(Collectors.toList());
     }
 }

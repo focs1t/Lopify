@@ -1,8 +1,9 @@
 package ru.focsit.backend.pojo;
 
-import lombok.*;
-
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.*;
 
 @Entity
 @Table(name = "genres")
@@ -16,7 +17,8 @@ public class Genre {
     @Column(name = "genreId")
     private Long genreId;
 
+    @NotBlank(message = "Название жанра обязательно")
+    @Size(max = 100, message = "Название жанра должно быть меньше 100 символов")
     @Column(name = "genreName", nullable = false, unique = true)
     private String genreName;
 }
-

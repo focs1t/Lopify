@@ -23,7 +23,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @RestController
-@RequestMapping("/api/search")
+@RequestMapping("/api/search-page")
 public class SearchRestController {
 
     @Autowired
@@ -64,7 +64,7 @@ public class SearchRestController {
         return ResponseEntity.ok(curUser);
     }
 
-    @GetMapping("/api/search")
+    @GetMapping("/search")
     public SearchResults search(@RequestParam String query) {
         List<Album> albums = albumService.searchAlbums(query);
         List<Artist> artists = artistService.searchArtists(query);

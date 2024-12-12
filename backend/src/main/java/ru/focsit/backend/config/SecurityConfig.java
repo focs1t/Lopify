@@ -28,30 +28,17 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // Disable CSRF as it's usually not needed for stateless JWT-based auth
         http.csrf(csrf -> csrf.disable())
-
-                // Define authorization rules for different paths
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**", "/css/**", "/static/**", "/images/**", "/js/**", "/uploads/**", "/register", "/login", "/").permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/moderator/**").hasRole("MODERATOR")
-                        .requestMatchers("/api/**").hasRole("USER")
+                        .requestMatchers("/admin/**", "/api/home", "/api/search-page", "/api/your-library").hasRole("ADMIN")
+                        .requestMatchers("/moderator/**", "/api/home", "/api/search-page", "/api/your-library").hasRole("MODERATOR")
+                        .requestMatchers("/api/user/**", "/api/home", "/api/search-page", "/api/your-library").hasRole("USER")
                         .anyRequest().authenticated())
 
-                // Configure custom login page
-                .formLogin(form -> form
-                        .defaultSuccessUrl("/", true)
-                        .permitAll())
-
-                // Configure logout behavior
-                .logout(logout -> logout.permitAll())
-
-                // Disable session creation as we are using stateless JWT authentication
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        // Add JWT filter before UsernamePasswordAuthenticationFilter
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

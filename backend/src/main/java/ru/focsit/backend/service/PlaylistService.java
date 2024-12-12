@@ -43,15 +43,26 @@ public class PlaylistService {
 
             List<Track> currentTracks = trackService.getTracksByPlaylist(curPlaylist);
             List<Track> newTracks = playlistDetails.getTracks();
-
             currentTracks.stream()
                     .filter(currentTrack -> !newTracks.contains(currentTrack))
-                    .forEach(currentTrack -> trackService.deleteTrack(currentTrack.getTrackId()));
-
+                    .forEach(currentTrack -> {
+                        currentTrack.getPlaylists().remove(curPlaylist);
+                        if (currentTrack.getPlaylists().isEmpty()) {
+                            trackService.deleteTrack(currentTrack.getTrackId());
+                        } else {
+                            trackService.updateTrack(currentTrack.getTrackId(), currentTrack);
+                        }
+                    });
             newTracks.stream()
                     .filter(newTrack -> !currentTracks.contains(newTrack))
-                    .peek(newTrack -> newTrack.setPlaylists(curPlaylist)) // TODO List<Playlist> need to fix
-                    .forEach(trackService::createTrack);
+                    .forEach(newTrack -> {
+                        newTrack.getPlaylists().add(curPlaylist);
+                        if (newTrack.getTrackId() == null) {
+                            trackService.createTrack(newTrack);
+                        } else {
+                            trackService.updateTrack(newTrack.getTrackId(), newTrack);
+                        }
+                    });
 
             return playlistRepository.save(curPlaylist);
         }

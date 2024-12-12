@@ -18,7 +18,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user/artists")
-public class ArtistRestController {
+public class ArtistUserRestController {
 
     @Autowired
     private ArtistService artistService;

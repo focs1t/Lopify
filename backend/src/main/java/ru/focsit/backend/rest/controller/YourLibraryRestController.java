@@ -46,19 +46,7 @@ public class YourLibraryRestController {
         curUser.setPlaylists(playlists);
         return ResponseEntity.ok(curUser);
     }
-    // для юзера!!!
-    // TODO создание плейлиста под своим именем
-    // TODO отображение своих плейлистов
-    // TODO поиск своих плейлистов
 
-    // для модера!!!
-    // TODO создание плейлиста под стандартным именем(LopifyUser)
-    // TODO отображение стандартных плейлистов(LopifyUser)
-    // TODO поиск стандартных плейлистов(LopifyUser)
-
-    // для админа!!!
-    // TODO создание пользователя
-    // TODO отображение пользователей
     // Для пользователя
     @PostMapping("/create-playlist")
     @PreAuthorize("hasRole('ROLE_USER')")

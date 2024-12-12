@@ -19,7 +19,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user/albums")
-public class AlbumRestController {
+public class AlbumUserRestController {
 
     @Autowired
     private AlbumService albumService;

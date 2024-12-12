@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user/playlists")
-public class PlaylistRestController {
+public class PlaylistUserRestController {
 
     @Autowired
     private PlaylistService playlistService;
