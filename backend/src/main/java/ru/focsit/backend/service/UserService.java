@@ -69,17 +69,6 @@ public class UserService {
         return null;
     }
 
-    public User updateUserself(Long userId, User userDetails) {
-        Optional<User> user = userRepository.findById(userId);
-        if (user.isPresent()) {
-            User curUser = user.get();
-            curUser.setUserLogin(userDetails.getUserLogin());
-            curUser.setUserEmail(userDetails.getUserEmail());
-            return userRepository.save(curUser);
-        }
-        return null;
-    }
-
     public void deleteUser(Long userId) {
         userRepository.deleteById(userId);
     }
