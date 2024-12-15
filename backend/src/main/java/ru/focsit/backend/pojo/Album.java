@@ -2,7 +2,6 @@ package ru.focsit.backend.pojo;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -39,13 +38,13 @@ public class Album {
     @NotBlank(message = "URL изображения альбома обязателен")
     @Size(max = 255, message = "URL изображения альбома должен быть меньше 255 символов")
     @Column(name = "albumImageUrl", nullable = false)
-    private String albumImageUrl; // TODO берем фото по треку
+    private String albumImageUrl;
 
     @Column(name = "albumReleaseDate")
     private LocalDate albumReleaseDate = LocalDate.now();
 
     @Column(name = "albumDuration")
-    private LocalTime albumDuration;  // TODO изменить на суммму по трекам
+    private LocalTime albumDuration;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "albumArtistId")

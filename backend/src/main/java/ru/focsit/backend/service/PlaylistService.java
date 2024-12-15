@@ -9,6 +9,8 @@ import ru.focsit.backend.pojo.User;
 import ru.focsit.backend.repository.PlaylistRepository;
 
 import jakarta.validation.Valid;
+import java.time.Duration;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -42,17 +44,30 @@ public class PlaylistService {
     }
 
     public Playlist updatePlaylist(Long playlistId, @Valid Playlist playlistDetails, MultipartFile file) {
-        Optional<Playlist> playlist = playlistRepository.findById(playlistId);
-        if (playlist.isPresent()) {
-            Playlist curPlaylist = playlist.get();
+        Optional<Playlist> playlistOptional = playlistRepository.findById(playlistId);
+        if (playlistOptional.isPresent()) {
+            Playlist curPlaylist = playlistOptional.get();
             curPlaylist.setPlaylistName(playlistDetails.getPlaylistName());
             curPlaylist.setPlaylistDescription(playlistDetails.getPlaylistDescription());
             if (file != null && !file.isEmpty()) {
                 String filePath = fileUploadService.uploadFile(file);
                 curPlaylist.setPlaylistImageUrl(filePath);
             }
-            curPlaylist.setPlaylistDuration(playlistDetails.getPlaylistDuration());
             curPlaylist.setPlaylistUser(playlistDetails.getPlaylistUser());
+
+            List<Track> currentTracks = curPlaylist.getTracks();
+            List<Track> newTracks = playlistDetails.getTracks();
+
+            newTracks.stream()
+                    .filter(newTrack -> !currentTracks.contains(newTrack))
+                    .forEach(newTrack -> newTrack.getPlaylists().add(curPlaylist));
+
+            currentTracks.stream()
+                    .filter(currentTrack -> !newTracks.contains(currentTrack))
+                    .forEach(currentTrack -> currentTrack.getPlaylists().remove(curPlaylist));
+
+            updatePlaylistDuration(curPlaylist);
+
             return playlistRepository.save(curPlaylist);
         }
         return null;
@@ -82,5 +97,13 @@ public class PlaylistService {
         return getAllPlaylists().stream()
                 .filter(playlist -> playlist.getPlaylistUser().equals(curUser) && playlist.getPlaylistUser().getUsername().contains(query))
                 .collect(Collectors.toList());
+    }
+
+    private void updatePlaylistDuration(Playlist playlist) {
+        Duration totalDuration = playlist.getTracks().stream()
+                .map(Track::getTrackDuration)
+                .map(duration -> Duration.between(LocalTime.MIN, duration))
+                .reduce(Duration.ZERO, Duration::plus);
+        playlist.setPlaylistDuration(LocalTime.ofNanoOfDay(totalDuration.toNanos()));
     }
 }

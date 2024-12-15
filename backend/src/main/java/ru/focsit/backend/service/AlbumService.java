@@ -10,6 +10,8 @@ import ru.focsit.backend.pojo.Track;
 import ru.focsit.backend.repository.AlbumRepository;
 
 import jakarta.validation.Valid;
+import java.time.Duration;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -44,41 +46,11 @@ public class AlbumService {
         if (album.getTracks() != null) {
             album.getTracks().stream()
                     .peek(track -> track.setTrackAlbum(savedAlbum))
-                    .forEach(track -> trackService.createTrack(track, null));
+                    .forEach(track -> trackService.createTrack(track, null, savedAlbum));
+
+            updateAlbumDuration(savedAlbum);
         }
-        return savedAlbum;
-    }
-
-    public Album updateAlbum(Long albumId, @Valid Album albumDetails, MultipartFile file) {
-        Optional<Album> albumOptional = albumRepository.findById(albumId);
-        if (albumOptional.isPresent()) {
-            Album curAlbum = albumOptional.get();
-            curAlbum.setAlbumName(albumDetails.getAlbumName());
-            curAlbum.setAlbumDescription(albumDetails.getAlbumDescription());
-            if (file != null && !file.isEmpty()) {
-                String filePath = fileUploadService.uploadFile(file);
-                curAlbum.setAlbumImageUrl(filePath);
-            }
-            curAlbum.setAlbumReleaseDate(albumDetails.getAlbumReleaseDate());
-            curAlbum.setAlbumDuration(albumDetails.getAlbumDuration());
-            curAlbum.setAlbumArtist(albumDetails.getAlbumArtist());
-            curAlbum.setAlbumGenre(albumDetails.getAlbumGenre());
-
-            List<Track> currentTracks = trackService.getTracksByAlbum(curAlbum);
-            List<Track> newTracks = albumDetails.getTracks();
-
-            currentTracks.stream()
-                    .filter(currentTrack -> !newTracks.contains(currentTrack))
-                    .forEach(currentTrack -> trackService.deleteTrack(currentTrack.getTrackId()));
-
-            newTracks.stream()
-                    .filter(newTrack -> !currentTracks.contains(newTrack))
-                    .peek(newTrack -> newTrack.setTrackAlbum(curAlbum))
-                    .forEach(newTrack -> trackService.createTrack(newTrack, null));
-
-            return albumRepository.save(curAlbum);
-        }
-        return null;
+        return albumRepository.save(savedAlbum);
     }
 
     public void deleteAlbum(Long albumId) {
@@ -118,5 +90,13 @@ public class AlbumService {
                                 .filter(album -> album.getAlbumGenre().equals(genre))
                                 .collect(Collectors.toList())
                 ));
+    }
+
+    private void updateAlbumDuration(Album album) {
+        Duration totalDuration = album.getTracks().stream()
+                .map(Track::getTrackDuration)
+                .map(duration -> Duration.between(LocalTime.MIN, duration))
+                .reduce(Duration.ZERO, Duration::plus);
+        album.setAlbumDuration(LocalTime.ofNanoOfDay(totalDuration.toNanos()));
     }
 }

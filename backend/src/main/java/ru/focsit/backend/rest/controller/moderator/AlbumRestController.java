@@ -57,12 +57,6 @@ public class AlbumRestController {
         return albumService.createAlbum(album, file);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Album> updateAlbum(@PathVariable Long id, @RequestParam("file") MultipartFile file, @RequestPart("album") @Valid Album albumDetails) {
-        Album updatedAlbum = albumService.updateAlbum(id, albumDetails, file);
-        return updatedAlbum != null ? ResponseEntity.ok(updatedAlbum) : ResponseEntity.notFound().build();
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAlbum(@PathVariable Long id) {
         albumService.deleteAlbum(id);

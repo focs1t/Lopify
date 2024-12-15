@@ -22,6 +22,9 @@ public class TrackService {
     @Autowired
     private FileUploadService fileUploadService;
 
+    @Autowired
+    private AlbumService albumService;
+
     public List<Track> getAllTracks() {
         return trackRepository.findAll();
     }
@@ -30,11 +33,25 @@ public class TrackService {
         return trackRepository.findById(trackId);
     }
 
-    public Track createTrack(@Valid Track track, MultipartFile file) {
+    public Track createTrack(@Valid Track track, MultipartFile file, Album album) {
         if (file != null && !file.isEmpty()) {
             String filePath = fileUploadService.uploadFile(file);
             track.setTrackImageUrl(filePath);
+        } else if (album != null) {
+            track.setTrackImageUrl(album.getAlbumImageUrl());
         }
+
+        if (album == null && !track.getArtists().isEmpty()) {
+            Artist firstArtist = track.getArtists().get(0);
+            album = new Album();
+            album.setAlbumName(track.getTrackName());
+            album.setAlbumDescription("no desc");
+            album.setAlbumImageUrl(track.getTrackImageUrl());
+            album.setAlbumArtist(firstArtist);
+            album = albumService.createAlbum(album, null);
+        }
+
+        track.setTrackAlbum(album);
         return trackRepository.save(track);
     }
 
