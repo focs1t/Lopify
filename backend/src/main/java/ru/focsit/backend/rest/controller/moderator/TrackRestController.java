@@ -48,20 +48,21 @@ public class TrackRestController {
 
     @PostMapping
     public Track createTrack(@RequestParam("file") MultipartFile file, @RequestPart("track") @Valid Track track) {
+        Album album = null;
         if (track.getTrackAlbum() == null) {
             Optional<Artist> artistOptional = artistService.getArtistByTrack(track);
             if (artistOptional.isPresent()) {
                 Artist artist = artistOptional.get();
-                Album newAlbum = new Album();
-                newAlbum.setAlbumName(track.getTrackName());
-                newAlbum.setAlbumArtist(artist);
-                newAlbum = albumService.createAlbum(newAlbum, file);
-                track.setTrackAlbum(newAlbum);
+                album = new Album();
+                album.setAlbumName(track.getTrackName());
+                album.setAlbumArtist(artist);
+                album = albumService.createAlbum(album, file);
+                track.setTrackAlbum(album);
             } else {
                 throw new IllegalArgumentException("No artist found for the track");
             }
         }
-        return trackService.createTrack(track, file);
+        return trackService.createTrack(track, file, album);
     }
 
     @DeleteMapping("/{id}")
