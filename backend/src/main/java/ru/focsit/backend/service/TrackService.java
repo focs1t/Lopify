@@ -1,6 +1,7 @@
 package ru.focsit.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.focsit.backend.pojo.Album;
@@ -23,6 +24,7 @@ public class TrackService {
     private FileUploadService fileUploadService;
 
     @Autowired
+    @Lazy
     private AlbumService albumService;
 
     public List<Track> getAllTracks() {

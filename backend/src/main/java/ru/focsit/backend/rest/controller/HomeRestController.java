@@ -72,68 +72,57 @@ public class HomeRestController {
         return ResponseEntity.ok(likedTracks);
     }
 
-    // Для админа!!!
-    @GetMapping("/admin/genres")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<Genre>> getGenres() {
-        List<Genre> genres = genreService.getAllGenres();
-        return ResponseEntity.ok(genres);
+    public ResponseEntity<Void> redirectToCountries() {
+        return ResponseEntity.status(301)
+                .header("Location", "/api/admin/countries")
+                .build();
     }
 
-    @GetMapping("/admin/countries")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<Country>> getCountries() {
-        List<Country> countries = countryService.getAllCountries();
-        return ResponseEntity.ok(countries);
+    public ResponseEntity<Void> redirectToGenres() {
+        return ResponseEntity.status(301)
+                .header("Location", "/api/admin/genres")
+                .build();
     }
 
-    @GetMapping("/admin/roles")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<Role>> getRoles() {
-        List<Role> roles = roleService.getAllRoles();
-        return ResponseEntity.ok(roles);
+    public ResponseEntity<Void> redirectToRoles() {
+        return ResponseEntity.status(301)
+                .header("Location", "/api/admin/roles")
+                .build();
     }
 
-    @GetMapping("/admin/users")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<User>> getUsers() {
-        List<User> users = userService.getAllUsers();
-        return ResponseEntity.ok(users);
+    public ResponseEntity<Void> redirectToUsers() {
+        return ResponseEntity.status(301)
+                .header("Location", "/api/admin/users")
+                .build();
     }
 
-    // Для модера!!!
-    @GetMapping("/moderator/albums")
-    @PreAuthorize("hasRole('MODERATOR')")
-    public ResponseEntity<List<Album>> getAlbums() {
-        List<Album> albums = albumService.getAllAlbums();
-        return ResponseEntity.ok(albums);
+    public ResponseEntity<Void> redirectToAlbums() {
+        return ResponseEntity.status(301)
+                .header("Location", "/api/moderator/albums")
+                .build();
     }
 
-    @GetMapping("/moderator/tracks")
-    @PreAuthorize("hasRole('MODERATOR')")
-    public ResponseEntity<List<Track>> getTracks() {
-        List<Track> tracks = trackService.getAllTracks();
-        return ResponseEntity.ok(tracks);
+    public ResponseEntity<Void> redirectToTracks() {
+        return ResponseEntity.status(301)
+                .header("Location", "/api/moderator/tracks")
+                .build();
     }
 
-    @GetMapping("/moderator/artists")
-    @PreAuthorize("hasRole('MODERATOR')")
-    public ResponseEntity<List<Artist>> getArtists() {
-        List<Artist> artists = artistService.getAllArtists();
-        return ResponseEntity.ok(artists);
+    public ResponseEntity<Void> redirectToArtists() {
+        return ResponseEntity.status(301)
+                .header("Location", "/api/moderator/artists")
+                .build();
     }
 
-    @GetMapping("/moderator/playlists")
-    @PreAuthorize("hasRole('MODERATOR')")
-    public ResponseEntity<List<Playlist>> getPlaylists() {
-        List<Playlist> playlists = playlistService.getAllPlaylists();
-        return ResponseEntity.ok(playlists);
+    public ResponseEntity<Void> redirectToPlaylists() {
+        return ResponseEntity.status(301)
+                .header("Location", "/api/moderator/playlists")
+                .build();
     }
 
-    @GetMapping("/moderator/comments")
-    @PreAuthorize("hasRole('MODERATOR')")
-    public ResponseEntity<List<Comment>> getComments() {
-        List<Comment> comments = commentService.getAllComments();
-        return ResponseEntity.ok(comments);
+    public ResponseEntity<Void> redirectToComments() {
+        return ResponseEntity.status(301)
+                .header("Location", "/api/moderator/comments")
+                .build();
     }
 }
