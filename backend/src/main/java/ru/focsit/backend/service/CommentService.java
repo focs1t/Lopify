@@ -1,13 +1,14 @@
 package ru.focsit.backend.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.focsit.backend.pojo.Album;
 import ru.focsit.backend.pojo.Comment;
 import ru.focsit.backend.pojo.User;
 import ru.focsit.backend.repository.CommentRepository;
 import ru.focsit.backend.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,11 +30,11 @@ public class CommentService {
         return commentRepository.findById(commentId);
     }
 
-    public Comment createComment(Comment comment) {
+    public Comment createComment(@Valid Comment comment) {
         return commentRepository.save(comment);
     }
 
-    public Comment updateComment(Long commentId, Comment commentDetails) {
+    public Comment updateComment(Long commentId, @Valid Comment commentDetails) {
         Optional<Comment> comment = commentRepository.findById(commentId);
         if (comment.isPresent()) {
             Comment curComment = comment.get();

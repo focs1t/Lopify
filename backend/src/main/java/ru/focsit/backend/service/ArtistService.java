@@ -1,14 +1,15 @@
 package ru.focsit.backend.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import ru.focsit.backend.pojo.Artist;
 import ru.focsit.backend.pojo.Track;
 import ru.focsit.backend.repository.ArtistRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ArtistService {
@@ -17,10 +18,7 @@ public class ArtistService {
     private ArtistRepository artistRepository;
 
     @Autowired
-    private AlbumService albumService;
-
-    @Autowired
-    private TrackService trackService;
+    private FileUploadService fileUploadService;
 
     public List<Artist> getAllArtists() {
         return artistRepository.findAll();
@@ -53,13 +51,13 @@ public class ArtistService {
     public List<Artist> searchArtists(String query) {
         return getAllArtists().stream()
                 .filter(artist -> artist.getArtistName().equals(query))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<Artist> getArtistsByTrack(Track track) {
         return getAllArtists().stream()
                 .filter(artist -> artist.getTracks().contains(track))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public Optional<Artist> getArtistByTrack(Track track) {

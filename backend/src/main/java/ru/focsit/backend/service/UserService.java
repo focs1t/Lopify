@@ -1,16 +1,16 @@
 package ru.focsit.backend.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 import ru.focsit.backend.pojo.User;
 import ru.focsit.backend.repository.CountryRepository;
 import ru.focsit.backend.repository.RoleRepository;
 import ru.focsit.backend.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,7 +27,7 @@ public class UserService {
     @Autowired
     private CountryRepository countryRepository;
 
-    public User createUser(User user) {
+    public User createUser(@Valid User user) {
         return userRepository.save(user);
     }
 
@@ -39,7 +39,7 @@ public class UserService {
         return userRepository.findById(userId);
     }
 
-    public User updateUser(Long userId, User userDetails) {
+    public User updateUser(Long userId, @Valid User userDetails) {
         Optional<User> user = userRepository.findById(userId);
         if (user.isPresent()) {
             User curUser = user.get();
@@ -77,7 +77,7 @@ public class UserService {
         return searchUsers(curUserName).stream().findFirst().orElseThrow();
     }
 
-    public User create(User user) {
+    public User create(@Valid User user) {
         if (userRepository.existsByUsername(user.getUsername())) {
             throw new RuntimeException("Пользователь с таким именем уже существует");
         }
@@ -92,7 +92,6 @@ public class UserService {
     public User getByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
-
     }
 
     public UserDetailsService userDetailsService() {
@@ -104,4 +103,3 @@ public class UserService {
         return getByUsername(username);
     }
 }
-

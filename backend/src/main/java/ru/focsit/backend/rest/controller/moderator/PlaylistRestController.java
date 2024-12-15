@@ -5,11 +5,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import ru.focsit.backend.pojo.*;
+import org.springframework.web.multipart.MultipartFile;
+import ru.focsit.backend.pojo.Playlist;
+import ru.focsit.backend.pojo.Track;
+import ru.focsit.backend.pojo.User;
 import ru.focsit.backend.service.PlaylistService;
 import ru.focsit.backend.service.TrackService;
 import ru.focsit.backend.service.UserService;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,13 +43,13 @@ public class PlaylistRestController {
     }
 
     @PostMapping
-    public Playlist createPlaylist(@RequestBody Playlist playlist) {
+    public Playlist createPlaylist(@RequestParam("file") MultipartFile file, @RequestPart("playlist") @Valid Playlist playlist) {
         playlist.setPlaylistUser(userService.getLopifyUser());
-        return playlistService.createPlaylist(playlist);
+        return playlistService.createPlaylist(playlist, file);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Playlist> updatePlaylist(@PathVariable Long id, @RequestBody Playlist playlistDetails) {
+    public ResponseEntity<Playlist> updatePlaylist(@PathVariable Long id, @RequestParam("file") MultipartFile file, @RequestPart("playlist") @Valid Playlist playlistDetails) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String curUserName = authentication.getName();
         User curUser = userService.findByUserLogin(curUserName);
@@ -57,7 +61,7 @@ public class PlaylistRestController {
             if (playlistOptional.isPresent()) {
                 Playlist existingPlaylist = playlistOptional.get();
                 if (existingPlaylist.getPlaylistUser().equals(lopifyUser)) {
-                    Playlist updatedPlaylist = playlistService.updatePlaylist(id, playlistDetails);
+                    Playlist updatedPlaylist = playlistService.updatePlaylist(id, playlistDetails, file);
                     return updatedPlaylist != null ? ResponseEntity.ok(updatedPlaylist) : ResponseEntity.notFound().build();
                 } else {
                     return ResponseEntity.status(403).build();
@@ -101,7 +105,7 @@ public class PlaylistRestController {
             Playlist playlist = playlistOptional.get();
             return trackService.searchTracksByPlaylist(playlist, query);
         } else {
-            throw new IllegalArgumentException("Album not found");
+            throw new IllegalArgumentException("Playlist not found");
         }
     }
 }

@@ -1,15 +1,17 @@
 package ru.focsit.backend.rest.controller.moderator;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.focsit.backend.pojo.Album;
 import ru.focsit.backend.pojo.Artist;
 import ru.focsit.backend.pojo.Track;
 import ru.focsit.backend.service.AlbumService;
 import ru.focsit.backend.service.ArtistService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import ru.focsit.backend.service.TrackService;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,12 +49,12 @@ public class ArtistRestController {
     }
 
     @PostMapping
-    public Artist createArtist(@RequestBody Artist artist) {
+    public Artist createArtist(@RequestPart("artist") @Valid Artist artist) {
         return artistService.createArtist(artist);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Artist> updateArtist(@PathVariable Long id, @RequestBody Artist artistDetails) {
+    public ResponseEntity<Artist> updateArtist(@PathVariable Long id, @RequestPart("artist") @Valid Artist artistDetails) {
         Artist updatedArtist = artistService.updateArtist(id, artistDetails);
         return updatedArtist != null ? ResponseEntity.ok(updatedArtist) : ResponseEntity.notFound().build();
     }

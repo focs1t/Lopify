@@ -1,10 +1,11 @@
 package ru.focsit.backend.service;
 
-import ru.focsit.backend.pojo.Country;
-import ru.focsit.backend.repository.CountryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.focsit.backend.pojo.Country;
+import ru.focsit.backend.repository.CountryRepository;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,11 +23,11 @@ public class CountryService {
         return countryRepository.findById(countryId);
     }
 
-    public Country createCountry(Country country) {
+    public Country createCountry(@Valid Country country) {
         return countryRepository.save(country);
     }
 
-    public Country updateCountry(Long countryId, Country countryDetails) {
+    public Country updateCountry(Long countryId, @Valid Country countryDetails) {
         Optional<Country> country = countryRepository.findById(countryId);
         if (country.isPresent()) {
             Country curCountry = country.get();

@@ -7,8 +7,10 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.*;
-import org.springframework.boot.jdbc.DataSourceBuilder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -41,10 +43,6 @@ public class User implements UserDetails {
     @Column(name = "userPassword", nullable = false)
     private String password;
 
-    @Transient
-    @Column(name = "userPasswordConfirm")
-    private String userPasswordConfirm;
-
     @Email(message = "Неверный формат email")
     @NotBlank(message = "Email пользователя обязателен")
     @Size(max = 100, message = "Email пользователя должен быть меньше 100 символов")
@@ -73,8 +71,8 @@ public class User implements UserDetails {
     public String toString() {
         return "User{" +
                 "userId=" + userId +
-                ", userLogin='" + username + '\'' +
-                ", userPassword='" + password + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
                 ", userEmail='" + userEmail + '\'' +
                 ", userRole=" + (userRole != null ? userRole.getRoleId() : null) +
                 ", userCountry=" + (userCountry != null ? userCountry.getCountryId() : null) +

@@ -1,12 +1,14 @@
 package ru.focsit.backend.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import ru.focsit.backend.pojo.Playlist;
 import ru.focsit.backend.pojo.Track;
 import ru.focsit.backend.pojo.User;
 import ru.focsit.backend.repository.PlaylistRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,6 +22,9 @@ public class PlaylistService {
     @Autowired
     private TrackService trackService;
 
+    @Autowired
+    private FileUploadService fileUploadService;
+
     public List<Playlist> getAllPlaylists() {
         return playlistRepository.findAll();
     }
@@ -28,42 +33,26 @@ public class PlaylistService {
         return playlistRepository.findById(playlistId);
     }
 
-    public Playlist createPlaylist(Playlist playlist) {
+    public Playlist createPlaylist(@Valid Playlist playlist, MultipartFile file) {
+        if (file != null && !file.isEmpty()) {
+            String filePath = fileUploadService.uploadFile(file);
+            playlist.setPlaylistImageUrl(filePath);
+        }
         return playlistRepository.save(playlist);
     }
 
-    public Playlist updatePlaylist(Long playlistId, Playlist playlistDetails) {
+    public Playlist updatePlaylist(Long playlistId, @Valid Playlist playlistDetails, MultipartFile file) {
         Optional<Playlist> playlist = playlistRepository.findById(playlistId);
         if (playlist.isPresent()) {
             Playlist curPlaylist = playlist.get();
             curPlaylist.setPlaylistName(playlistDetails.getPlaylistName());
             curPlaylist.setPlaylistDescription(playlistDetails.getPlaylistDescription());
-            curPlaylist.setPlaylistImageUrl(playlistDetails.getPlaylistImageUrl());
+            if (file != null && !file.isEmpty()) {
+                String filePath = fileUploadService.uploadFile(file);
+                curPlaylist.setPlaylistImageUrl(filePath);
+            }
+            curPlaylist.setPlaylistDuration(playlistDetails.getPlaylistDuration());
             curPlaylist.setPlaylistUser(playlistDetails.getPlaylistUser());
-
-            List<Track> currentTracks = trackService.getTracksByPlaylist(curPlaylist);
-            List<Track> newTracks = playlistDetails.getTracks();
-            currentTracks.stream()
-                    .filter(currentTrack -> !newTracks.contains(currentTrack))
-                    .forEach(currentTrack -> {
-                        currentTrack.getPlaylists().remove(curPlaylist);
-                        if (currentTrack.getPlaylists().isEmpty()) {
-                            trackService.deleteTrack(currentTrack.getTrackId());
-                        } else {
-                            trackService.updateTrack(currentTrack.getTrackId(), currentTrack);
-                        }
-                    });
-            newTracks.stream()
-                    .filter(newTrack -> !currentTracks.contains(newTrack))
-                    .forEach(newTrack -> {
-                        newTrack.getPlaylists().add(curPlaylist);
-                        if (newTrack.getTrackId() == null) {
-                            trackService.createTrack(newTrack);
-                        } else {
-                            trackService.updateTrack(newTrack.getTrackId(), newTrack);
-                        }
-                    });
-
             return playlistRepository.save(curPlaylist);
         }
         return null;

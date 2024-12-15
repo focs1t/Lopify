@@ -1,16 +1,18 @@
 package ru.focsit.backend.rest.controller.moderator;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.focsit.backend.pojo.Album;
 import ru.focsit.backend.pojo.Comment;
 import ru.focsit.backend.pojo.Track;
 import ru.focsit.backend.service.AlbumService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import ru.focsit.backend.service.CommentService;
 import ru.focsit.backend.service.TrackService;
 import ru.focsit.backend.service.UserService;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,13 +53,13 @@ public class AlbumRestController {
     }
 
     @PostMapping
-    public Album createAlbum(@RequestBody Album album) {
-        return albumService.createAlbum(album);
+    public Album createAlbum(@RequestParam("file") MultipartFile file, @RequestPart("album") @Valid Album album) {
+        return albumService.createAlbum(album, file);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Album> updateAlbum(@PathVariable Long id, @RequestBody Album albumDetails) {
-        Album updatedAlbum = albumService.updateAlbum(id, albumDetails);
+    public ResponseEntity<Album> updateAlbum(@PathVariable Long id, @RequestParam("file") MultipartFile file, @RequestPart("album") @Valid Album albumDetails) {
+        Album updatedAlbum = albumService.updateAlbum(id, albumDetails, file);
         return updatedAlbum != null ? ResponseEntity.ok(updatedAlbum) : ResponseEntity.notFound().build();
     }
 
@@ -73,7 +75,7 @@ public class AlbumRestController {
     }
 
     @PostMapping("/{id}/comments")
-    public Comment createComment(@PathVariable Long id, @RequestBody Comment comment) {
+    public Comment createComment(@PathVariable Long id, @RequestBody @Valid Comment comment) {
         Optional<Album> albumOptional = albumService.getAlbumById(id);
         if (albumOptional.isPresent()) {
             Album album = albumOptional.get();

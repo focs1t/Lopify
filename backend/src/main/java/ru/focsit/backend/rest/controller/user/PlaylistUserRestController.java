@@ -9,9 +9,11 @@ import ru.focsit.backend.service.PlaylistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.focsit.backend.service.TrackService;
 import ru.focsit.backend.service.UserService;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,21 +45,23 @@ public class PlaylistUserRestController {
 
     /*
     @PostMapping
-    public Playlist createPlaylist(@RequestBody Playlist playlist) {
-        return playlistService.createPlaylist(playlist);
-        // TODO создание плейлиста для текущего пользователя
+    public Playlist createPlaylist(@RequestParam("file") MultipartFile file, @RequestPart("playlist") @Valid Playlist playlist) {
+        User curUser = userService.getCurrentUser();
+        playlist.setPlaylistUser(curUser);
+        return playlistService.createPlaylist(playlist, file);
     }
-    */
+
+     */
 
     @PutMapping("/{id}")
-    public ResponseEntity<Playlist> updatePlaylist(@PathVariable Long id, @RequestBody Playlist playlistDetails) {
+    public ResponseEntity<Playlist> updatePlaylist(@PathVariable Long id, @RequestParam("file") MultipartFile file, @RequestPart("playlist") @Valid Playlist playlistDetails) {
         User curUser = userService.getCurrentUser();
         Optional<Playlist> playlistOptional = playlistService.getPlaylistById(id);
         if (playlistOptional.isPresent()) {
             Playlist existingPlaylist = playlistOptional.get();
             if (existingPlaylist.getPlaylistUser().equals(curUser)) {
                 playlistDetails.setPlaylistUser(curUser);
-                Playlist updatedPlaylist = playlistService.updatePlaylist(id, playlistDetails);
+                Playlist updatedPlaylist = playlistService.updatePlaylist(id, playlistDetails, file);
                 return updatedPlaylist != null ? ResponseEntity.ok(updatedPlaylist) : ResponseEntity.notFound().build();
             } else {
                 return ResponseEntity.status(403).build(); // Forbidden
@@ -91,7 +95,7 @@ public class PlaylistUserRestController {
             Playlist playlist = playlistOptional.get();
             return trackService.searchTracksByPlaylist(playlist, query);
         } else {
-            throw new IllegalArgumentException("Album not found");
+            throw new IllegalArgumentException("Playlist not found");
         }
     }
 }

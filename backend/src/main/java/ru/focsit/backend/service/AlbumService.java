@@ -1,14 +1,15 @@
 package ru.focsit.backend.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import ru.focsit.backend.pojo.Album;
 import ru.focsit.backend.pojo.Artist;
 import ru.focsit.backend.pojo.Genre;
 import ru.focsit.backend.pojo.Track;
 import ru.focsit.backend.repository.AlbumRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -24,7 +25,7 @@ public class AlbumService {
     private TrackService trackService;
 
     @Autowired
-    private GenreService genreService;
+    private FileUploadService fileUploadService;
 
     public List<Album> getAllAlbums() {
         return albumRepository.findAll();
@@ -34,23 +35,30 @@ public class AlbumService {
         return albumRepository.findById(albumId);
     }
 
-    public Album createAlbum(Album album) {
+    public Album createAlbum(@Valid Album album, MultipartFile file) {
+        if (file != null && !file.isEmpty()) {
+            String filePath = fileUploadService.uploadFile(file);
+            album.setAlbumImageUrl(filePath);
+        }
         Album savedAlbum = albumRepository.save(album);
         if (album.getTracks() != null) {
             album.getTracks().stream()
                     .peek(track -> track.setTrackAlbum(savedAlbum))
-                    .forEach(trackService::createTrack);
+                    .forEach(track -> trackService.createTrack(track, null));
         }
         return savedAlbum;
     }
 
-    public Album updateAlbum(Long albumId, Album albumDetails) {
-        Optional<Album> album = albumRepository.findById(albumId);
-        if (album.isPresent()) {
-            Album curAlbum = album.get();
+    public Album updateAlbum(Long albumId, @Valid Album albumDetails, MultipartFile file) {
+        Optional<Album> albumOptional = albumRepository.findById(albumId);
+        if (albumOptional.isPresent()) {
+            Album curAlbum = albumOptional.get();
             curAlbum.setAlbumName(albumDetails.getAlbumName());
             curAlbum.setAlbumDescription(albumDetails.getAlbumDescription());
-            curAlbum.setAlbumImageUrl(albumDetails.getAlbumImageUrl());
+            if (file != null && !file.isEmpty()) {
+                String filePath = fileUploadService.uploadFile(file);
+                curAlbum.setAlbumImageUrl(filePath);
+            }
             curAlbum.setAlbumReleaseDate(albumDetails.getAlbumReleaseDate());
             curAlbum.setAlbumDuration(albumDetails.getAlbumDuration());
             curAlbum.setAlbumArtist(albumDetails.getAlbumArtist());
@@ -66,7 +74,7 @@ public class AlbumService {
             newTracks.stream()
                     .filter(newTrack -> !currentTracks.contains(newTrack))
                     .peek(newTrack -> newTrack.setTrackAlbum(curAlbum))
-                    .forEach(trackService::createTrack);
+                    .forEach(newTrack -> trackService.createTrack(newTrack, null));
 
             return albumRepository.save(curAlbum);
         }

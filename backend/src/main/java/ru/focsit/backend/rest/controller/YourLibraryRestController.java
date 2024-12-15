@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.focsit.backend.dto.JwtAuthenticationResponse;
 import ru.focsit.backend.dto.SignUpRequest;
 import ru.focsit.backend.pojo.Playlist;
@@ -54,10 +55,10 @@ public class YourLibraryRestController {
     // Для пользователя
     @PostMapping("/create-playlist")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Playlist> createPlaylist(@RequestBody Playlist playlist) {
+    public ResponseEntity<Playlist> createPlaylist(@RequestParam("file") MultipartFile file, @RequestPart("playlist") @Valid Playlist playlist) {
         User curUser = userService.getCurrentUser();
         playlist.setPlaylistUser(curUser);
-        Playlist createdPlaylist = playlistService.createPlaylist(playlist);
+        Playlist createdPlaylist = playlistService.createPlaylist(playlist, file);
         return ResponseEntity.ok(createdPlaylist);
     }
 
@@ -80,10 +81,10 @@ public class YourLibraryRestController {
     // Для модератора
     @PostMapping("/create-lopify-playlist")
     @PreAuthorize("hasRole('ROLE_MODERATOR')")
-    public ResponseEntity<Playlist> createStandardPlaylist(@RequestBody Playlist playlist) {
+    public ResponseEntity<Playlist> createStandardPlaylist(@RequestParam("file") MultipartFile file, @RequestPart("playlist") @Valid Playlist playlist) {
         User lopifyUser = userService.getLopifyUser();
         playlist.setPlaylistUser(lopifyUser);
-        Playlist createdPlaylist = playlistService.createPlaylist(playlist);
+        Playlist createdPlaylist = playlistService.createPlaylist(playlist, file);
         return ResponseEntity.ok(createdPlaylist);
     }
 

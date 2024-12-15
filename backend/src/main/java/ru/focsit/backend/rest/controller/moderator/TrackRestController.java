@@ -1,16 +1,17 @@
 package ru.focsit.backend.rest.controller.moderator;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.focsit.backend.pojo.Album;
 import ru.focsit.backend.pojo.Artist;
-import ru.focsit.backend.pojo.Playlist;
 import ru.focsit.backend.pojo.Track;
 import ru.focsit.backend.service.AlbumService;
 import ru.focsit.backend.service.ArtistService;
 import ru.focsit.backend.service.TrackService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,7 +47,7 @@ public class TrackRestController {
     }
 
     @PostMapping
-    public Track createTrack(@RequestBody Track track) {
+    public Track createTrack(@RequestParam("file") MultipartFile file, @RequestPart("track") @Valid Track track) {
         if (track.getTrackAlbum() == null) {
             Optional<Artist> artistOptional = artistService.getArtistByTrack(track);
             if (artistOptional.isPresent()) {
@@ -54,19 +55,13 @@ public class TrackRestController {
                 Album newAlbum = new Album();
                 newAlbum.setAlbumName(track.getTrackName());
                 newAlbum.setAlbumArtist(artist);
-                newAlbum = albumService.createAlbum(newAlbum);
+                newAlbum = albumService.createAlbum(newAlbum, file);
                 track.setTrackAlbum(newAlbum);
             } else {
                 throw new IllegalArgumentException("No artist found for the track");
             }
         }
-        return trackService.createTrack(track);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Track> updateTrack(@PathVariable Long id, @RequestBody Track trackDetails) {
-        Track updatedTrack = trackService.updateTrack(id, trackDetails);
-        return updatedTrack != null ? ResponseEntity.ok(updatedTrack) : ResponseEntity.notFound().build();
+        return trackService.createTrack(track, file);
     }
 
     @DeleteMapping("/{id}")

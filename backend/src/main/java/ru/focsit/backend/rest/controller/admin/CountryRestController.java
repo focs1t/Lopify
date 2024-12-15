@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -21,7 +22,7 @@ public class CountryRestController {
     }
 
     @PostMapping
-    public Country createCountry(@RequestBody Country country) {
+    public Country createCountry(@RequestBody @Valid Country country) {
         return countryService.createCountry(country);
     }
 

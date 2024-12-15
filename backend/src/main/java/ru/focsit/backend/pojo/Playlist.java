@@ -6,8 +6,11 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @Entity
@@ -31,6 +34,9 @@ public class Playlist {
     @Size(max = 500, message = "Описание плейлиста должно быть меньше 500 символов")
     @Column(name = "playlistDescription", nullable = false)
     private String playlistDescription;
+
+    @Column(name = "playlistDuration")
+    private LocalTime playlistDuration;  // TODO изменить на суммму по трекам
 
     @NotBlank(message = "URL изображения плейлиста обязателен")
     @Size(max = 255, message = "URL изображения плейлиста должен быть меньше 255 символов")

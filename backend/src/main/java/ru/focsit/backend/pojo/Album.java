@@ -5,9 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -38,13 +39,13 @@ public class Album {
     @NotBlank(message = "URL изображения альбома обязателен")
     @Size(max = 255, message = "URL изображения альбома должен быть меньше 255 символов")
     @Column(name = "albumImageUrl", nullable = false)
-    private String albumImageUrl;
+    private String albumImageUrl; // TODO берем фото по треку
 
     @Column(name = "albumReleaseDate")
-    private LocalDate albumReleaseDate;
+    private LocalDate albumReleaseDate = LocalDate.now();
 
     @Column(name = "albumDuration")
-    private LocalTime albumDuration;
+    private LocalTime albumDuration;  // TODO изменить на суммму по трекам
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "albumArtistId")

@@ -6,7 +6,9 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -30,17 +32,12 @@ public class Track {
     private String trackName;
 
     @Column(name = "trackDate")
-    private LocalDate trackDate;
+    private LocalDate trackDate = LocalDate.now();
 
     @NotBlank(message = "URL изображения трека обязателен")
     @Size(max = 255, message = "URL изображения трека должен быть меньше 255 символов")
     @Column(name = "trackImageUrl", nullable = false)
     private String trackImageUrl;
-
-    @NotBlank(message = "URL песни трека обязателен")
-    @Size(max = 255, message = "URL песни трека должен быть меньше 255 символов")
-    @Column(name = "trackSongUrl", nullable = false)
-    private String trackSongUrl;
 
     @Column(name = "trackDuration")
     private LocalTime trackDuration;

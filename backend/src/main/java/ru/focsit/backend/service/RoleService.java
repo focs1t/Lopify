@@ -1,10 +1,11 @@
 package ru.focsit.backend.service;
 
-import ru.focsit.backend.pojo.Role;
-import ru.focsit.backend.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.focsit.backend.pojo.Role;
+import ru.focsit.backend.repository.RoleRepository;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,11 +23,11 @@ public class RoleService {
         return roleRepository.findById(roleId);
     }
 
-    public Role createRole(Role role) {
+    public Role createRole(@Valid Role role) {
         return roleRepository.save(role);
     }
 
-    public Role updateRole(Long roleId, Role roleDetails) {
+    public Role updateRole(Long roleId, @Valid Role roleDetails) {
         Optional<Role> role = roleRepository.findById(roleId);
         if (role.isPresent()) {
             Role curRole = role.get();

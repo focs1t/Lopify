@@ -1,10 +1,11 @@
 package ru.focsit.backend.service;
 
-import ru.focsit.backend.pojo.Genre;
-import ru.focsit.backend.repository.GenreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.focsit.backend.pojo.Genre;
+import ru.focsit.backend.repository.GenreRepository;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,11 +23,11 @@ public class GenreService {
         return genreRepository.findById(genreId);
     }
 
-    public Genre createGenre(Genre genre) {
+    public Genre createGenre(@Valid Genre genre) {
         return genreRepository.save(genre);
     }
 
-    public Genre updateGenre(Long genreId, Genre genreDetails) {
+    public Genre updateGenre(Long genreId, @Valid Genre genreDetails) {
         Optional<Genre> genre = genreRepository.findById(genreId);
         if (genre.isPresent()) {
             Genre curGenre = genre.get();
