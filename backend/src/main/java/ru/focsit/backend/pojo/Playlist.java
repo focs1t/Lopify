@@ -36,7 +36,7 @@ public class Playlist {
     private String playlistDescription;
 
     @Column(name = "playlistDuration")
-    private LocalTime playlistDuration;  // TODO изменить на суммму по трекам
+    private LocalTime playlistDuration;
 
     @NotBlank(message = "URL изображения плейлиста обязателен")
     @Size(max = 255, message = "URL изображения плейлиста должен быть меньше 255 символов")
