@@ -39,7 +39,10 @@ public class AuthenticationService {
         userService.create(user);
 
         var jwt = jwtService.generateToken(user);
-        return new JwtAuthenticationResponse(jwt);
+        return JwtAuthenticationResponse.builder()
+                .token(jwt)
+                .role(role.get().getRoleName())
+                .build();
     }
 
     public JwtAuthenticationResponse registerUser(SignUpRequest request) {
@@ -57,7 +60,10 @@ public class AuthenticationService {
         userService.create(user);
 
         var jwt = jwtService.generateToken(user);
-        return new JwtAuthenticationResponse(jwt);
+        return JwtAuthenticationResponse.builder()
+                .token(jwt)
+                .role(role.get().getRoleName())
+                .build();
     }
 
     public JwtAuthenticationResponse signIn(SignInRequest request) {
@@ -71,6 +77,10 @@ public class AuthenticationService {
                 .loadUserByUsername(request.getUsername());
 
         var jwt = jwtService.generateToken(user);
-        return new JwtAuthenticationResponse(jwt);
+        String roleName = user.getAuthorities().iterator().next().getAuthority(); // Extract role from authorities
+        return JwtAuthenticationResponse.builder()
+                .token(jwt)
+                .role(roleName)
+                .build();
     }
 }
