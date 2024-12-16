@@ -42,8 +42,9 @@ class SignInActivity : AppCompatActivity() {
                         Log.d("SignIn", "Response: $response")
                         Toast.makeText(this, "Вход успешен", Toast.LENGTH_SHORT).show()
 
-                        // Сохраняем токен
+                        // Сохраняем токен и роль
                         PreferencesHelper.saveToken(this, response.token)
+                        PreferencesHelper.saveRole(this, response.role)
 
                         // Переход на MainActivity и открытие вкладки Home
                         val intent = Intent(this, MainActivity::class.java)

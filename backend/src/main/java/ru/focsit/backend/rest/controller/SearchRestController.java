@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
+import ru.focsit.backend.dto.SearchResults;
 import ru.focsit.backend.pojo.Album;
 import ru.focsit.backend.pojo.Artist;
 import ru.focsit.backend.pojo.Playlist;
@@ -18,9 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Map;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
 
 @RestController
 @RequestMapping("/api/search-page")
@@ -77,15 +75,5 @@ public class SearchRestController {
     public ResponseEntity<Map<String, List<Album>>> getAlbumsByAllGenres() {
         Map<String, List<Album>> albumsByGenre = albumService.getAlbumsByAllGenres(genreService.getAllGenres());
         return ResponseEntity.ok(albumsByGenre);
-    }
-
-    @Data
-    @AllArgsConstructor
-    public static class SearchResults {
-        private List<Album> albums;
-        private List<Artist> artists;
-        private List<Playlist> playlists;
-        private List<Track> tracks;
-        private List<User> users;
     }
 }

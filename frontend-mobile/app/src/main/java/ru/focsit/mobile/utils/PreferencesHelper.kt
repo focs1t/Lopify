@@ -6,8 +6,8 @@ import android.content.SharedPreferences
 object PreferencesHelper {
     private const val PREFS_NAME = "user_prefs"
     private const val KEY_TOKEN = "auth_token"
+    private const val KEY_ROLE = "user_role"
 
-    // Получаем объект SharedPreferences
     private fun getSharedPreferences(context: Context): SharedPreferences {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     }
@@ -24,9 +24,27 @@ object PreferencesHelper {
         return prefs.getString(KEY_TOKEN, null)
     }
 
-    // Удаляем токен (например, при выходе из системы)
+    // Удаляем токен
     fun clearToken(context: Context) {
         val prefs = getSharedPreferences(context)
         prefs.edit().remove(KEY_TOKEN).apply()
+    }
+
+    // Сохраняем роль
+    fun saveRole(context: Context, role: String) {
+        val prefs = getSharedPreferences(context)
+        prefs.edit().putString(KEY_ROLE, role).apply()
+    }
+
+    // Получаем роль
+    fun getRole(context: Context): String? {
+        val prefs = getSharedPreferences(context)
+        return prefs.getString(KEY_ROLE, null)
+    }
+
+    // Удаляем роль
+    fun clearRole(context: Context) {
+        val prefs = getSharedPreferences(context)
+        prefs.edit().remove(KEY_ROLE).apply()
     }
 }
