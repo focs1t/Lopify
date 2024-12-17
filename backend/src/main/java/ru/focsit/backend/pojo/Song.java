@@ -1,35 +1,38 @@
 package ru.focsit.backend.pojo;
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.util.Set;
+
 @Entity
+@Table(name = "songs")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Song {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Size(max = 100)
-    private String title;
+    @Column(nullable = false, length = 255)
+    private String name;
 
-    @NotBlank
-    @Size(max = 50)
+    @Column(nullable = false)
+    private Integer duration;
+
+    @Column(nullable = false, length = 255)
     private String genre;
 
-    private Integer duration; // duration in seconds
+    @Column(nullable = false, length = 255)
+    private String artist;
 
-    @ManyToOne
-    @JoinColumn(name = "album_id")
-    private Album album;
+    @Column(nullable = false, length = 255)
+    private String album;
 
-    @ManyToOne
-    @JoinColumn(name = "artist_id")
-    private Artist artist;
+    @ManyToMany(mappedBy = "favoriteSongs")
+    @JsonBackReference
+    private Set<User> usersWhoFavorited;
 }

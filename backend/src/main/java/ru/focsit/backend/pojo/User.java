@@ -1,34 +1,72 @@
 package ru.focsit.backend.pojo;
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 @Entity
+@Table(name = "users")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
-
+@Builder
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Size(max = 50)
+    @Column(nullable = false, unique = true, length = 255)
     private String username;
 
-    @NotBlank
-    @Size(max = 100)
+    @Column(nullable = false, length = 255)
+    @JsonIgnore
     private String password;
 
-    @Email
-    @NotBlank
-    @Size(max = 100)
+    @Column(nullable = false, unique = true, length = 255)
     private String email;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 50)
     private Role role;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_favorites",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "song_id")
+    )
+    @JsonManagedReference
+    private Set<Song> favoriteSongs;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.toString()));
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

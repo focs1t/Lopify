@@ -2,53 +2,79 @@ package ru.focsit.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.focsit.backend.pojo.Album;
-import ru.focsit.backend.pojo.Artist;
+import ru.focsit.backend.dto.SongDto;
 import ru.focsit.backend.pojo.Song;
 import ru.focsit.backend.repository.SongRepository;
-import ru.focsit.backend.repository.AlbumRepository;
-import ru.focsit.backend.repository.ArtistRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class SongService {
-
     @Autowired
     private SongRepository songRepository;
 
-    @Autowired
-    private AlbumRepository albumRepository;
-
-    @Autowired
-    private ArtistRepository artistRepository;
-
-    public Song getSongById(Long songId) {
-        return songRepository.findById(songId).orElseThrow(() -> new IllegalArgumentException("Song not found"));
+    public SongDto toDto(Song song) {
+        return new SongDto(
+                song.getId(),
+                song.getName(),
+                song.getGenre(),
+                song.getArtist(),
+                song.getAlbum(),
+                song.getDuration()
+        );
     }
 
-    public List<Song> getSongsByAlbum(Long albumId) {
-        return songRepository.findByAlbumId(albumId);
+    public Song fromDto(SongDto songDto) {
+        return Song.builder()
+                .id(songDto.getId())
+                .name(songDto.getName())
+                .genre(songDto.getGenre())
+                .artist(songDto.getArtist())
+                .album(songDto.getAlbum())
+                .duration(songDto.getDuration())
+                .build();
     }
 
-    public List<Song> getSongsByArtist(Long artistId) {
-        return songRepository.findByArtistId(artistId);
-    }
-
-    public Song createSong(String title, Long albumId, Long artistId) {
-        // Получаем альбом и артиста через их репозитории
-        Album album = albumRepository.findById(albumId).orElseThrow(() -> new IllegalArgumentException("Album not found"));
-        Artist artist = artistRepository.findById(artistId).orElseThrow(() -> new IllegalArgumentException("Artist not found"));
-
-        Song song = new Song();
-        song.setTitle(title);
-        song.setAlbum(album);  // Устанавливаем альбом
-        song.setArtist(artist);  // Устанавливаем артиста
-
+    public Song createSong(SongDto songDto) {
+        Song song = fromDto(songDto);
         return songRepository.save(song);
     }
 
-    public void deleteSong(Long songId) {
-        songRepository.deleteById(songId);
+    public List<SongDto> getAllSongs() {
+        return songRepository.findAll()
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
+    public Song getSongById(Long id) {
+        return songRepository.findById(id).orElseThrow(() -> new RuntimeException("Song not found"));
+    }
+
+    public Song updateSong(Long id, Song updatedSong) {
+        Song song = getSongById(id);
+        song.setName(updatedSong.getName());
+        song.setDuration(updatedSong.getDuration());
+        song.setGenre(updatedSong.getGenre());
+        song.setArtist(updatedSong.getArtist());
+        song.setAlbum(updatedSong.getAlbum());
+        return songRepository.save(song);
+    }
+
+    public void deleteSong(Long id) {
+        songRepository.deleteById(id);
+    }
+
+    public List<Song> getSongsByCriteria(String album, String artist, String name) {
+        if (album != null) {
+            return songRepository.findByAlbum(album);
+        } else if (artist != null) {
+            return songRepository.findByArtist(artist);
+        } else if (name != null) {
+            return songRepository.findByName(name);
+        } else {
+            return songRepository.findAll();
+        }
     }
 }

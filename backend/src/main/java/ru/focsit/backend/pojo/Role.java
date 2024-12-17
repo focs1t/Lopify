@@ -1,7 +1,7 @@
 package ru.focsit.backend.pojo;
 
 public enum Role {
-    USER,
-    ADMIN,
-    MODERATOR
+    ROLE_USER,
+    ROLE_ADMIN,
+    ROLE_MODERATOR
 }
