@@ -6,6 +6,46 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="16dp"
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.44">
+
+        <!-- Имя пользователя -->
+
+        <!-- Кнопка для получения любимых треков -->
+        <TextView
+            android:id="@+id/textUserProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:text="Имя пользователя"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/btnLikedTracks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Загрузить любимые треки"
+            android:visibility="gone" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewTracks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
     <TextView
         android:id="@+id/text_home"
         android:layout_width="match_parent"
@@ -18,5 +58,73 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.13999999" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5">
+
+        <Button
+            android:id="@+id/btnCountries"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Countries" />
+
+        <Button
+            android:id="@+id/btnGenres"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Genres" />
+
+        <Button
+            android:id="@+id/btnRoles"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Role" />
+
+        <Button
+            android:id="@+id/btnUsers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="User" />
+
+        <Button
+            android:id="@+id/btnAlbums"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Albums" />
+
+        <Button
+            android:id="@+id/btnArtists"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Artists" />
+
+        <Button
+            android:id="@+id/btnComments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Comments" />
+
+        <Button
+            android:id="@+id/btnTracks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tracks" />
+
+        <Button
+            android:id="@+id/btnUserProfiles"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Users" />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

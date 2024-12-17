@@ -5,12 +5,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import ru.focsit.backend.pojo.Playlist;
 import ru.focsit.backend.pojo.User;
 import ru.focsit.backend.repository.CountryRepository;
+import ru.focsit.backend.repository.PlaylistRepository;
 import ru.focsit.backend.repository.RoleRepository;
 import ru.focsit.backend.repository.UserRepository;
 
 import jakarta.validation.Valid;
+
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,6 +27,9 @@ public class UserService {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private PlaylistRepository playlistRepository;
 
     @Autowired
     private CountryRepository countryRepository;
@@ -77,6 +84,16 @@ public class UserService {
         return searchUsers(curUserName).stream().findFirst().orElseThrow();
     }
 
+    public Playlist createFavoritePlaylist(User user) {
+        Playlist favoritePlaylist = new Playlist();
+        favoritePlaylist.setPlaylistName("Favorite");
+        favoritePlaylist.setPlaylistDescription("This is the user's favorite playlist.");
+        favoritePlaylist.setPlaylistImageUrl("static/uploads/heart.png");
+        favoritePlaylist.setPlaylistUser(user);
+
+        return playlistRepository.save(favoritePlaylist);
+    }
+
     public User create(@Valid User user) {
         if (userRepository.existsByUsername(user.getUsername())) {
             throw new RuntimeException("Пользователь с таким именем уже существует");
@@ -86,7 +103,11 @@ public class UserService {
             throw new RuntimeException("Пользователь с таким email уже существует");
         }
 
-        return createUser(user);
+        User createdUser = userRepository.save(user);
+
+        createFavoritePlaylist(createdUser);
+
+        return createdUser;
     }
 
     public User getByUsername(String username) {

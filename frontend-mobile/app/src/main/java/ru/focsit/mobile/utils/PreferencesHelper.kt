@@ -47,4 +47,20 @@ object PreferencesHelper {
         val prefs = getSharedPreferences(context)
         prefs.edit().remove(KEY_ROLE).apply()
     }
+
+    // Проверка ролей
+    fun isAdmin(context: Context): Boolean {
+        val role = getRole(context)
+        return role == "ROLE_ADMIN"
+    }
+
+    fun isModerator(context: Context): Boolean {
+        val role = getRole(context)
+        return role == "ROLE_MODERATOR"
+    }
+
+    fun isUser(context: Context): Boolean {
+        val role = getRole(context)
+        return role == "ROLE_USER"
+    }
 }

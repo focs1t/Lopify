@@ -60,7 +60,7 @@ public class User implements UserDetails {
     private Country userCountry;
 
     @OneToMany(mappedBy = "playlistUser", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference
+    @JsonIdentityReference
     private List<Playlist> playlists;
 
     @OneToMany(mappedBy = "commentUser", cascade = CascadeType.ALL, orphanRemoval = true)

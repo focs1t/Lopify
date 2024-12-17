@@ -42,24 +42,6 @@ public class SearchRestController {
     @Autowired
     private GenreService genreService;
 
-    @PostMapping("/logout")
-    public String logout(HttpServletRequest request, HttpServletResponse response) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null) {
-            new SecurityContextLogoutHandler().logout(request, response, auth);
-        }
-        return "Logged out successfully";
-    }
-
-    @GetMapping("/my-profile")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<User> getUserProfile() {
-        User curUser = userService.getCurrentUser();
-        List<Playlist> playlists = playlistService.getPlaylistsByUser(curUser);
-        curUser.setPlaylists(playlists);
-        return ResponseEntity.ok(curUser);
-    }
-
     @GetMapping("/search")
     public SearchResults search(@RequestParam String query) {
         List<Album> albums = albumService.searchAlbums(query);

@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
         // Получаем контроллер навигации
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
 
+
         // Настройка ActionBar с NavController
         val appBarConfiguration = AppBarConfiguration(
             setOf(

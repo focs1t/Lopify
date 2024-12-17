@@ -66,7 +66,6 @@ public class PlaylistService {
                     .filter(currentTrack -> !newTracks.contains(currentTrack))
                     .forEach(currentTrack -> currentTrack.getPlaylists().remove(curPlaylist));
 
-            updatePlaylistDuration(curPlaylist);
 
             return playlistRepository.save(curPlaylist);
         }
@@ -97,13 +96,5 @@ public class PlaylistService {
         return getAllPlaylists().stream()
                 .filter(playlist -> playlist.getPlaylistUser().equals(curUser) && playlist.getPlaylistUser().getUsername().contains(query))
                 .collect(Collectors.toList());
-    }
-
-    private void updatePlaylistDuration(Playlist playlist) {
-        Duration totalDuration = playlist.getTracks().stream()
-                .map(Track::getTrackDuration)
-                .map(duration -> Duration.between(LocalTime.MIN, duration))
-                .reduce(Duration.ZERO, Duration::plus);
-        playlist.setPlaylistDuration(LocalTime.ofNanoOfDay(totalDuration.toNanos()));
     }
 }

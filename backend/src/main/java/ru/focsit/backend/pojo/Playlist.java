@@ -35,9 +35,6 @@ public class Playlist {
     @Column(name = "playlistDescription", nullable = false)
     private String playlistDescription;
 
-    @Column(name = "playlistDuration")
-    private LocalTime playlistDuration;
-
     @NotBlank(message = "URL изображения плейлиста обязателен")
     @Size(max = 255, message = "URL изображения плейлиста должен быть меньше 255 символов")
     @Column(name = "playlistImageUrl", nullable = false)
@@ -45,7 +42,7 @@ public class Playlist {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "playlistUserId")
-    @JsonIdentityReference
+    @JsonBackReference
     private User playlistUser;
 
     @ManyToMany(mappedBy = "playlists")
