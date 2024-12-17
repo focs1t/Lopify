@@ -1,5 +1,6 @@
 package ru.focsit.mobile.repository
 
+import android.content.Context
 import android.util.Log
 import retrofit2.Call
 import retrofit2.Callback
@@ -8,15 +9,14 @@ import ru.focsit.mobile.RetrofitClient
 import ru.focsit.mobile.data.User
 import ru.focsit.mobile.data.Playlist
 
-class HomeRepository {
-    private val homeApi = RetrofitClient.homeApi
+class HomeRepository(private val context: Context) {
+    private val homeApi = RetrofitClient.getHomeApi(context)
 
-    // Method for getting the user profile
     fun getUserProfile(callback: (User?) -> Unit) {
         homeApi.getUserProfile().enqueue(object : Callback<User> {
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 if (response.isSuccessful) {
-                    callback(response.body()) // Pass the user object
+                    callback(response.body())
                 } else {
                     Log.e("HomeRepository", "Error fetching profile: ${response.code()} - ${response.message()}")
                     callback(null)
@@ -30,12 +30,11 @@ class HomeRepository {
         })
     }
 
-    // Method for getting the liked tracks (favorites)
     fun getLikedTracks(callback: (Playlist?) -> Unit) {
         homeApi.getLikedTracks().enqueue(object : Callback<Playlist> {
             override fun onResponse(call: Call<Playlist>, response: Response<Playlist>) {
                 if (response.isSuccessful) {
-                    callback(response.body()) // Pass the playlist object
+                    callback(response.body())
                 } else {
                     Log.e("HomeRepository", "Error fetching favorites: ${response.code()} - ${response.message()}")
                     callback(null)
@@ -49,12 +48,11 @@ class HomeRepository {
         })
     }
 
-    // Method for logging out
     fun logout(callback: (String?) -> Unit) {
         homeApi.logout().enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 if (response.isSuccessful) {
-                    callback(response.body()) // Pass the logout success message
+                    callback(response.body())
                 } else {
                     Log.e("HomeRepository", "Error during logout: ${response.code()} - ${response.message()}")
                     callback(null)

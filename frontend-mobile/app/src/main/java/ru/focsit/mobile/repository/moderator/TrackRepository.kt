@@ -1,5 +1,6 @@
 package ru.focsit.mobile.repository.moderator
 
+import android.content.Context
 import android.util.Log
 import okhttp3.MultipartBody
 import retrofit2.Call
@@ -8,9 +9,8 @@ import retrofit2.Response
 import ru.focsit.mobile.RetrofitClient
 import ru.focsit.mobile.data.Track
 
-class TrackRepository {
-
-    private val trackApi = RetrofitClient.trackApi
+class TrackRepository(private val context: Context) {
+    private val trackApi = RetrofitClient.getTrackApi(context)
 
     // Получить все треки
     fun getAllTracks(callback: (List<Track>?) -> Unit) {

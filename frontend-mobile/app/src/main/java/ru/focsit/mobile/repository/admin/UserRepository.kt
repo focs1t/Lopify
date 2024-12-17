@@ -1,5 +1,6 @@
 package ru.focsit.mobile.repository.admin
 
+import android.content.Context
 import android.util.Log
 import retrofit2.Call
 import retrofit2.Callback
@@ -9,8 +10,8 @@ import ru.focsit.mobile.data.User
 import ru.focsit.mobile.data.auth.SignUpRequest
 import ru.focsit.mobile.data.auth.JwtAuthenticationResponse
 
-class UserRepository {
-    private val userApi = RetrofitClient.userApi
+class UserRepository(private val context: Context) {
+    private val userApi = RetrofitClient.getUserApi(context)
 
     // Метод для получения всех пользователей
     fun getUsers(callback: (List<User>?) -> Unit) {

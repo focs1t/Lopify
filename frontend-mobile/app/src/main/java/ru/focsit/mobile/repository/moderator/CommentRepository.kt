@@ -1,5 +1,6 @@
 package ru.focsit.mobile.repository.moderator
 
+import android.content.Context
 import android.util.Log
 import retrofit2.Call
 import retrofit2.Callback
@@ -7,9 +8,8 @@ import retrofit2.Response
 import ru.focsit.mobile.RetrofitClient
 import ru.focsit.mobile.data.Comment
 
-class CommentRepository {
-
-    private val commentApi = RetrofitClient.commentApi
+class CommentRepository(private val context: Context) {
+    private val commentApi = RetrofitClient.getCommentApi(context)
 
     // Получение всех комментариев
     fun getComments(callback: (List<Comment>?) -> Unit) {

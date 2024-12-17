@@ -1,5 +1,6 @@
 package ru.focsit.mobile.repository.moderator
 
+import android.content.Context
 import android.util.Log
 import retrofit2.Call
 import retrofit2.Callback
@@ -7,9 +8,8 @@ import retrofit2.Response
 import ru.focsit.mobile.RetrofitClient
 import ru.focsit.mobile.data.Artist
 
-class ArtistRepository {
-
-    private val artistApi = RetrofitClient.artistApi
+class ArtistRepository(private val context: Context) {
+    private val artistApi = RetrofitClient.getArtistApi(context)
 
     // Получение всех артистов
     fun getArtists(callback: (List<Artist>?) -> Unit) {

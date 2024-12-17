@@ -1,5 +1,6 @@
 package ru.focsit.mobile.repository.moderator
 
+import android.content.Context
 import android.util.Log
 import okhttp3.MultipartBody
 import retrofit2.Call
@@ -9,9 +10,8 @@ import ru.focsit.mobile.RetrofitClient
 import ru.focsit.mobile.data.Playlist
 import ru.focsit.mobile.data.Track
 
-class PlaylistRepository {
-
-    private val playlistApi = RetrofitClient.playlistApi
+class PlaylistRepository(private val context: Context) {
+    private val playlistApi = RetrofitClient.getPlaylistApi(context)
 
     // Получить плейлист по ID
     fun getPlaylistById(id: Long, callback: (Playlist?) -> Unit) {

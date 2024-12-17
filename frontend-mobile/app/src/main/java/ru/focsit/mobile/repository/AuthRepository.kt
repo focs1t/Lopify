@@ -10,7 +10,7 @@ import ru.focsit.mobile.data.auth.SignInRequest
 import ru.focsit.mobile.data.auth.SignUpRequest
 
 class AuthRepository {
-    private val authApi = RetrofitClient.authApi
+    private val authApi = RetrofitClient.getAuthApi()
 
     // Метод для регистрации
     fun signUp(request: SignUpRequest, callback: (JwtAuthenticationResponse?) -> Unit) {

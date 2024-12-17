@@ -1,5 +1,6 @@
 package ru.focsit.mobile.repository.admin
 
+import android.content.Context
 import android.util.Log
 import retrofit2.Call
 import retrofit2.Callback
@@ -7,8 +8,8 @@ import retrofit2.Response
 import ru.focsit.mobile.RetrofitClient
 import ru.focsit.mobile.data.Country
 
-class CountryRepository {
-    private val countryApi = RetrofitClient.countryApi
+class CountryRepository(private val context: Context) {
+    private val countryApi = RetrofitClient.getCountryApi(context)
 
     // Метод для получения всех стран
     fun getCountries(callback: (List<Country>?) -> Unit) {

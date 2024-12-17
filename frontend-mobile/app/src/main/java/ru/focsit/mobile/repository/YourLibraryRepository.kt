@@ -1,5 +1,6 @@
 package ru.focsit.mobile.repository
 
+import android.content.Context
 import android.util.Log
 import okhttp3.MultipartBody
 import retrofit2.Call
@@ -11,9 +12,8 @@ import ru.focsit.mobile.data.User
 import ru.focsit.mobile.data.auth.JwtAuthenticationResponse
 import ru.focsit.mobile.data.auth.SignUpRequest
 
-class YourLibraryRepository {
-
-    private val yourLibraryApi = RetrofitClient.yourLibraryApi
+class YourLibraryRepository(private val context: Context) {
+    private val yourLibraryApi = RetrofitClient.getYourLibraryApi(context)
 
     // Method to log out the user
     fun logout(callback: (String?) -> Unit) {

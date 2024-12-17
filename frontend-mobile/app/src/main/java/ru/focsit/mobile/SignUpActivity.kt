@@ -82,7 +82,7 @@ class SignUpActivity : AppCompatActivity() {
     // Функция для загрузки стран с бэкенда
     private fun loadCountries() {
         lifecycleScope.launch(Dispatchers.IO) {
-            val call = RetrofitClient.authApi.getCountries()
+            val call = RetrofitClient.getAuthApi().getCountries()
             call.enqueue(object : Callback<List<Country>> {
                 override fun onResponse(call: Call<List<Country>>, response: Response<List<Country>>) {
                     if (response.isSuccessful) {

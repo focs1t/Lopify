@@ -1,5 +1,6 @@
 package ru.focsit.mobile.repository.moderator
 
+import android.content.Context
 import android.util.Log
 import okhttp3.MultipartBody
 import retrofit2.Call
@@ -10,8 +11,8 @@ import ru.focsit.mobile.data.Album
 import ru.focsit.mobile.data.Comment
 import ru.focsit.mobile.data.Track
 
-class AlbumRepository {
-    private val albumApi = RetrofitClient.albumApi
+class AlbumRepository(private val context: Context) {
+    private val albumApi = RetrofitClient.getAlbumApi(context)
 
     // Получение всех альбомов
     fun getAlbums(callback: (List<Album>?) -> Unit) {

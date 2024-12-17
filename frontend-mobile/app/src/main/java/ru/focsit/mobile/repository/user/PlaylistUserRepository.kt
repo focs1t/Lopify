@@ -1,5 +1,6 @@
 package ru.focsit.mobile.repository.user
 
+import android.content.Context
 import android.util.Log
 import okhttp3.MultipartBody
 import retrofit2.Call
@@ -9,9 +10,8 @@ import ru.focsit.mobile.RetrofitClient
 import ru.focsit.mobile.data.Playlist
 import ru.focsit.mobile.data.Track
 
-class PlaylistUserRepository {
-
-    private val playlistUserApi = RetrofitClient.playlistUserApi
+class PlaylistUserRepository(private val context: Context) {
+    private val playlistUserApi = RetrofitClient.getPlaylistUserApi(context)
 
     // Получить плейлист по ID
     fun getPlaylistById(id: Long, callback: (Playlist?) -> Unit) {

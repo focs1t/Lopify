@@ -1,5 +1,6 @@
 package ru.focsit.mobile.repository.admin
 
+import android.content.Context
 import android.util.Log
 import retrofit2.Call
 import retrofit2.Callback
@@ -7,8 +8,8 @@ import retrofit2.Response
 import ru.focsit.mobile.RetrofitClient
 import ru.focsit.mobile.data.Genre
 
-class GenreRepository {
-    private val genreApi = RetrofitClient.genreApi
+class GenreRepository(private val context: Context) {
+    private val genreApi = RetrofitClient.getGenreApi(context)
 
     // Метод для получения всех жанров
     fun getGenres(callback: (List<Genre>?) -> Unit) {

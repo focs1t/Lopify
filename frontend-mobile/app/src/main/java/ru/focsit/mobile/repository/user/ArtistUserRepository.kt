@@ -1,5 +1,6 @@
 package ru.focsit.mobile.repository.user
 
+import android.content.Context
 import android.util.Log
 import retrofit2.Call
 import retrofit2.Callback
@@ -9,8 +10,8 @@ import ru.focsit.mobile.data.Artist
 import ru.focsit.mobile.data.Album
 import ru.focsit.mobile.data.Track
 
-class ArtistUserRepository {
-    private val artistUserApi = RetrofitClient.artistUserApi
+class ArtistUserRepository(private val context: Context) {
+    private val artistUserApi = RetrofitClient.getArtistUserApi(context)
 
     // Получить артиста по ID
     fun getArtistById(id: Long, callback: (Artist?) -> Unit) {

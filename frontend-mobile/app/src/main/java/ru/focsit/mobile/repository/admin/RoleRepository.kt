@@ -1,5 +1,6 @@
 package ru.focsit.mobile.repository.admin
 
+import android.content.Context
 import android.util.Log
 import retrofit2.Call
 import retrofit2.Callback
@@ -7,8 +8,8 @@ import retrofit2.Response
 import ru.focsit.mobile.RetrofitClient
 import ru.focsit.mobile.data.Role
 
-class RoleRepository {
-    private val roleApi = RetrofitClient.roleApi
+class RoleRepository(private val context: Context) {
+    private val roleApi = RetrofitClient.getRoleApi(context)
 
     // Метод для получения всех ролей
     fun getRoles(callback: (List<Role>?) -> Unit) {

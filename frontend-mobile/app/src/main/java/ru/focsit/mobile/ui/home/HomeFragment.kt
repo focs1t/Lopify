@@ -33,12 +33,6 @@ class HomeFragment : Fragment() {
             textView.text = it
         }
 
-        // Настроим кнопку для перехода на экран стран
-        val buttonGoToCountries: Button = binding.root.findViewById(R.id.button_go_to_countries)
-        buttonGoToCountries.setOnClickListener {
-            findNavController().navigate(R.id.action_navigation_home_to_countriesFragment)
-        }
-
         return root
     }
 

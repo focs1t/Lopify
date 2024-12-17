@@ -1,5 +1,6 @@
 package ru.focsit.mobile.repository.moderator
 
+import android.content.Context
 import android.util.Log
 import retrofit2.Call
 import retrofit2.Callback
@@ -7,9 +8,8 @@ import retrofit2.Response
 import ru.focsit.mobile.RetrofitClient
 import ru.focsit.mobile.data.User
 
-class UserProfileRepository {
-
-    private val userProfileApi = RetrofitClient.userProfileApi
+class UserProfileRepository(private val context: Context) {
+    private val userProfileApi = RetrofitClient.getUserProfileApi(context)
 
     // Получить всех пользователей
     fun getAllUsers(callback: (List<User>?) -> Unit) {

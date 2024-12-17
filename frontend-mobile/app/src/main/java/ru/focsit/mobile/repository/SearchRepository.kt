@@ -1,5 +1,6 @@
 package ru.focsit.mobile.repository
 
+import android.content.Context
 import android.util.Log
 import retrofit2.Call
 import retrofit2.Callback
@@ -12,9 +13,8 @@ import ru.focsit.mobile.data.Track
 import ru.focsit.mobile.data.User
 import ru.focsit.mobile.data.SearchResults
 
-class SearchRepository {
-
-    private val searchApi = RetrofitClient.searchApi
+class SearchRepository(private val context: Context) {
+    private val searchApi = RetrofitClient.getSearchApi(context)
 
     // Method to search across different entities (albums, artists, playlists, etc.)
     fun search(query: String, callback: (SearchResults?) -> Unit) {

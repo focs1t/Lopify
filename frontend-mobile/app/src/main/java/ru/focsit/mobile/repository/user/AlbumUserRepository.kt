@@ -1,5 +1,6 @@
 package ru.focsit.mobile.repository.user
 
+import android.content.Context
 import android.util.Log
 import retrofit2.Call
 import retrofit2.Callback
@@ -9,8 +10,8 @@ import ru.focsit.mobile.data.Album
 import ru.focsit.mobile.data.Comment
 import ru.focsit.mobile.data.Track
 
-class AlbumUserRepository {
-    private val albumUserApi = RetrofitClient.albumUserApi
+class AlbumUserRepository(private val context: Context) {
+    private val albumUserApi = RetrofitClient.getAlbumUserApi(context)
 
     // Получить альбом по ID
     fun getAlbumById(id: Long, callback: (Album?) -> Unit) {

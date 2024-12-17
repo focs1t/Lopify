@@ -1,5 +1,6 @@
 package ru.focsit.mobile.repository.user
 
+import android.content.Context
 import android.util.Log
 import retrofit2.Call
 import retrofit2.Callback
@@ -7,9 +8,8 @@ import retrofit2.Response
 import ru.focsit.mobile.RetrofitClient
 import ru.focsit.mobile.data.Track
 
-class TrackUserRepository {
-
-    private val trackUserApi = RetrofitClient.trackUserApi
+class TrackUserRepository(private val context: Context) {
+    private val trackUserApi = RetrofitClient.getTrackUserApi(context)
 
     // Получить трек по ID
     fun getTrackById(id: Long, callback: (Track?) -> Unit) {

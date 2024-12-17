@@ -12,24 +12,14 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_search"
         android:name="ru.focsit.mobile.ui.search.SearchFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:label="@string/title_search"
+        tools:layout="@layout/fragment_search" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_your_library"
         android:name="ru.focsit.mobile.ui.your_library.YourLibraryFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
-
-    <fragment
-        android:id="@+id/countriesFragment"
-        android:name="ru.focsit.mobile.ui.admin.countries.CountriesFragment"
-        android:label="Countries"
-        tools:layout="@layout/fragment_countries" />
-
-    <action
-        android:id="@+id/action_navigation_home_to_countriesFragment"
-        app:destination="@id/countriesFragment" />
+        android:label="@string/title_your_library"
+        tools:layout="@layout/fragment_your_library" />
 </navigation>

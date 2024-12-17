@@ -1,5 +1,6 @@
 package ru.focsit.mobile
 
+import android.content.Context
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -22,181 +23,213 @@ import ru.focsit.mobile.api.user.ArtistUserApi
 import ru.focsit.mobile.api.user.PlaylistUserApi
 import ru.focsit.mobile.api.user.ProfileApi
 import ru.focsit.mobile.api.user.TrackUserApi
+import ru.focsit.mobile.utils.AuthInterceptor
+import ru.focsit.mobile.utils.PreferencesHelper
 
 object RetrofitClient {
     private const val BASE_URL = "http://192.168.2.103:8080"
 
-    val authApi: AuthApi by lazy {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        retrofit.create(AuthApi::class.java)
+    // Получаем токен из SharedPreferences
+    private fun getTokenFromPreferences(context: Context): String? {
+        return PreferencesHelper.getToken(context)
     }
 
-    val countryApi: CountryApi by lazy {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+    // Создаем OkHttpClient с интерцептором
+    private fun createOkHttpClient(context: Context): OkHttpClient {
+        val token = getTokenFromPreferences(context) ?: ""
+        val authInterceptor = AuthInterceptor(token)
 
-        retrofit.create(CountryApi::class.java)
+        return OkHttpClient.Builder()
+            .addInterceptor(authInterceptor)  // Добавляем интерцептор
+            .build()
     }
 
-    val genreApi: GenreApi by lazy {
+    fun getAuthApi(): AuthApi {
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        retrofit.create(GenreApi::class.java)
+        return retrofit.create(AuthApi::class.java)
     }
 
-    val roleApi: RoleApi by lazy {
+    fun getCountryApi(context: Context): CountryApi {
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .client(createOkHttpClient(context))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        retrofit.create(RoleApi::class.java)
+        return retrofit.create(CountryApi::class.java)
     }
 
-    val userApi: UserApi by lazy {
+    fun getGenreApi(context: Context): GenreApi {
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .client(createOkHttpClient(context))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        retrofit.create(UserApi::class.java)
+        return retrofit.create(GenreApi::class.java)
     }
 
-    val albumApi: AlbumApi by lazy {
+    fun getRoleApi(context: Context): RoleApi {
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .client(createOkHttpClient(context))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        retrofit.create(AlbumApi::class.java)
+        return retrofit.create(RoleApi::class.java)
     }
 
-    val artistApi: ArtistApi by lazy {
+    fun getUserApi(context: Context): UserApi {
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .client(createOkHttpClient(context))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        retrofit.create(ArtistApi::class.java)
+        return retrofit.create(UserApi::class.java)
     }
 
-    val commentApi: CommentApi by lazy {
+    fun getAlbumApi(context: Context): AlbumApi {
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .client(createOkHttpClient(context))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        retrofit.create(CommentApi::class.java)
+        return retrofit.create(AlbumApi::class.java)
     }
 
-    val playlistApi: PlaylistApi by lazy {
+    fun getArtistApi(context: Context): ArtistApi {
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .client(createOkHttpClient(context))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        retrofit.create(PlaylistApi::class.java)
+        return retrofit.create(ArtistApi::class.java)
     }
 
-    val trackApi: TrackApi by lazy {
+    fun getCommentApi(context: Context): CommentApi {
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .client(createOkHttpClient(context))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        retrofit.create(TrackApi::class.java)
+        return retrofit.create(CommentApi::class.java)
     }
 
-    val userProfileApi: UserProfileApi by lazy {
+    fun getPlaylistApi(context: Context): PlaylistApi {
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .client(createOkHttpClient(context))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        retrofit.create(UserProfileApi::class.java)
+        return retrofit.create(PlaylistApi::class.java)
     }
 
-    val albumUserApi: AlbumUserApi by lazy {
+    fun getTrackApi(context: Context): TrackApi {
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .client(createOkHttpClient(context))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        retrofit.create(AlbumUserApi::class.java)
+        return retrofit.create(TrackApi::class.java)
     }
 
-    val artistUserApi: ArtistUserApi by lazy {
+    fun getUserProfileApi(context: Context): UserProfileApi {
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .client(createOkHttpClient(context))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        retrofit.create(ArtistUserApi::class.java)
+        return retrofit.create(UserProfileApi::class.java)
     }
 
-    val playlistUserApi: PlaylistUserApi by lazy {
-        val client = OkHttpClient.Builder().build()
-
+    fun getAlbumUserApi(context: Context): AlbumUserApi {
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .client(client)
+            .client(createOkHttpClient(context))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        retrofit.create(PlaylistUserApi::class.java)
+        return retrofit.create(AlbumUserApi::class.java)
     }
 
-    val profileApi: ProfileApi by lazy {
+    fun getArtistUserApi(context: Context): ArtistUserApi {
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .client(createOkHttpClient(context))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        retrofit.create(ProfileApi::class.java)
+        return retrofit.create(ArtistUserApi::class.java)
     }
 
-    val trackUserApi: TrackUserApi by lazy {
+    fun getPlaylistUserApi(context: Context): PlaylistUserApi {
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .client(createOkHttpClient(context))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        retrofit.create(TrackUserApi::class.java)
+        return retrofit.create(PlaylistUserApi::class.java)
     }
 
-    val homeApi: HomeApi by lazy {
+    fun getProfileApi(context: Context): ProfileApi {
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .client(createOkHttpClient(context))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        retrofit.create(HomeApi::class.java)
+        return retrofit.create(ProfileApi::class.java)
     }
 
-    val searchApi: SearchApi by lazy {
+    fun getTrackUserApi(context: Context): TrackUserApi {
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .client(createOkHttpClient(context))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        retrofit.create(SearchApi::class.java)
+        return retrofit.create(TrackUserApi::class.java)
     }
 
-    val yourLibraryApi: YourLibraryApi by lazy {
+    fun getHomeApi(context: Context): HomeApi {
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .client(createOkHttpClient(context))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        retrofit.create(YourLibraryApi::class.java)
+        return retrofit.create(HomeApi::class.java)
+    }
+
+    fun getSearchApi(context: Context): SearchApi {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(createOkHttpClient(context))
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        return retrofit.create(SearchApi::class.java)
+    }
+
+    fun getYourLibraryApi(context: Context): YourLibraryApi {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(createOkHttpClient(context))
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        return retrofit.create(YourLibraryApi::class.java)
     }
 }
