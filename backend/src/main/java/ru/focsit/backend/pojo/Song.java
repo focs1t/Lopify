@@ -5,13 +5,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
-import java.util.List;
-
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Album {
+public class Song {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,15 +17,19 @@ public class Album {
 
     @NotBlank
     @Size(max = 100)
-    private String name;
+    private String title;
 
     @NotBlank
-    private String releaseDate;
+    @Size(max = 50)
+    private String genre;
+
+    private Integer duration; // duration in seconds
+
+    @ManyToOne
+    @JoinColumn(name = "album_id")
+    private Album album;
 
     @ManyToOne
     @JoinColumn(name = "artist_id")
     private Artist artist;
-
-    @OneToMany(mappedBy = "album")
-    private List<Song> songs;
 }
