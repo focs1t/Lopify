@@ -1,10 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- Основные цвета фиолетового -->
+    <color name="purple_200">#BB86FC</color> <!-- Светлый фиолетовый -->
+    <color name="purple_500">#6200EE</color> <!-- Основной фиолетовый -->
+    <color name="purple_700">#3700B3</color> <!-- Тёмный фиолетовый -->
+
+    <!-- Чёрные оттенки -->
+    <color name="black_light">#212121</color> <!-- Светло-чёрный (фон) -->
+    <color name="black_dark">#121212</color> <!-- Глубокий чёрный -->
+    <color name="black">#000000</color> <!-- Абсолютный чёрный -->
+
+    <!-- Акценты -->
+    <color name="teal_200">#03DAC5</color> <!-- Бирюзовый акцент -->
+    <color name="teal_700">#018786</color> <!-- Тёмно-бирюзовый акцент -->
+
+    <!-- Основные цвета приложения -->
+    <color name="colorPrimary">#6200EE</color> <!-- Основной цвет фиолетовый -->
+    <color name="colorPrimaryDark">#3700B3</color> <!-- Тёмный фиолетовый -->
+    <color name="colorAccent">#03DAC5</color> <!-- Бирюзовый для акцента -->
+    <color name="white">#FFFFFF</color> <!-- Белый для контраста -->
 </resources>

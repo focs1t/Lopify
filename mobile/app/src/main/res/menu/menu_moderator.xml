@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_moderator"
+        android:title="Moderator"
+        android:icon="@drawable/ic_admin" />
+    <item
+        android:id="@+id/nav_song_management"
+        android:title="Songs"
+        android:icon="@drawable/ic_song_management" />
+    <item
+        android:id="@+id/nav_user_management"
+        android:title="Users"
+        android:icon="@drawable/ic_user_management" />
+</menu>
