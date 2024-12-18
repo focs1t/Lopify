@@ -1,7 +1,6 @@
 package ru.focsit.mobile.data
 
-data class SongDto(
-    val id: Long? = null,
+data class SongUpDto(
     val name: String,
     val genre: String,
     val artist: String,

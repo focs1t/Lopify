@@ -7,4 +7,9 @@
         <item>ROLE_MODERATOR</item>
         <item>ROLE_USER</item>
     </string-array>
+    <string-array name="search_criteria">
+        <item>Альбом</item>
+        <item>Артист</item>
+        <item>Название</item>
+    </string-array>
 </resources>

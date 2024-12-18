@@ -2,27 +2,16 @@ package ru.focsit.mobile
 
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import ru.focsit.mobile.fragments.admin.AdminFragment
-import ru.focsit.mobile.fragments.admin.AdminUserFragment
+import ru.focsit.mobile.fragments.admin.AdminUser.AdminUserFragment
 import ru.focsit.mobile.fragments.moderator.ModeratorFragment
 import ru.focsit.mobile.fragments.moderator.ModeratorSongFragment
 import ru.focsit.mobile.fragments.moderator.ModeratorUserFragment
 import ru.focsit.mobile.fragments.user.UserProfileFragment
 import ru.focsit.mobile.fragments.user.UserSongFragment
-import ru.focsit.mobile.ui.theme.MobileTheme
 import ru.focsit.mobile.utils.PreferencesHelper
 
 class MainActivity : AppCompatActivity() {
