@@ -84,19 +84,31 @@ public class UserSongRestController {
 
     @PostMapping("/{songId}/comments")
     public ResponseEntity<CommentDto> addCommentToSong(@PathVariable Long songId, @RequestBody String content) {
-        UserDto currentUser = userService.getCurrentUser();
-        Long userId = currentUser.getId();
-        Song song = songService.getSongById(songId); // Assuming you have a method to fetch the song by ID
-        User user = userService.getUserById(userId); // Assuming you have a method to fetch the user by ID
+        try {
+            UserDto currentUser = userService.getCurrentUser();
+            Long userId = currentUser.getId();
 
-        Comment comment = new Comment();
-        comment.setContent(content);
-        comment.setUser(user);
-        comment.setSong(song);
+            Song song = songService.getSongById(songId);
+            if (song == null) {
+                return ResponseEntity.status(404).body(null);
+            }
 
-        Comment savedComment = commentService.addComment(comment);
-        CommentDto commentDto = commentService.toDto(savedComment);
-        return ResponseEntity.ok(commentDto);
+            User user = userService.getUserById(userId);
+            if (user == null) {
+                return ResponseEntity.status(404).body(null);
+            }
+
+            Comment comment = new Comment();
+            comment.setContent(content);
+            comment.setUser(user);
+            comment.setSong(song);
+
+            Comment savedComment = commentService.addComment(comment);
+            CommentDto commentDto = commentService.toDto(savedComment);
+            return ResponseEntity.ok(commentDto);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
+        }
     }
 
     @GetMapping("/{songId}/comments")
