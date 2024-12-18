@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -36,14 +35,24 @@ public class User implements UserDetails {
     @Column(nullable = false, length = 50)
     private Role role;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_favorites",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "song_id")
-    )
+    @OneToOne(mappedBy = "user")
     @JsonManagedReference
-    private Set<Song> favoriteSongs;
+    private Playlist playlist;  // Связь с плейлистом "Избранное"
+
+    @Override
+    public int hashCode() {
+        // Используйте только неизменяемые поля для вычисления hashCode
+        return (id != null ? id.hashCode() : 0);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        // Используйте только уникальные поля, такие как `id`, для проверки равенства
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        User user = (User) obj;
+        return id != null && id.equals(user.id);
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

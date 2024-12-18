@@ -97,31 +97,4 @@ public class UserService {
         User user = getByUsername(username);
         return toDto(user);
     }
-
-    public List<SongDto> getFavoriteSongsByUserId(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        return user.getFavoriteSongs().stream()
-                .map(songService::toDto)
-                .collect(Collectors.toList());
-    }
-
-    public void removeSongFromFavorites(Long userId, Long songId) {
-        User user = getUserById(userId);
-        Song song = songService.getSongById(songId);
-
-        user.getFavoriteSongs()
-                .stream()
-                .filter(favoriteSong -> favoriteSong.getId().equals(songId))
-                .findFirst()
-                .ifPresentOrElse(
-                        favoriteSong -> {
-                            user.getFavoriteSongs().remove(favoriteSong);
-                            userRepository.save(user);
-                        },
-                        () -> {
-                            throw new RuntimeException("Song not found in user's favorites");
-                        }
-                );
-    }
 }

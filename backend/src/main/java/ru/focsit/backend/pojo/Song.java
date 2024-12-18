@@ -32,7 +32,7 @@ public class Song {
     @Column(nullable = false, length = 255)
     private String album;
 
-    @ManyToMany(mappedBy = "favoriteSongs")
+    @ManyToMany(mappedBy = "songs")
     @JsonBackReference
-    private Set<User> usersWhoFavorited;
+    private Set<Playlist> playlists;  // Связь с плейлистами
 }

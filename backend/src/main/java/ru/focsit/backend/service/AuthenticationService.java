@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.focsit.backend.dto.JwtAuthenticationResponse;
 import ru.focsit.backend.dto.SignInRequest;
 import ru.focsit.backend.dto.SignUpRequest;
+import ru.focsit.backend.pojo.Playlist;
 import ru.focsit.backend.pojo.Role;
 import ru.focsit.backend.pojo.User;
 
@@ -18,6 +19,7 @@ import java.util.Optional;
 public class AuthenticationService {
     private final UserService userService;
     private final JwtService jwtService;
+    private final PlaylistService playlistService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
@@ -30,6 +32,13 @@ public class AuthenticationService {
                 .build();
 
         userService.create(user);
+
+        // Создаем плейлист для пользователя
+        Playlist playlist = Playlist.builder()
+                .user(user)
+                .name("Избранное")
+                .build();
+        playlistService.createPlaylist(playlist);
 
         var jwt = jwtService.generateToken(user);
         return JwtAuthenticationResponse.builder()
@@ -47,6 +56,13 @@ public class AuthenticationService {
                 .build();
 
         userService.create(user);
+
+        // Создаем плейлист для пользователя
+        Playlist playlist = Playlist.builder()
+                .user(user)
+                .name("Избранное")
+                .build();
+        playlistService.createPlaylist(playlist);
 
         var jwt = jwtService.generateToken(user);
         return JwtAuthenticationResponse.builder()

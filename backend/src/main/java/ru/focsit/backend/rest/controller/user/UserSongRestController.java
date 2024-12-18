@@ -1,6 +1,7 @@
 package ru.focsit.backend.rest.controller.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.focsit.backend.dto.CommentDto;
@@ -9,10 +10,7 @@ import ru.focsit.backend.dto.UserDto;
 import ru.focsit.backend.pojo.Comment;
 import ru.focsit.backend.pojo.Song;
 import ru.focsit.backend.pojo.User;
-import ru.focsit.backend.service.CommentService;
-import ru.focsit.backend.service.SongService;
-import ru.focsit.backend.service.UserFavoritesService;
-import ru.focsit.backend.service.UserService;
+import ru.focsit.backend.service.*;
 
 import java.util.List;
 import java.util.Set;
@@ -26,10 +24,10 @@ public class UserSongRestController {
     private SongService songService;
 
     @Autowired
-    private UserFavoritesService userFavoritesService;
+    private UserService userService;
 
     @Autowired
-    private UserService userService;
+    private PlaylistService playlistService;
 
     @Autowired
     private CommentService commentService;
@@ -56,30 +54,35 @@ public class UserSongRestController {
     }
 
     @PostMapping("/favorites/{songId}")
-    public ResponseEntity<Void> addSongToFavorites(@PathVariable Long songId) {
-        UserDto currentUser = userService.getCurrentUser();
-        Long userId = currentUser.getId();
-        userFavoritesService.addSongToFavorites(userId, songId);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<String> addSongToFavorites(@PathVariable Long songId) {
+        String result = playlistService.addSongToPlaylist(songId);
+
+        if (result.equals("Song added to playlist")) {
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        } else if (result.equals("Song already in playlist")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+        }
     }
 
     @DeleteMapping("/favorites/{songId}")
-    public ResponseEntity<Void> removeSongFromFavorites(@PathVariable Long songId) {
-        UserDto currentUser = userService.getCurrentUser();
-        Long userId = currentUser.getId();
-        userFavoritesService.removeSongFromFavorites(userId, songId);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<String> removeSongFromFavorites(@PathVariable Long songId) {
+        String result = playlistService.removeSongFromPlaylist(songId);
+
+        if (result.equals("Song removed from playlist")) {
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        } else if (result.equals("Song not found in playlist")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+        }
     }
 
     @GetMapping("/favorites")
     public ResponseEntity<List<SongDto>> getUserFavorites() {
-        UserDto currentUser = userService.getCurrentUser();
-        Long userId = currentUser.getId();
-        Set<Song> favoriteSongs = userFavoritesService.getUserFavorites(userId);
-        List<SongDto> songDtos = favoriteSongs.stream()
-                .map(songService::toDto)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(songDtos);
+        List<SongDto> songs = playlistService.getSongsFromPlaylist();
+        return ResponseEntity.ok(songs);
     }
 
     @PostMapping("/{songId}/comments")

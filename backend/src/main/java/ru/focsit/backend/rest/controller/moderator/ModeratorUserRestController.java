@@ -8,6 +8,7 @@ import ru.focsit.backend.dto.SongDto;
 import ru.focsit.backend.dto.UserDto;
 import ru.focsit.backend.pojo.User;
 import ru.focsit.backend.service.CommentService;
+import ru.focsit.backend.service.PlaylistService;
 import ru.focsit.backend.service.UserService;
 
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 public class ModeratorUserRestController {
     private final UserService userService;
     private final CommentService commentService;
+    private final PlaylistService playlistService;
 
     @GetMapping
     public List<UserDto> getAllUsers() {
@@ -33,7 +35,7 @@ public class ModeratorUserRestController {
 
     @GetMapping("/{userId}/favorites")
     public ResponseEntity<List<SongDto>> getUserFavorites(@PathVariable Long userId) {
-        List<SongDto> favoriteSongs = userService.getFavoriteSongsByUserId(userId);
+        List<SongDto> favoriteSongs = playlistService.getSongsFromPlaylistByUserId(userId);
         return ResponseEntity.ok(favoriteSongs);
     }
 
