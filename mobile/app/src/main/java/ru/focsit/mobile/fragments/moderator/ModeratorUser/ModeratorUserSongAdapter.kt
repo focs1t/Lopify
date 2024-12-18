@@ -1,3 +1,5 @@
+package ru.focsit.mobile.fragments.moderator.ModeratorUser
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

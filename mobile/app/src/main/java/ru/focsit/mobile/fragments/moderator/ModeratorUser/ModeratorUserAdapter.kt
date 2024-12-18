@@ -1,4 +1,4 @@
-package ru.focsit.mobile.fragments.moderator
+package ru.focsit.mobile.fragments.moderator.ModeratorUser
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.focsit.mobile.R
 import ru.focsit.mobile.data.UserDto
 
-class UserAdapter(private val users: List<UserDto>, private val onUserClick: (UserDto) -> Unit) :
-    RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
+class ModeratorUserAdapter(private val users: List<UserDto>, private val onUserClick: (UserDto) -> Unit) :
+    RecyclerView.Adapter<ModeratorUserAdapter.UserViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_user_info, parent, false)

@@ -1,7 +1,5 @@
-package ru.focsit.mobile.fragments.moderator
+package ru.focsit.mobile.fragments.moderator.ModeratorUser
 
-import ModeratorUserCommentAdapter
-import ModeratorUserSongAdapter
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
@@ -11,14 +9,13 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.focsit.mobile.R
-import ru.focsit.mobile.data.UserDto
 import ru.focsit.mobile.repo.moderator.ModeratorUserRepository
 
 class ModeratorUserFragment : Fragment(R.layout.fragment_moderator_user) {
 
     private lateinit var moderatorUserRepository: ModeratorUserRepository
     private lateinit var userRecyclerView: RecyclerView
-    private lateinit var userAdapter: UserAdapter
+    private lateinit var moderatorUserAdapter: ModeratorUserAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -33,10 +30,10 @@ class ModeratorUserFragment : Fragment(R.layout.fragment_moderator_user) {
     private fun loadAllUsers() {
         moderatorUserRepository.getAllUsers { users ->
             if (users != null) {
-                userAdapter = UserAdapter(users) { user ->
+                moderatorUserAdapter = ModeratorUserAdapter(users) { user ->
                     showUserDetails(user.id)
                 }
-                userRecyclerView.adapter = userAdapter
+                userRecyclerView.adapter = moderatorUserAdapter
             } else {
                 showToast("Ошибка загрузки пользователей")
             }
