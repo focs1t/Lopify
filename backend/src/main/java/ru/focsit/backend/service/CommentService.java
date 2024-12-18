@@ -50,4 +50,8 @@ public class CommentService {
     public void deleteComment(Long id) {
         commentRepository.deleteById(id);
     }
+
+    public boolean commentBelongsToUser(Long commentId, Long userId) {
+        return commentRepository.existsByIdAndUserId(commentId, userId);
+    }
 }

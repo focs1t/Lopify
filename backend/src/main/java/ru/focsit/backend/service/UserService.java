@@ -110,11 +110,18 @@ public class UserService {
         User user = getUserById(userId);
         Song song = songService.getSongById(songId);
 
-        if (user.getFavoriteSongs().contains(song)) {
-            user.getFavoriteSongs().remove(song);
-            userRepository.save(user);
-        } else {
-            throw new RuntimeException("Song not found in user's favorites");
-        }
+        user.getFavoriteSongs()
+                .stream()
+                .filter(favoriteSong -> favoriteSong.getId().equals(songId))
+                .findFirst()
+                .ifPresentOrElse(
+                        favoriteSong -> {
+                            user.getFavoriteSongs().remove(favoriteSong);
+                            userRepository.save(user);
+                        },
+                        () -> {
+                            throw new RuntimeException("Song not found in user's favorites");
+                        }
+                );
     }
 }

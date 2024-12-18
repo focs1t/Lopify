@@ -54,11 +54,13 @@ public class SongService {
 
     public Song updateSong(Long id, Song updatedSong) {
         Song song = getSongById(id);
-        song.setName(updatedSong.getName());
-        song.setDuration(updatedSong.getDuration());
-        song.setGenre(updatedSong.getGenre());
-        song.setArtist(updatedSong.getArtist());
-        song.setAlbum(updatedSong.getAlbum());
+        List.of(
+                (Runnable) () -> song.setName(updatedSong.getName()),
+                () -> song.setDuration(updatedSong.getDuration()),
+                () -> song.setGenre(updatedSong.getGenre()),
+                () -> song.setArtist(updatedSong.getArtist()),
+                () -> song.setAlbum(updatedSong.getAlbum())
+        ).forEach(Runnable::run);
         return songRepository.save(song);
     }
 
@@ -67,14 +69,10 @@ public class SongService {
     }
 
     public List<Song> getSongsByCriteria(String album, String artist, String name) {
-        if (album != null) {
-            return songRepository.findByAlbum(album);
-        } else if (artist != null) {
-            return songRepository.findByArtist(artist);
-        } else if (name != null) {
-            return songRepository.findByName(name);
-        } else {
-            return songRepository.findAll();
-        }
+        return songRepository.findAll().stream()
+                .filter(song -> album == null || song.getAlbum().equalsIgnoreCase(album))
+                .filter(song -> artist == null || song.getArtist().equalsIgnoreCase(artist))
+                .filter(song -> name == null || song.getName().equalsIgnoreCase(name))
+                .collect(Collectors.toList());
     }
 }

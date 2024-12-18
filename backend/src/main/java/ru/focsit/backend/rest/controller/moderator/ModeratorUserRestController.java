@@ -26,9 +26,9 @@ public class ModeratorUserRestController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
         User user = userService.getUserById(id);
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(userService.toDto(user));
     }
 
     @GetMapping("/{userId}/favorites")
@@ -48,15 +48,13 @@ public class ModeratorUserRestController {
 
     @DeleteMapping("/{userId}/comments/{commentId}")
     public ResponseEntity<Void> deleteUserComment(@PathVariable Long userId, @PathVariable Long commentId) {
-        List<CommentDto> userComments = commentService.getCommentsByUserId(userId)
-                .stream()
-                .map(commentService::toDto)
-                .collect(Collectors.toList());
-        boolean commentExists = userComments.stream()
-                .anyMatch(comment -> comment.getId().equals(commentId));
-        if (!commentExists) {
+        // Проверяем, принадлежит ли комментарий пользователю
+        boolean commentBelongsToUser = commentService.commentBelongsToUser(commentId, userId);
+        if (!commentBelongsToUser) {
             return ResponseEntity.notFound().build();
         }
+
+        // Удаляем комментарий
         commentService.deleteComment(commentId);
         return ResponseEntity.noContent().build();
     }
