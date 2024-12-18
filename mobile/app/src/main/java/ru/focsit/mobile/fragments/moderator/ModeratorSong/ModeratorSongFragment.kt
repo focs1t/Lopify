@@ -1,4 +1,4 @@
-package ru.focsit.mobile.fragments.moderator
+package ru.focsit.mobile.fragments.moderator.ModeratorSong
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.focsit.mobile.R
-import ru.focsit.mobile.data.CommentDto
 import ru.focsit.mobile.data.SongDto
 import ru.focsit.mobile.repo.moderator.ModeratorSongRepository
 
@@ -151,10 +150,15 @@ class ModeratorSongFragment : Fragment(R.layout.fragment_moderator_song) {
             song.id?.let {
                 repository.updateSong(it, updatedSong) { updated ->
                     if (updated != null) {
-                        Toast.makeText(requireContext(), "Песня обновлена", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Песня обновлена", Toast.LENGTH_SHORT)
+                            .show()
                         loadAllSongs()
                     } else {
-                        Toast.makeText(requireContext(), "Ошибка обновления песни", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "Ошибка обновления песни",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }

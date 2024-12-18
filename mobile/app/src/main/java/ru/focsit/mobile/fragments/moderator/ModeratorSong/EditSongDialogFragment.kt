@@ -1,4 +1,4 @@
-package ru.focsit.mobile.fragments.moderator
+package ru.focsit.mobile.fragments.moderator.ModeratorSong
 
 import android.app.AlertDialog
 import android.os.Bundle
