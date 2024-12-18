@@ -3,9 +3,13 @@ package ru.focsit.backend.rest.controller.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.focsit.backend.dto.CommentDto;
 import ru.focsit.backend.dto.SongDto;
 import ru.focsit.backend.dto.UserDto;
+import ru.focsit.backend.pojo.Comment;
 import ru.focsit.backend.pojo.Song;
+import ru.focsit.backend.pojo.User;
+import ru.focsit.backend.service.CommentService;
 import ru.focsit.backend.service.SongService;
 import ru.focsit.backend.service.UserFavoritesService;
 import ru.focsit.backend.service.UserService;
@@ -26,6 +30,9 @@ public class UserSongRestController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private CommentService commentService;
 
     @GetMapping
     public ResponseEntity<List<SongDto>> getAllSongs() {
@@ -73,6 +80,32 @@ public class UserSongRestController {
                 .map(songService::toDto)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(songDtos);
+    }
+
+    @PostMapping("/{songId}/comments")
+    public ResponseEntity<CommentDto> addCommentToSong(@PathVariable Long songId, @RequestBody String content) {
+        UserDto currentUser = userService.getCurrentUser();
+        Long userId = currentUser.getId();
+        Song song = songService.getSongById(songId); // Assuming you have a method to fetch the song by ID
+        User user = userService.getUserById(userId); // Assuming you have a method to fetch the user by ID
+
+        Comment comment = new Comment();
+        comment.setContent(content);
+        comment.setUser(user);
+        comment.setSong(song);
+
+        Comment savedComment = commentService.addComment(comment);
+        CommentDto commentDto = commentService.toDto(savedComment);
+        return ResponseEntity.ok(commentDto);
+    }
+
+    @GetMapping("/{songId}/comments")
+    public ResponseEntity<List<CommentDto>> getCommentsForSong(@PathVariable Long songId) {
+        List<Comment> comments = commentService.getCommentsBySongId(songId);
+        List<CommentDto> commentDtos = comments.stream()
+                .map(commentService::toDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(commentDtos);
     }
 }
 
