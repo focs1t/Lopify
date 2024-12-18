@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">mobile</string>
+    <string name="sign_in_name">sign in</string>
+    <string name="sign_up_name">sign up</string>
 </resources>
