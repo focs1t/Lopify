@@ -8,8 +8,10 @@ import ru.focsit.backend.dto.CommentDto;
 import ru.focsit.backend.dto.SongDto;
 import ru.focsit.backend.dto.UserDto;
 import ru.focsit.backend.pojo.Comment;
+import ru.focsit.backend.pojo.Role;
 import ru.focsit.backend.pojo.Song;
 import ru.focsit.backend.pojo.User;
+import ru.focsit.backend.repository.UserRepository;
 import ru.focsit.backend.service.*;
 
 import java.util.List;
@@ -30,7 +32,13 @@ public class UserSongRestController {
     private PlaylistService playlistService;
 
     @Autowired
+    private EmailService emailService;
+
+    @Autowired
     private CommentService commentService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping
     public ResponseEntity<List<SongDto>> getAllSongs() {
@@ -108,8 +116,31 @@ public class UserSongRestController {
 
             Comment savedComment = commentService.addComment(comment);
             CommentDto commentDto = commentService.toDto(savedComment);
+
+            // Получение всех модераторов
+            List<User> moderators = userRepository.findByRole(Role.ROLE_MODERATOR);  // Используем enum вместо строки
+
+            // Отправка уведомлений модераторам
+            for (User moderator : moderators) {
+                String toEmail = moderator.getEmail();
+                if (toEmail != null && !toEmail.isEmpty()) {
+                    try {
+                        String subject = "Новый комментарий к песне";
+                        String message = "Пользователь " + user.getUsername() + " добавил новый комментарий: \n" + content;
+                        emailService.sendCommentNotification(toEmail, subject, message);
+                    } catch (Exception e) {
+                        System.out.println("Error sending email to " + toEmail + ": " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            // Возвращение успешного ответа
             return ResponseEntity.ok(commentDto);
+
         } catch (Exception e) {
+            System.out.println("Error while adding comment: " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(500).body(null);
         }
     }
