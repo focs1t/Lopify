@@ -117,6 +117,7 @@ public class UserSongRestController {
             Comment savedComment = commentService.addComment(comment);
             CommentDto commentDto = commentService.toDto(savedComment);
 
+            /*
             // Получение всех модераторов
             List<User> moderators = userRepository.findByRole(Role.ROLE_MODERATOR);  // Используем enum вместо строки
 
@@ -134,6 +135,8 @@ public class UserSongRestController {
                     }
                 }
             }
+
+             */
 
             // Возвращение успешного ответа
             return ResponseEntity.ok(commentDto);

@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -35,7 +36,7 @@ public class Playlist {
     )
     @JsonManagedReference
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private Set<Song> songs;
+    private Set<Song> songs = new HashSet<>();;
 
     @Override
     public int hashCode() {
