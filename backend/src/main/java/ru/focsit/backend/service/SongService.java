@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.focsit.backend.dto.SongDto;
 import ru.focsit.backend.pojo.Song;
+import ru.focsit.backend.repository.PlaylistRepository;
 import ru.focsit.backend.repository.SongRepository;
 
 import java.util.List;
@@ -13,6 +14,9 @@ import java.util.stream.Collectors;
 public class SongService {
     @Autowired
     private SongRepository songRepository;
+
+    @Autowired
+    private PlaylistRepository playlistRepository;
 
     public SongDto toDto(Song song) {
         return new SongDto(
@@ -65,6 +69,10 @@ public class SongService {
     }
 
     public void deleteSong(Long id) {
+        Song song = getSongById(id);  // Получаем объект песни по ID
+        playlistRepository.removeSongFromAllPlaylists(song);  // Передаем сам объект песни
+
+        // Затем удаление песни
         songRepository.deleteById(id);
     }
 

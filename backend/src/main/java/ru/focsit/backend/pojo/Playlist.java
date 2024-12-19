@@ -3,6 +3,8 @@ package ru.focsit.backend.pojo;
 import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.Set;
 
@@ -20,7 +22,7 @@ public class Playlist {
     @Column(nullable = false, length = 255)
     private String name = "Избранное";
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     @JsonBackReference
     private User user;
@@ -32,6 +34,7 @@ public class Playlist {
             inverseJoinColumns = @JoinColumn(name = "song_id")
     )
     @JsonManagedReference
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Song> songs;
 
     @Override

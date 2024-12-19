@@ -35,9 +35,13 @@ public class User implements UserDetails {
     @Column(nullable = false, length = 50)
     private Role role;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonManagedReference
     private Playlist playlist;  // Связь с плейлистом "Избранное"
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Comment> comments;
 
     @Override
     public int hashCode() {

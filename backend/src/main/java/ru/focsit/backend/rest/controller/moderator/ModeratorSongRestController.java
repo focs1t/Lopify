@@ -80,11 +80,7 @@ public class ModeratorSongRestController {
 
     @DeleteMapping("/{songId}/comments/{commentId}")
     public ResponseEntity<Void> deleteComment(@PathVariable Long songId, @PathVariable Long commentId) {
-        List<CommentDto> userComments = commentService.getCommentsBySongId(songId)
-                .stream()
-                .map(commentService::toDto)
-                .collect(Collectors.toList());
-        boolean commentExists = userComments.stream()
+        boolean commentExists = commentService.getCommentsBySongId(songId).stream()
                 .anyMatch(comment -> comment.getId().equals(commentId));
         if (!commentExists) {
             return ResponseEntity.notFound().build();
