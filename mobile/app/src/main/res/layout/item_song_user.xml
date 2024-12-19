@@ -1,0 +1,56 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground">
+
+    <!-- Разделяющая полоса -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Содержимое трека -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <!-- Номер трека -->
+        <TextView
+            android:id="@+id/songNumber"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="1"
+            android:textSize="16sp"
+            android:textColor="@android:color/darker_gray" />
+
+        <!-- Информация о треке -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingStart="8dp">
+
+            <TextView
+                android:id="@+id/songName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Song Name"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/artistName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Artist Name"
+                android:textSize="14sp"
+                android:textColor="@android:color/darker_gray" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

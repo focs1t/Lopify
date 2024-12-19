@@ -10,7 +10,7 @@ import ru.focsit.mobile.fragments.admin.AdminUser.AdminUserFragment
 import ru.focsit.mobile.fragments.moderator.ModeratorFragment
 import ru.focsit.mobile.fragments.moderator.ModeratorSong.ModeratorSongFragment
 import ru.focsit.mobile.fragments.moderator.ModeratorUser.ModeratorUserFragment
-import ru.focsit.mobile.fragments.user.UserProfileFragment
+import ru.focsit.mobile.fragments.user.UserProfile.UserProfileFragment
 import ru.focsit.mobile.fragments.user.UserSongFragment
 import ru.focsit.mobile.utils.PreferencesHelper
 

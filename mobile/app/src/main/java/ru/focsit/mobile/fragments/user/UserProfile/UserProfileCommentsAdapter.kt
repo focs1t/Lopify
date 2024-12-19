@@ -1,4 +1,4 @@
-package ru.focsit.mobile.fragments.user
+package ru.focsit.mobile.fragments.user.UserProfile
 
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +12,7 @@ class UserProfileCommentsAdapter(private val comments: List<CommentDto>) :
     RecyclerView.Adapter<UserProfileCommentsAdapter.CommentViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_user_comment, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_user_comment_p, parent, false)
         return CommentViewHolder(view)
     }
 

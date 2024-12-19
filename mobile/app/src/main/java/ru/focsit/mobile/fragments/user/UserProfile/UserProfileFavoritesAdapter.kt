@@ -1,4 +1,4 @@
-package ru.focsit.mobile.fragments.user
+package ru.focsit.mobile.fragments.user.UserProfile
 
 import android.view.LayoutInflater
 import android.view.View
