@@ -1,4 +1,4 @@
-package ru.focsit.mobile.fragments.user
+package ru.focsit.mobile.fragments.user.UserSong
 
 import android.os.Bundle
 import android.view.*
@@ -8,8 +8,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.focsit.mobile.R
 import ru.focsit.mobile.repo.user.UserSongRepository
-import ru.focsit.mobile.data.CommentDto
-import ru.focsit.mobile.adapters.CommentAdapter
 import androidx.appcompat.app.AlertDialog
 
 class UserSongFragment : Fragment(R.layout.fragment_user_song) {

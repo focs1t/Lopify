@@ -1,4 +1,4 @@
-package ru.focsit.mobile.adapters
+package ru.focsit.mobile.fragments.user.UserSong
 
 import android.view.LayoutInflater
 import android.view.View

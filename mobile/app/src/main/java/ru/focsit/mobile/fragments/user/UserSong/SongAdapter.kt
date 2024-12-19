@@ -1,4 +1,4 @@
-package ru.focsit.mobile.fragments.user
+package ru.focsit.mobile.fragments.user.UserSong
 
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.focsit.mobile.R
 import ru.focsit.mobile.data.SongDto
 
-class SongAdapter(private val onClick: (Long) -> Unit) : ListAdapter<SongDto, SongAdapter.SongViewHolder>(SongDiffCallback()) {
+class SongAdapter(private val onClick: (Long) -> Unit) : ListAdapter<SongDto, SongAdapter.SongViewHolder>(
+    SongDiffCallback()
+) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_song_user, parent, false)
