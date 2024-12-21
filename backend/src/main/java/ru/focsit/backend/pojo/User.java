@@ -1,52 +1,85 @@
 package ru.focsit.backend.pojo;
 
-import lombok.*;
-
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
-
+@Builder
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "userId")
-    private Long userId;
+    private Long id;
 
-    @Column(name = "userLogin", nullable = false, unique = true)
-    private String userLogin;
+    @Column(nullable = false, unique = true, length = 255)
+    private String username;
 
-    @Column(name = "userPassword", nullable = false)
-    private String userPassword;
+    @Column(nullable = false, length = 255)
+    @JsonIgnore
+    private String password;
 
-    @Transient
-    @Column(name = "userPasswordConfirm")
-    private String userPasswordConfirm;
+    @Column(nullable = false, unique = true, length = 255)
+    private String email;
 
-    @Column(name = "userEmail", nullable = false, unique = true)
-    private String userEmail;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 50)
+    private Role role;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userRoleId")
-    private Role userRole;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private Playlist playlist;  // Связь с плейлистом "Избранное"
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userCountryId")
-    private Country userCountry;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Comment> comments;
 
     @Override
-    public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", userLogin='" + userLogin + '\'' +
-                ", userPassword='" + userPassword + '\'' +
-                ", userEmail='" + userEmail + '\'' +
-                ", userRole=" + (userRole != null ? userRole.getRoleId() : null) +
-                ", userCountry=" + (userCountry != null ? userCountry.getCountryId() : null) +
-                '}';
+    public int hashCode() {
+        // Используйте только неизменяемые поля для вычисления hashCode
+        return (id != null ? id.hashCode() : 0);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        // Используйте только уникальные поля, такие как `id`, для проверки равенства
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        User user = (User) obj;
+        return id != null && id.equals(user.id);
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.toString()));
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
-

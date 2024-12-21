@@ -1,4 +1,4 @@
-package com.example.lopify.ui.theme
+package ru.focsit.mobile.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

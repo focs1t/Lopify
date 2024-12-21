@@ -1,34 +1,45 @@
 package ru.focsit.backend.pojo;
 
+import com.fasterxml.jackson.annotation.*;
+import jakarta.persistence.*;
 import lombok.*;
 
-import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "comments")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Comment {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "commentId")
-    private Long commentId;
+    private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "commentUserId")
-    private User commentUser;
+    @Column(nullable = false, length = 1000)  // Увеличено ограничение длины комментария
+    private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "commentAlbumId")
-    private Album commentAlbum;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
+    private User user;
 
-    @Column(name = "commentText", nullable = false)
-    private String commentText;
+    @ManyToOne
+    @JoinColumn(name = "song_id", nullable = false)
+    @JsonBackReference
+    private Song song;
 
-    @Column(name = "commentDate", nullable = false, updatable = false)
-    private LocalDateTime commentDate = LocalDateTime.now();
+    @Override
+    public int hashCode() {
+        return Objects.hash(id); // Использование уникального идентификатора
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Comment comment = (Comment) obj;
+        return id != null && id.equals(comment.id);
+    }
 }
-

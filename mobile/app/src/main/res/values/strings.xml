@@ -1,3 +1,15 @@
 <resources>
-    <string name="app_name">Lopify</string>
+    <string name="app_name">MusicService</string>
+    <string name="sign_in_name">sign in</string>
+    <string name="sign_up_name">sign up</string>
+    <string-array name="roles">
+        <item>ROLE_ADMIN</item>
+        <item>ROLE_MODERATOR</item>
+        <item>ROLE_USER</item>
+    </string-array>
+    <string-array name="search_criteria">
+        <item>Альбом</item>
+        <item>Артист</item>
+        <item>Название</item>
+    </string-array>
 </resources>

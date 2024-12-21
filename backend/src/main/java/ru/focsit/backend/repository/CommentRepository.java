@@ -1,13 +1,14 @@
 package ru.focsit.backend.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.focsit.backend.pojo.Album;
+import org.springframework.stereotype.Repository;
 import ru.focsit.backend.pojo.Comment;
-import ru.focsit.backend.pojo.User;
 
 import java.util.List;
 
+@Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    List<Comment> findByCommentUser(User user);
-    List<Comment> findByCommentAlbum(Album album);
+    List<Comment> findBySongId(Long songId);
+    List<Comment> findByUserId(Long userId);
+    boolean existsByIdAndUserId(Long commentId, Long userId);
 }
