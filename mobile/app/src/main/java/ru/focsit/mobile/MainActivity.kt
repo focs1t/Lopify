@@ -14,29 +14,42 @@ import ru.focsit.mobile.fragments.user.UserProfile.UserProfileFragment
 import ru.focsit.mobile.fragments.user.UserSong.UserSongFragment
 import ru.focsit.mobile.utils.PreferencesHelper
 
+/**
+ * Главная активность приложения. Управляет отображением фрагментов и навигацией в зависимости от роли пользователя.
+ */
 class MainActivity : AppCompatActivity() {
 
+    // Нижняя панель навигации
     private lateinit var bottomNavView: BottomNavigationView
 
+    /**
+     * Вызывается при создании активности. Устанавливает начальную конфигурацию.
+     *
+     * @param savedInstanceState Состояние активности, сохраненное ранее.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         bottomNavView = findViewById(R.id.bottom_nav_view)
 
-        // Получаем роль пользователя из SharedPreferences
+        // Получение роли пользователя из SharedPreferences
         val role = PreferencesHelper.getRole(this)
 
         if (role != null) {
             setupNavigation(role)
         } else {
-            // Если роль не определена, показываем ошибку
-            Toast.makeText(this, "User role is undefined", Toast.LENGTH_SHORT).show()
+            // Если роль не определена, отображаем уведомление
+            Toast.makeText(this, "Роль пользователя не определена", Toast.LENGTH_SHORT).show()
         }
     }
 
+    /**
+     * Настраивает нижнюю панель навигации в зависимости от роли пользователя.
+     *
+     * @param role Роль пользователя (ROLE_USER, ROLE_ADMIN, ROLE_MODERATOR).
+     */
     private fun setupNavigation(role: String) {
-        // В зависимости от роли, настраиваем вкладки навбара
         when (role) {
             "ROLE_MODERATOR" -> setupModeratorNavigation()
             "ROLE_ADMIN" -> setupAdminNavigation()
@@ -44,6 +57,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Настройка навигации для администратора.
+     */
     private fun setupAdminNavigation() {
         bottomNavView.menu.clear()
         bottomNavView.inflateMenu(R.menu.menu_admin)
@@ -55,9 +71,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // Отображаем фрагмент по умолчанию
         switchFragment(AdminFragment())
     }
 
+    /**
+     * Настройка навигации для модератора.
+     */
     private fun setupModeratorNavigation() {
         bottomNavView.menu.clear()
         bottomNavView.inflateMenu(R.menu.menu_moderator)
@@ -70,9 +90,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // Отображаем фрагмент по умолчанию
         switchFragment(ModeratorFragment())
     }
 
+    /**
+     * Настройка навигации для пользователя.
+     */
     private fun setupUserNavigation() {
         bottomNavView.menu.clear()
         bottomNavView.inflateMenu(R.menu.menu_user)
@@ -84,10 +108,16 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // Отображаем фрагмент по умолчанию
         switchFragment(UserProfileFragment())
     }
 
-    // Переключаем фрагменты
+    /**
+     * Переключение фрагментов.
+     *
+     * @param fragment Фрагмент, который нужно отобразить.
+     * @return true, если фрагмент был переключен успешно.
+     */
     private fun switchFragment(fragment: Fragment): Boolean {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.fragment_container, fragment)
