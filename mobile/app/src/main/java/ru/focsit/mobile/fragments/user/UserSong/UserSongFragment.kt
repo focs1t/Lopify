@@ -10,6 +10,11 @@ import ru.focsit.mobile.R
 import ru.focsit.mobile.repo.user.UserSongRepository
 import androidx.appcompat.app.AlertDialog
 
+/**
+ * Фрагмент для отображения списка песен пользователя с возможностью их поиска, добавления в избранное и просмотра комментариев.
+ *
+ * Этот фрагмент содержит логику для отображения списка песен с возможностью фильтрации и поиска по альбому, артисту или названию. Также пользователи могут добавлять песни в избранное и оставлять комментарии к ним.
+ */
 class UserSongFragment : Fragment(R.layout.fragment_user_song) {
 
     private lateinit var repository: UserSongRepository
@@ -23,6 +28,10 @@ class UserSongFragment : Fragment(R.layout.fragment_user_song) {
     private lateinit var searchInput: EditText
     private lateinit var searchButton: ImageView
 
+    /**
+     * Метод вызывается при создании представления фрагмента.
+     * Инициализирует компоненты UI, настраивает поиск и загружает список песен.
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -61,6 +70,9 @@ class UserSongFragment : Fragment(R.layout.fragment_user_song) {
         }
     }
 
+    /**
+     * Загружает все доступные песни с использованием репозитория и отображает их в списке.
+     */
     private fun loadSongs() {
         repository.getAllSongs { songs ->
             if (songs != null) {
@@ -71,7 +83,13 @@ class UserSongFragment : Fragment(R.layout.fragment_user_song) {
         }
     }
 
-    // Метод для поиска песен по заданным параметрам
+    /**
+     * Выполняет поиск песен по указанным параметрам.
+     *
+     * @param album Название альбома для поиска.
+     * @param artist Имя артиста для поиска.
+     * @param name Название песни для поиска.
+     */
     private fun searchSongs(album: String? = null, artist: String? = null, name: String? = null) {
         repository.searchSongs(album, artist, name) { songs ->
             if (songs != null) {
@@ -82,11 +100,21 @@ class UserSongFragment : Fragment(R.layout.fragment_user_song) {
         }
     }
 
+    /**
+     * Обрабатывает нажатие на элемент списка песни.
+     *
+     * @param songId ID выбранной песни.
+     */
     private fun onSongItemClick(songId: Long) {
         selectedSongId = songId
         showSongOptionsMenu(songId)
     }
 
+    /**
+     * Отображает меню опций для выбранной песни, позволяя добавить в избранное или просмотреть комментарии.
+     *
+     * @param songId ID выбранной песни.
+     */
     private fun showSongOptionsMenu(songId: Long) {
         repository.getUserFavorites { favorites ->
             val isFavorite = favorites?.any { it.id == songId } == true
@@ -111,6 +139,11 @@ class UserSongFragment : Fragment(R.layout.fragment_user_song) {
         }
     }
 
+    /**
+     * Добавляет песню в избранное.
+     *
+     * @param songId ID выбранной песни.
+     */
     private fun handleAddToFavorites(songId: Long) {
         repository.addSongToFavorites(songId) { success ->
             if (success) {
@@ -121,6 +154,11 @@ class UserSongFragment : Fragment(R.layout.fragment_user_song) {
         }
     }
 
+    /**
+     * Удаляет песню из избранного.
+     *
+     * @param songId ID выбранной песни.
+     */
     private fun handleRemoveFromFavorites(songId: Long) {
         repository.removeSongFromFavorites(songId) { success ->
             if (success) {
@@ -131,6 +169,11 @@ class UserSongFragment : Fragment(R.layout.fragment_user_song) {
         }
     }
 
+    /**
+     * Отображает комментарии к выбранной песне.
+     *
+     * @param songId ID выбранной песни.
+     */
     private fun showComments(songId: Long) {
         repository.getCommentsForSong(songId) { comments ->
             if (comments != null) {
@@ -156,6 +199,11 @@ class UserSongFragment : Fragment(R.layout.fragment_user_song) {
         }
     }
 
+    /**
+     * Отображает диалог для добавления комментария к песне.
+     *
+     * @param songId ID выбранной песни.
+     */
     private fun showAddCommentDialog(songId: Long) {
         val builder = AlertDialog.Builder(requireContext())
         val input = EditText(requireContext())
@@ -176,6 +224,12 @@ class UserSongFragment : Fragment(R.layout.fragment_user_song) {
         builder.create().show()
     }
 
+    /**
+     * Добавляет комментарий к песне.
+     *
+     * @param songId ID песни.
+     * @param comment Текст комментария.
+     */
     private fun addCommentToSong(songId: Long, comment: String) {
         repository.addCommentToSong(songId, comment) { newComment ->
             if (newComment != null) {

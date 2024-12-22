@@ -11,12 +11,23 @@ import ru.focsit.mobile.R
 import ru.focsit.mobile.data.SongDto
 import ru.focsit.mobile.repo.moderator.ModeratorSongRepository
 
+/**
+ * Фрагмент для модерации песен. Этот фрагмент позволяет добавлять, редактировать,
+ * искать и удалять песни, а также управлять комментариями к песням.
+ */
 class ModeratorSongFragment : Fragment(R.layout.fragment_moderator_song) {
     private lateinit var repository: ModeratorSongRepository
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ModeratorSongAdapter
     private lateinit var commentsAdapter: ModeratorSongCommentsAdapter
 
+    /**
+     * Метод, вызываемый при создании фрагмента. Здесь происходит инициализация
+     * компонентов пользовательского интерфейса и загрузка всех песен.
+     *
+     * @param view Вид, который отображается в фрагменте.
+     * @param savedInstanceState Сохраненное состояние, если фрагмент был восстановлен.
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         repository = ModeratorSongRepository(requireContext())
@@ -30,6 +41,7 @@ class ModeratorSongFragment : Fragment(R.layout.fragment_moderator_song) {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         loadAllSongs()
 
+        // Обработчик поиска песен
         searchButton.setOnClickListener {
             val query = searchInput.text.toString()
             val selectedCriterion = spinnerCriteria.selectedItem.toString()
@@ -45,11 +57,15 @@ class ModeratorSongFragment : Fragment(R.layout.fragment_moderator_song) {
             }
         }
 
+        // Обработчик кнопки для добавления новой песни
         addButton.setOnClickListener {
             showCreateSongDialog()
         }
     }
 
+    /**
+     * Загружает все песни и отображает их в RecyclerView.
+     */
     private fun loadAllSongs() {
         repository.getAllSongs { songs ->
             if (songs != null) {
@@ -61,6 +77,13 @@ class ModeratorSongFragment : Fragment(R.layout.fragment_moderator_song) {
         }
     }
 
+    /**
+     * Ищет песни по указанным параметрам: альбом, артист или название.
+     *
+     * @param album Название альбома для поиска.
+     * @param artist Имя артиста для поиска.
+     * @param name Название песни для поиска.
+     */
     private fun searchSongs(album: String? = null, artist: String? = null, name: String? = null) {
         repository.searchSongs(album, artist, name) { songs ->
             if (songs != null) {
@@ -72,6 +95,9 @@ class ModeratorSongFragment : Fragment(R.layout.fragment_moderator_song) {
         }
     }
 
+    /**
+     * Отображает диалог для добавления новой песни.
+     */
     private fun showCreateSongDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_create_song, null)
 
@@ -88,6 +114,7 @@ class ModeratorSongFragment : Fragment(R.layout.fragment_moderator_song) {
             .setCancelable(true)
             .create()
 
+        // Обработчик для создания новой песни
         createButton.setOnClickListener {
             val name = nameInput.text.toString()
             val genre = genreInput.text.toString()
@@ -127,10 +154,20 @@ class ModeratorSongFragment : Fragment(R.layout.fragment_moderator_song) {
         dialog.show()
     }
 
+    /**
+     * Обработчик нажатия на песню для отображения диалога с действиями.
+     *
+     * @param song Объект песни, по которой был совершен клик.
+     */
     private fun onSongClick(song: SongDto) {
         showActionDialog(song)
     }
 
+    /**
+     * Отображает диалог с возможностью редактирования песни или просмотра комментариев.
+     *
+     * @param song Песня, для которой нужно выполнить одно из действий.
+     */
     private fun showActionDialog(song: SongDto) {
         AlertDialog.Builder(requireContext())
             .setTitle("Выберите действие")
@@ -145,20 +182,20 @@ class ModeratorSongFragment : Fragment(R.layout.fragment_moderator_song) {
             .show()
     }
 
+    /**
+     * Отображает диалог для редактирования песни.
+     *
+     * @param song Песня, которую нужно отредактировать.
+     */
     private fun showEditSongDialog(song: SongDto) {
         val editSongDialog = EditSongDialogFragment.newInstance(song) { updatedSong ->
             song.id?.let {
                 repository.updateSong(it, updatedSong) { updated ->
                     if (updated != null) {
-                        Toast.makeText(requireContext(), "Песня обновлена", Toast.LENGTH_SHORT)
-                            .show()
+                        Toast.makeText(requireContext(), "Песня обновлена", Toast.LENGTH_SHORT).show()
                         loadAllSongs()
                     } else {
-                        Toast.makeText(
-                            requireContext(),
-                            "Ошибка обновления песни",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(requireContext(), "Ошибка обновления песни", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -166,6 +203,11 @@ class ModeratorSongFragment : Fragment(R.layout.fragment_moderator_song) {
         editSongDialog.show(parentFragmentManager, "editSongDialog")
     }
 
+    /**
+     * Отображает диалог с комментариями для песни.
+     *
+     * @param songId ID песни для загрузки комментариев.
+     */
     private fun showCommentsDialog(songId: Long?) {
         if (songId == null) {
             Toast.makeText(requireContext(), "ID песни не найден", Toast.LENGTH_SHORT).show()
@@ -199,6 +241,12 @@ class ModeratorSongFragment : Fragment(R.layout.fragment_moderator_song) {
         alertDialog.show()
     }
 
+    /**
+     * Удаляет комментарий для песни.
+     *
+     * @param songId ID песни.
+     * @param commentId ID комментария для удаления.
+     */
     private fun onDeleteCommentClick(songId: Long, commentId: Long) {
         repository.deleteComment(songId, commentId) { success ->
             if (success) {
@@ -210,10 +258,20 @@ class ModeratorSongFragment : Fragment(R.layout.fragment_moderator_song) {
         }
     }
 
+    /**
+     * Обработчик нажатия на кнопку удаления песни.
+     *
+     * @param songId ID песни для удаления.
+     */
     private fun onDeleteSongClick(songId: Long) {
         showDeleteConfirmationDialog(songId)
     }
 
+    /**
+     * Отображает диалог с подтверждением удаления песни.
+     *
+     * @param songId ID песни для удаления.
+     */
     private fun showDeleteConfirmationDialog(songId: Long) {
         AlertDialog.Builder(requireContext())
             .setTitle("Подтверждение удаления")

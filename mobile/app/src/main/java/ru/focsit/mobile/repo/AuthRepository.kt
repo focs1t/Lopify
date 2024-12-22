@@ -9,10 +9,23 @@ import ru.focsit.mobile.data.auth.JwtAuthenticationResponse
 import ru.focsit.mobile.data.auth.SignInRequest
 import ru.focsit.mobile.data.auth.SignUpRequest
 
+/**
+ * Репозиторий для управления операциями авторизации и регистрации через API.
+ * Включает методы для регистрации, авторизации и выхода из системы.
+ */
 class AuthRepository {
+
+    // Инициализация API для авторизации
     private val authApi = RetrofitClient.getAuthApi()
 
-    // Метод для регистрации
+    /**
+     * Метод для регистрации нового пользователя.
+     * Выполняет запрос на сервер для создания нового пользователя и получения токена.
+     *
+     * @param request Объект [SignUpRequest], содержащий данные для регистрации.
+     * @param callback Функция обратного вызова для обработки ответа от сервера.
+     * В случае успешной регистрации передается объект [JwtAuthenticationResponse], в случае ошибки - null.
+     */
     fun signUp(request: SignUpRequest, callback: (JwtAuthenticationResponse?) -> Unit) {
         authApi.signUp(request).enqueue(object : Callback<JwtAuthenticationResponse> {
             override fun onResponse(call: Call<JwtAuthenticationResponse>, response: Response<JwtAuthenticationResponse>) {
@@ -34,7 +47,14 @@ class AuthRepository {
         })
     }
 
-    // Метод для авторизации
+    /**
+     * Метод для авторизации пользователя.
+     * Выполняет запрос на сервер для получения токена пользователя.
+     *
+     * @param request Объект [SignInRequest], содержащий данные для авторизации.
+     * @param callback Функция обратного вызова для обработки ответа от сервера.
+     * В случае успешной авторизации передается объект [JwtAuthenticationResponse], в случае ошибки - null.
+     */
     fun signIn(request: SignInRequest, callback: (JwtAuthenticationResponse?) -> Unit) {
         authApi.signIn(request).enqueue(object : Callback<JwtAuthenticationResponse> {
             override fun onResponse(call: Call<JwtAuthenticationResponse>, response: Response<JwtAuthenticationResponse>) {
@@ -56,7 +76,13 @@ class AuthRepository {
         })
     }
 
-    // Метод для выхода из системы
+    /**
+     * Метод для выхода из системы.
+     * Выполняет запрос на сервер для выхода пользователя из системы.
+     *
+     * @param callback Функция обратного вызова для обработки ответа от сервера.
+     * Если выход из системы успешен, передается значение true, иначе - false.
+     */
     fun logout(callback: (Boolean) -> Unit) {
         authApi.logout().enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
