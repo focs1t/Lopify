@@ -11,12 +11,20 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.focsit.mobile.R
 import ru.focsit.mobile.repo.moderator.ModeratorUserRepository
 
+/**
+ * Фрагмент для отображения списка пользователей и их деталей в интерфейсе модератора.
+ * Предоставляет возможность просматривать комментарии и избранные песни пользователей,
+ * а также удалять комментарии.
+ */
 class ModeratorUserFragment : Fragment(R.layout.fragment_moderator_user) {
 
     private lateinit var moderatorUserRepository: ModeratorUserRepository
     private lateinit var userRecyclerView: RecyclerView
     private lateinit var moderatorUserAdapter: ModeratorUserAdapter
 
+    /**
+     * Инициализация фрагмента и загрузка списка пользователей.
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -24,9 +32,13 @@ class ModeratorUserFragment : Fragment(R.layout.fragment_moderator_user) {
         userRecyclerView = view.findViewById(R.id.userRecyclerView)
         userRecyclerView.layoutManager = LinearLayoutManager(context)
 
+        // Загрузка всех пользователей
         loadAllUsers()
     }
 
+    /**
+     * Загружает список всех пользователей и отображает их в RecyclerView.
+     */
     private fun loadAllUsers() {
         moderatorUserRepository.getAllUsers { users ->
             if (users != null) {
@@ -40,6 +52,11 @@ class ModeratorUserFragment : Fragment(R.layout.fragment_moderator_user) {
         }
     }
 
+    /**
+     * Показывает диалог с деталями пользователя: его комментариями и избранными песнями.
+     *
+     * @param userId Идентификатор пользователя, чьи детали нужно показать.
+     */
     private fun showUserDetails(userId: Long) {
         val dialogView = layoutInflater.inflate(R.layout.dialog_user_details, null)
 
@@ -58,18 +75,20 @@ class ModeratorUserFragment : Fragment(R.layout.fragment_moderator_user) {
             if (user != null) {
                 userNameTextView.text = user.username
 
+                // Загружаем избранные песни пользователя
                 moderatorUserRepository.getUserFavorites(userId) { songs ->
                     if (songs != null && songs.isNotEmpty()) {
                         val favoritesAdapter = ModeratorUserSongAdapter(songs)
                         favoritesRecyclerView.adapter = favoritesAdapter
-                        emptyFavoritesTextView.visibility = View.GONE  // Скрываем сообщение о пустом списке
-                        favoritesRecyclerView.visibility = View.VISIBLE  // Показываем RecyclerView
+                        emptyFavoritesTextView.visibility = View.GONE
+                        favoritesRecyclerView.visibility = View.VISIBLE
                     } else {
-                        emptyFavoritesTextView.visibility = View.VISIBLE  // Показываем сообщение о пустом списке
-                        favoritesRecyclerView.visibility = View.GONE  // Скрываем RecyclerView
+                        emptyFavoritesTextView.visibility = View.VISIBLE
+                        favoritesRecyclerView.visibility = View.GONE
                     }
                 }
 
+                // Загружаем комментарии пользователя
                 moderatorUserRepository.getUserComments(userId) { comments ->
                     if (comments != null && comments.isNotEmpty()) {
                         val commentsAdapter = ModeratorUserCommentAdapter(comments) { commentId ->
@@ -77,11 +96,11 @@ class ModeratorUserFragment : Fragment(R.layout.fragment_moderator_user) {
                             alertDialog?.dismiss()
                         }
                         commentsRecyclerView.adapter = commentsAdapter
-                        emptyCommentsTextView.visibility = View.GONE  // Скрываем сообщение о пустом списке
-                        commentsRecyclerView.visibility = View.VISIBLE  // Показываем RecyclerView
+                        emptyCommentsTextView.visibility = View.GONE
+                        commentsRecyclerView.visibility = View.VISIBLE
                     } else {
-                        emptyCommentsTextView.visibility = View.VISIBLE  // Показываем сообщение о пустом списке
-                        commentsRecyclerView.visibility = View.GONE  // Скрываем RecyclerView
+                        emptyCommentsTextView.visibility = View.VISIBLE
+                        commentsRecyclerView.visibility = View.GONE
                     }
                 }
             } else {
@@ -98,17 +117,28 @@ class ModeratorUserFragment : Fragment(R.layout.fragment_moderator_user) {
         alertDialog.show()
     }
 
+    /**
+     * Удаляет комментарий пользователя.
+     *
+     * @param userId Идентификатор пользователя.
+     * @param commentId Идентификатор комментария.
+     */
     private fun deleteUserComment(userId: Long, commentId: Long) {
         moderatorUserRepository.deleteUserComment(userId, commentId) { success ->
             if (success) {
                 Toast.makeText(requireContext(), "Комментарий удалён", Toast.LENGTH_SHORT).show()
-                showUserDetails(userId) // Перезагрузим данные пользователя
+                showUserDetails(userId)  // Перезагружаем данные пользователя
             } else {
                 Toast.makeText(requireContext(), "Ошибка удаления комментария", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
+    /**
+     * Показывает сообщение в виде Toast.
+     *
+     * @param message Текст сообщения.
+     */
     private fun showToast(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }

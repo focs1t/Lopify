@@ -12,11 +12,25 @@ import androidx.fragment.app.DialogFragment
 import ru.focsit.mobile.R
 import ru.focsit.mobile.data.SongDto
 
+/**
+ * Диалоговое окно для редактирования информации о песне.
+ * Позволяет пользователю обновить название, жанр, артиста, альбом и продолжительность песни.
+ *
+ * @property song Песня, информацию о которой нужно отредактировать.
+ * @property onUpdate Функция, которая будет вызываться для обновления данных песни.
+ */
 class EditSongDialogFragment : DialogFragment() {
 
     private var song: SongDto? = null
 
     companion object {
+        /**
+         * Создает новый экземпляр [EditSongDialogFragment] с заданной песней и функцией для обновления данных.
+         *
+         * @param song Песня, информацию о которой нужно отредактировать.
+         * @param onUpdate Функция, которая будет вызываться для обновления данных песни.
+         * @return Новый экземпляр [EditSongDialogFragment].
+         */
         fun newInstance(song: SongDto, onUpdate: (SongDto) -> Unit): EditSongDialogFragment {
             val fragment = EditSongDialogFragment()
             fragment.song = song
@@ -27,6 +41,14 @@ class EditSongDialogFragment : DialogFragment() {
 
     private lateinit var onUpdate: (SongDto) -> Unit
 
+    /**
+     * Создает и отображает вид для диалога редактирования песни.
+     *
+     * @param inflater Объект для инфлейта XML-файла в View.
+     * @param container Родительский элемент, в который будет помещен View.
+     * @param savedInstanceState Сохраненное состояние фрагмента, если оно есть.
+     * @return View для диалога.
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

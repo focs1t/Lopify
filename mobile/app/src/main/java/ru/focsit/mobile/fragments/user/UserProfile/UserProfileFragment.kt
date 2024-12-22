@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.focsit.mobile.R
@@ -17,6 +18,15 @@ import ru.focsit.mobile.repo.AuthRepository
 import ru.focsit.mobile.repo.user.UserProfileRepository
 import ru.focsit.mobile.utils.PreferencesHelper
 
+/**
+ * Фрагмент профиля пользователя, который отображает информацию о пользователе, его комментариях и избранных песнях.
+ *
+ * В этом фрагменте реализованы следующие функции:
+ * 1. Отображение имени пользователя.
+ * 2. Показ комментариев пользователя.
+ * 3. Показ избранных песен пользователя.
+ * 4. Вход/выход из аккаунта.
+ */
 class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
 
     private val authRepository = AuthRepository()
@@ -33,6 +43,12 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
         userProfileRepository = UserProfileRepository(context)  // Инициализируем репозиторий в onAttach
     }
 
+    /**
+     * Метод для загрузки данных пользователя, его комментариев и избранных песен.
+     *
+     * Загрузка данных о пользователе, комментариях и избранных песнях через репозиторий. Если данные не удается загрузить,
+     * выводится сообщение об ошибке.
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -48,36 +64,59 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
         }
     }
 
+    /**
+     * Загружает данные пользователя, его комментарии и избранные песни.
+     */
     private fun loadUserData() {
         // Проверяем, прикреплен ли фрагмент
         activity?.let { activity ->
+            // Загружаем данные пользователя
             userProfileRepository.getCurrentUser { userDto ->
                 if (userDto != null) {
-                    // Отображаем имя пользователя
-                    userNameTextView.text = userDto.username
+                    activity.runOnUiThread {
+                        userNameTextView.text = userDto.username
+                    }
                 } else {
-                    // Обработка ошибки получения данных о пользователе
+                    activity.runOnUiThread {
+                        Toast.makeText(activity, "Не удалось загрузить данные пользователя", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
 
             // Загружаем комментарии
             userProfileRepository.getMyComments { comments ->
-                comments?.let {
-                    userComments.clear()
-                    userComments.addAll(it)
+                activity.runOnUiThread {
+                    if (comments != null) {
+                        userComments.clear()
+                        userComments.addAll(comments)
+                    } else {
+                        Toast.makeText(activity, "Не удалось загрузить комментарии", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
 
             // Загружаем избранные песни
             userProfileRepository.getMyFavorites { songs ->
-                songs?.let {
-                    favoriteSongs.clear()
-                    favoriteSongs.addAll(it)
+                activity.runOnUiThread {
+                    if (songs != null) {
+                        favoriteSongs.clear()
+                        favoriteSongs.addAll(songs)
+                    } else {
+                        Toast.makeText(activity, "Не удалось загрузить избранные песни", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
     }
 
+    /**
+     * Отображает диалог с выбором действия для пользователя.
+     *
+     * Пользователь может выбрать одно из следующих действий:
+     * 1. Показать свои комментарии.
+     * 2. Показать свои избранные песни.
+     * 3. Выйти из аккаунта.
+     */
     private fun showActionDialog() {
         // Проверяем, прикреплен ли фрагмент
         activity?.let { activity ->
@@ -96,6 +135,9 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
         }
     }
 
+    /**
+     * Отображает диалог с комментариями пользователя.
+     */
     private fun showCommentsDialog() {
         // Проверяем, прикреплен ли фрагмент
         activity?.let { activity ->
@@ -116,6 +158,9 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
         }
     }
 
+    /**
+     * Отображает диалог с избранными песнями пользователя.
+     */
     private fun showFavoritesDialog() {
         // Проверяем, прикреплен ли фрагмент
         activity?.let { activity ->
@@ -138,6 +183,11 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
         }
     }
 
+    /**
+     * Удаляет песню из списка избранных.
+     *
+     * @param songId ID песни, которую нужно удалить.
+     */
     private fun removeSongFromFavorites(songId: Long) {
         // Проверяем, прикреплен ли фрагмент
         activity?.let { activity ->
@@ -152,6 +202,11 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
         }
     }
 
+    /**
+     * Выполняет выход из аккаунта.
+     *
+     * После выхода из аккаунта очищаются данные о пользователе и выполняется переход на экран входа.
+     */
     private fun performLogout() {
         // Проверяем, прикреплен ли фрагмент
         activity?.let { activity ->
@@ -165,8 +220,6 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
                     val intent = Intent(activity, SignInActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)
-                } else {
-                    // Показываем сообщение об ошибке (можно добавить Toast или Snackbar)
                 }
             }
         }
