@@ -1,6 +1,7 @@
 package ru.focsit.mobile.repo.user
 
 import android.content.Context
+import android.util.Log
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -128,10 +129,16 @@ class UserSongRepository(context: Context) {
     fun addCommentToSong(songId: Long, content: String, callback: (CommentDto?) -> Unit) {
         api.addCommentToSong(songId, content).enqueue(object : Callback<CommentDto> {
             override fun onResponse(call: Call<CommentDto>, response: Response<CommentDto>) {
-                callback(response.body())
+                if (response.isSuccessful) {
+                    callback(response.body())
+                } else {
+                    Log.e("API Error", "Failed to add comment: ${response.code()} - ${response.message()}")
+                    callback(null)
+                }
             }
 
             override fun onFailure(call: Call<CommentDto>, t: Throwable) {
+                Log.e("API Error", "Request failed: ${t.message}")
                 callback(null)
             }
         })

@@ -117,17 +117,17 @@ public class UserSongRestController {
             Comment savedComment = commentService.addComment(comment);
             CommentDto commentDto = commentService.toDto(savedComment);
 
-            /*
             // Получение всех модераторов
-            List<User> moderators = userRepository.findByRole(Role.ROLE_MODERATOR);  // Используем enum вместо строки
+            List<User> moderators = userRepository.findByRole(Role.ROLE_MODERATOR);
 
             // Отправка уведомлений модераторам
             for (User moderator : moderators) {
                 String toEmail = moderator.getEmail();
                 if (toEmail != null && !toEmail.isEmpty()) {
                     try {
-                        String subject = "Новый комментарий к песне";
-                        String message = "Пользователь " + user.getUsername() + " добавил новый комментарий: \n" + content;
+                        String subject = "Новый комментарий к песне ";
+                        String message = "Пользователь " + user.getUsername() + " добавил новый комментарий: \n" + content +
+                                "\nПесня: " + song.getName() + " - " + song.getArtist();
                         emailService.sendCommentNotification(toEmail, subject, message);
                     } catch (Exception e) {
                         System.out.println("Error sending email to " + toEmail + ": " + e.getMessage());
@@ -135,8 +135,6 @@ public class UserSongRestController {
                     }
                 }
             }
-
-             */
 
             // Возвращение успешного ответа
             return ResponseEntity.ok(commentDto);

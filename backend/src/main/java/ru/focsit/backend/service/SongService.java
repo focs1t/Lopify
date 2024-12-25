@@ -1,6 +1,7 @@
 package ru.focsit.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.focsit.backend.dto.SongDto;
 import ru.focsit.backend.pojo.Song;
@@ -17,6 +18,12 @@ public class SongService {
 
     @Autowired
     private PlaylistRepository playlistRepository;
+
+    private final JdbcTemplate jdbcTemplate;
+
+    public SongService(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public SongDto toDto(Song song) {
         return new SongDto(
@@ -82,5 +89,29 @@ public class SongService {
                 .filter(song -> artist == null || song.getArtist().equalsIgnoreCase(artist))
                 .filter(song -> name == null || song.getName().equalsIgnoreCase(name))
                 .collect(Collectors.toList());
+    }
+
+    public List<SongDto> getTop10SongsByFavorites() {
+        String query = """
+            SELECT s.id, s.name, s.genre, s.artist, s.album, s.duration
+            FROM songs s
+            JOIN playlist_songs ps ON s.id = ps.song_id
+            GROUP BY s.id
+            ORDER BY COUNT(ps.song_id) DESC
+            LIMIT 10
+        """;
+
+        List<Song> songs = jdbcTemplate.query(query, (rs, rowNum) -> Song.builder()
+                .id(rs.getLong("id"))
+                .name(rs.getString("name"))
+                .genre(rs.getString("genre"))
+                .artist(rs.getString("artist"))
+                .album(rs.getString("album"))
+                .duration(rs.getInt("duration"))
+                .build());
+
+        return songs.stream()
+                .map(this::toDto)
+                .toList();
     }
 }

@@ -1,23 +1,26 @@
 package ru.focsit.mobile
 
 import android.content.Context
+import android.util.Log
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.focsit.mobile.api.AuthApi
 import ru.focsit.mobile.api.admin.AdminUserApi
+import ru.focsit.mobile.api.moderator.ModeratorReportApi
 import ru.focsit.mobile.api.moderator.ModeratorSongApi
 import ru.focsit.mobile.api.moderator.ModeratorUserApi
 import ru.focsit.mobile.api.user.UserProfileApi
 import ru.focsit.mobile.api.user.UserSongApi
 import ru.focsit.mobile.utils.AuthInterceptor
 import ru.focsit.mobile.utils.PreferencesHelper
+import java.util.concurrent.TimeUnit
 
 /**
  * Объект для создания и управления экземплярами Retrofit для различных API.
  */
 object RetrofitClient {
-    private const val BASE_URL = "http://192.168.2.103:8080"
+    private const val BASE_URL = "http://192.168.2.105:8080"
 
     /**
      * Получает токен авторизации из SharedPreferences.
@@ -26,7 +29,9 @@ object RetrofitClient {
      * @return Токен в виде строки или `null`, если токен отсутствует.
      */
     private fun getTokenFromPreferences(context: Context): String? {
-        return PreferencesHelper.getToken(context)
+        val token = PreferencesHelper.getToken(context)
+        Log.d("Token", "Token: $token")
+        return token
     }
 
     /**
@@ -41,6 +46,9 @@ object RetrofitClient {
 
         return OkHttpClient.Builder()
             .addInterceptor(authInterceptor)
+            .connectTimeout(30, TimeUnit.SECONDS) // Таймаут на подключение
+            .readTimeout(30, TimeUnit.SECONDS)    // Таймаут на чтение
+            .writeTimeout(30, TimeUnit.SECONDS)   // Таймаут на запись
             .build()
     }
 
@@ -120,5 +128,15 @@ object RetrofitClient {
      */
     fun getUserProfileApi(context: Context): UserProfileApi {
         return createRetrofit(context).create(UserProfileApi::class.java)
+    }
+
+    /**
+     * Возвращает реализацию API для работы с отчетами модератора.
+     *
+     * @param context Контекст, используемый для настройки.
+     * @return Экземпляр [ModeratorReportApi].
+     */
+    fun getModeratorReportApi(context: Context): ModeratorReportApi {
+        return createRetrofit(context).create(ModeratorReportApi::class.java)
     }
 }
