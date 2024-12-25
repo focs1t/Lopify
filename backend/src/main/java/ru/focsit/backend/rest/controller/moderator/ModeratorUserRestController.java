@@ -50,13 +50,11 @@ public class ModeratorUserRestController {
 
     @DeleteMapping("/{userId}/comments/{commentId}")
     public ResponseEntity<Void> deleteUserComment(@PathVariable Long userId, @PathVariable Long commentId) {
-        // Проверяем, принадлежит ли комментарий пользователю
         boolean commentBelongsToUser = commentService.commentBelongsToUser(commentId, userId);
         if (!commentBelongsToUser) {
             return ResponseEntity.notFound().build();
         }
 
-        // Удаляем комментарий
         commentService.deleteComment(commentId);
         return ResponseEntity.noContent().build();
     }

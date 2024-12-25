@@ -35,7 +35,7 @@ public class Song {
 
     @ManyToMany(mappedBy = "songs", cascade = CascadeType.PERSIST)
     @JsonBackReference
-    private Set<Playlist> playlists;  // Связь с плейлистами
+    private Set<Playlist> playlists;
 
     @OneToMany(mappedBy = "song", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
@@ -43,7 +43,7 @@ public class Song {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id); // Используйте уникальные поля, не ссылающиеся на другие объекты
+        return Objects.hash(id);
     }
 
     @Override

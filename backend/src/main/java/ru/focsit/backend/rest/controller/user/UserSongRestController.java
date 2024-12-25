@@ -117,10 +117,7 @@ public class UserSongRestController {
             Comment savedComment = commentService.addComment(comment);
             CommentDto commentDto = commentService.toDto(savedComment);
 
-            // Получение всех модераторов
             List<User> moderators = userRepository.findByRole(Role.ROLE_MODERATOR);
-
-            // Отправка уведомлений модераторам
             for (User moderator : moderators) {
                 String toEmail = moderator.getEmail();
                 if (toEmail != null && !toEmail.isEmpty()) {
@@ -136,7 +133,6 @@ public class UserSongRestController {
                 }
             }
 
-            // Возвращение успешного ответа
             return ResponseEntity.ok(commentDto);
 
         } catch (Exception e) {

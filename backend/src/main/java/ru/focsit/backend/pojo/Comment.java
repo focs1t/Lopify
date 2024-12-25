@@ -17,7 +17,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 1000)  // Увеличено ограничение длины комментария
+    @Column(nullable = false, length = 1000)
     private String content;
 
     @ManyToOne
@@ -32,7 +32,7 @@ public class Comment {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id); // Использование уникального идентификатора
+        return Objects.hash(id);
     }
 
     @Override

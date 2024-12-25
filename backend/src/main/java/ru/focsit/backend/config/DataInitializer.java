@@ -36,7 +36,7 @@ public class DataInitializer {
     public void init() {
         initAdminUser();
         initUsersWithPlaylists();
-        initSongsIfNotExist();  // Теперь инициализация песен только если они не добавлены
+        initSongsIfNotExist();
     }
 
     private void initAdminUser() {
@@ -53,20 +53,17 @@ public class DataInitializer {
     }
 
     private void initUsersWithPlaylists() {
-        // Проверим, если нет пользователей с ролью ROLE_USER, то добавим
         createUserWithPlaylistIfNotExist("user1", "user1@music.com", "user1");
         createUserWithPlaylistIfNotExist("user2", "user2@music.com", "user2");
         createUserWithPlaylistIfNotExist("user3", "user3@music.com", "user3");
     }
 
     private void createUserWithPlaylistIfNotExist(String username, String email, String password) {
-        // Проверяем, существует ли уже пользователь с таким именем
         if (userService.getAllUsers().stream().anyMatch(u -> u.getUsername().equals(username))) {
             System.out.println("Пользователь с именем " + username + " уже существует");
             return;
         }
 
-        // Если нет, создаем нового пользователя
         User user = User.builder()
                 .username(username)
                 .password(passwordEncoder.encode(password))
@@ -76,7 +73,6 @@ public class DataInitializer {
 
         userService.create(user);
 
-        // Создаем плейлист "Избранное" для пользователя
         Playlist playlist = Playlist.builder()
                 .user(user)
                 .name("Избранное")
@@ -86,9 +82,9 @@ public class DataInitializer {
     }
 
     private void initSongsIfNotExist() {
-        if (!songsInitialized) {  // Проверяем, была ли уже инициализация песен
+        if (!songsInitialized) {
             initSongs();
-            songsInitialized = true;  // Помечаем, что инициализация песен выполнена
+            songsInitialized = true;
         }
     }
 

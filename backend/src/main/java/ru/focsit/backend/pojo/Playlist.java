@@ -40,13 +40,11 @@ public class Playlist {
 
     @Override
     public int hashCode() {
-        // Используйте только неизменяемые поля для вычисления hashCode
         return (id != null ? id.hashCode() : 0);
     }
 
     @Override
     public boolean equals(Object obj) {
-        // Используйте только уникальные поля, такие как `id`, для проверки равенства
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Playlist playlist = (Playlist) obj;

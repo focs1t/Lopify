@@ -36,13 +36,11 @@ public class PlaylistService {
         return playlistRepository.save(playlist);
     }
 
-    // Метод для получения текущего аутентифицированного пользователя
     private User getCurrentUser() {
         String username = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         return userRepository.findByUsername(username);
     }
 
-    // Метод для добавления трека в плейлист
     public String addSongToPlaylist(Long songId) {
         User user = getCurrentUser();
         Optional<Song> songOptional = songRepository.findById(songId);
@@ -54,7 +52,6 @@ public class PlaylistService {
         Song song = songOptional.get();
         Playlist playlist = user.getPlaylist();
 
-        // Добавляем песню в плейлист, если её там еще нет
         if (!playlist.getSongs().contains(song)) {
             playlist.getSongs().add(song);
             playlistRepository.save(playlist);
@@ -64,9 +61,8 @@ public class PlaylistService {
         return "Song already in playlist";
     }
 
-    // Метод для удаления трека из плейлиста
     public String removeSongFromPlaylist(Long songId) {
-        User user = getCurrentUser(); // Получаем текущего пользователя
+        User user = getCurrentUser();
         Optional<Song> songOptional = songRepository.findById(songId);
 
         if (songOptional.isEmpty()) {
@@ -76,7 +72,6 @@ public class PlaylistService {
         Song song = songOptional.get();
         Playlist playlist = user.getPlaylist();
 
-        // Удаляем песню из плейлиста
         if (playlist.getSongs().contains(song)) {
             playlist.getSongs().remove(song);
             playlistRepository.save(playlist);
@@ -87,7 +82,7 @@ public class PlaylistService {
     }
 
     public List<SongDto> getSongsFromPlaylist() {
-        User user = getCurrentUser(); // Получаем текущего пользователя
+        User user = getCurrentUser();
         if (user == null) {
             throw new IllegalStateException("Текущий пользователь не найден");
         }
@@ -99,9 +94,8 @@ public class PlaylistService {
             throw new IllegalStateException("Плейлист для пользователя с ID " + userId + " не найден");
         }
 
-        // Преобразуем список песен в SongDto
         return playlist.getSongs().stream()
-                .map(songService::toDto) // Используем метод toDto для преобразования
+                .map(songService::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -116,9 +110,8 @@ public class PlaylistService {
             throw new IllegalStateException("Плейлист для пользователя с ID " + userId + " не найден");
         }
 
-        // Преобразуем список песен в SongDto
         return playlist.getSongs().stream()
-                .map(songService::toDto) // Используем метод toDto для преобразования
+                .map(songService::toDto)
                 .collect(Collectors.toList());
     }
 

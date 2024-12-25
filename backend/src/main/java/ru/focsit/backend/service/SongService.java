@@ -76,10 +76,9 @@ public class SongService {
     }
 
     public void deleteSong(Long id) {
-        Song song = getSongById(id);  // Получаем объект песни по ID
-        playlistRepository.removeSongFromAllPlaylists(song);  // Передаем сам объект песни
+        Song song = getSongById(id);
+        playlistRepository.removeSongFromAllPlaylists(song);
 
-        // Затем удаление песни
         songRepository.deleteById(id);
     }
 

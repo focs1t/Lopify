@@ -37,7 +37,7 @@ public class User implements UserDetails {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonManagedReference
-    private Playlist playlist;  // Связь с плейлистом "Избранное"
+    private Playlist playlist;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
@@ -45,13 +45,11 @@ public class User implements UserDetails {
 
     @Override
     public int hashCode() {
-        // Используйте только неизменяемые поля для вычисления hashCode
         return (id != null ? id.hashCode() : 0);
     }
 
     @Override
     public boolean equals(Object obj) {
-        // Используйте только уникальные поля, такие как `id`, для проверки равенства
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         User user = (User) obj;

@@ -57,7 +57,6 @@ public class AuthenticationService {
 
         userService.create(user);
 
-        // Создаем плейлист для пользователя
         Playlist playlist = Playlist.builder()
                 .user(user)
                 .name("Избранное")
