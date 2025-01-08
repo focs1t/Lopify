@@ -2,12 +2,15 @@ package ru.focsit.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 import ru.focsit.backend.dto.SongDto;
 import ru.focsit.backend.pojo.Song;
 import ru.focsit.backend.repository.PlaylistRepository;
 import ru.focsit.backend.repository.SongRepository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,10 +62,19 @@ public class SongService {
                 .collect(Collectors.toList());
     }
 
+    /*
     public Song getSongById(Long id) {
         return songRepository.findById(id).orElseThrow(() -> new RuntimeException("Song not found"));
     }
 
+     */
+
+    public Song getSongById(Long id) {
+        String query = "SELECT id, name, genre, artist, album, duration FROM songs WHERE id = ?";
+        return jdbcTemplate.queryForObject(query, new Object[]{id}, new SongRowMapper());
+    }
+
+    /*
     public Song updateSong(Long id, Song updatedSong) {
         Song song = getSongById(id);
         List.of(
@@ -73,6 +85,38 @@ public class SongService {
                 () -> song.setAlbum(updatedSong.getAlbum())
         ).forEach(Runnable::run);
         return songRepository.save(song);
+    }
+
+     */
+
+    public Song updateSong(Long id, Song updatedSong) {
+        String query = """
+            UPDATE songs
+            SET name = ?, duration = ?, genre = ?, artist = ?, album = ?
+            WHERE id = ?
+        """;
+        jdbcTemplate.update(query,
+                updatedSong.getName(),
+                updatedSong.getDuration(),
+                updatedSong.getGenre(),
+                updatedSong.getArtist(),
+                updatedSong.getAlbum(),
+                id);
+        return getSongById(id);
+    }
+
+    private static class SongRowMapper implements RowMapper<Song> {
+        @Override
+        public Song mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return Song.builder()
+                    .id(rs.getLong("id"))
+                    .name(rs.getString("name"))
+                    .genre(rs.getString("genre"))
+                    .artist(rs.getString("artist"))
+                    .album(rs.getString("album"))
+                    .duration(rs.getInt("duration"))
+                    .build();
+        }
     }
 
     public void deleteSong(Long id) {
